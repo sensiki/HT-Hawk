@@ -1,0 +1,15 @@
+L 1 "..\..\User\Driver\IIC\hard_iic.c"
+N/*
+N******************* (C) COPYRIGHT 2015 Air Nano Team ***************************
+N * 模块名称 : 硬件IIC
+N * 文件名   ：main.c
+N * 描述     ：系统初始化         
+N * 实验平台 ：
+N * 库版本   ：ST3.5.0
+N * 作者     ：Air Nano Team 
+N * 淘宝     ：http://byd2.taobao.com   
+N *            http://hengtuo.taobao.com   
+N*********************************************************************************
+N*/
+C "..\..\User\Driver\IIC\hard_iic.c" 13 22 cannot open source input file "hard_i2c.h": No such file or directory
+N#include "hard_i2c.h"

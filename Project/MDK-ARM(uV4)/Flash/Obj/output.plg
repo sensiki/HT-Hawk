@@ -1,0 +1,1857 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\project.uvproj
+Project File Date:  06/03/2015
+
+<h2>Output:</h2>
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Failed!
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling system_stm32f10x.c...
+compiling core_cm3.c...
+assembling startup_stm32f10x_hd.s...
+compiling stm32f10x_rcc.c...
+compiling misc.c...
+compiling stm32f10x_usart.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_fsmc.c...
+compiling stm32f10x_spi.c...
+compiling stm32f10x_tim.c...
+compiling stm32f10x_adc.c...
+compiling stm32f10x_dma.c...
+compiling stm32f10x_flash.c...
+compiling stm32f10x_i2c.c...
+compiling otgd_fs_dev.c...
+compiling otgd_fs_int.c...
+compiling otgd_fs_pcd.c...
+compiling usb_core.c...
+compiling usb_init.c...
+compiling usb_int.c...
+compiling usb_mem.c...
+compiling usb_regs.c...
+compiling usb_sil.c...
+compiling otgd_fs_cal.c...
+compiling usb_desc.c...
+compiling usb_endp.c...
+compiling usb_hw.c...
+compiling usb_istr.c...
+compiling usb_prop.c...
+compiling usb_pwr.c...
+compiling led.c...
+compiling Spi.c...
+compiling I2C.c...
+compiling adc.c...
+compiling time.c...
+compiling moto.c...
+compiling usart.c...
+compiling delay.c...
+compiling eeprom.c...
+compiling pwm_in.c...
+compiling hard_i2c.c...
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling oled.c...
+compiling mpu6050.c...
+compiling hmc5883.c...
+compiling NRF24L01.c...
+compiling Algorithm_filter.c...
+compiling Algorithm_math.c...
+compiling Algorithm_sqLite.c...
+compiling Algorithm_quaternion.c...
+compiling MultiRotor_rc.c...
+compiling MultiRotor_app.c...
+compiling MultiRotor_ahrs.c...
+compiling MultiRotor_radio.c...
+compiling MultiRotor_control.c...
+compiling main.c...
+compiling stm32f10x_it.c...
+linking...
+Program Size: Code=35148 RO-data=3532 RW-data=720 ZI-data=13168  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 2 Warning(s).
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(402): warning:  #167-D: argument of type "u16 *" is incompatible with parameter of type "s16 *"
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(402): error:  #140: too many arguments in function call
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(417): warning:  #223-D: function "Data_Parser" declared implicitly
+Target not created
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(402): warning:  #167-D: argument of type "u16 *" is incompatible with parameter of type "s16 *"
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(402): error:  #140: too many arguments in function call
+Target not created
+Build target 'Flash'
+compiling led.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling Spi.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling I2C.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling pwm_in.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling hard_i2c.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling mpu6050.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling hmc5883.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling NRF24L01.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling Algorithm_filter.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling Algorithm_math.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.c(60): error:  #147: declaration is incompatible with "int array_assign(u16 *, s16, u16)" (declared at line 16 of "..\..\User\Algorithm\Algorithm_math\Algorithm_math.h")
+compiling Algorithm_sqLite.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling Algorithm_quaternion.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling MultiRotor_rc.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling MultiRotor_app.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling MultiRotor_ahrs.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling MultiRotor_radio.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling MultiRotor_control.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling main.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+compiling stm32f10x_it.c...
+..\..\User\Algorithm\Algorithm_math\Algorithm_math.h(16): error:  #260-D: explicit type is missing ("int" assumed)
+Target not created
+Build target 'Flash'
+compiling led.c...
+compiling Spi.c...
+compiling I2C.c...
+compiling pwm_in.c...
+compiling hard_i2c.c...
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling mpu6050.c...
+compiling hmc5883.c...
+compiling NRF24L01.c...
+compiling Algorithm_filter.c...
+compiling Algorithm_math.c...
+compiling Algorithm_sqLite.c...
+compiling Algorithm_quaternion.c...
+compiling MultiRotor_rc.c...
+compiling MultiRotor_app.c...
+compiling MultiRotor_ahrs.c...
+compiling MultiRotor_radio.c...
+compiling MultiRotor_control.c...
+compiling main.c...
+compiling stm32f10x_it.c...
+linking...
+Program Size: Code=35636 RO-data=3532 RW-data=788 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 2 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35688 RO-data=3528 RW-data=788 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling led.c...
+compiling Spi.c...
+compiling I2C.c...
+compiling pwm_in.c...
+compiling hard_i2c.c...
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling mpu6050.c...
+compiling hmc5883.c...
+compiling NRF24L01.c...
+compiling Algorithm_filter.c...
+compiling Algorithm_math.c...
+compiling Algorithm_sqLite.c...
+compiling Algorithm_quaternion.c...
+compiling MultiRotor_rc.c...
+compiling MultiRotor_app.c...
+compiling MultiRotor_ahrs.c...
+compiling MultiRotor_radio.c...
+compiling MultiRotor_control.c...
+compiling main.c...
+compiling stm32f10x_it.c...
+linking...
+Program Size: Code=35688 RO-data=3528 RW-data=788 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 2 Warning(s).
+Build target 'Flash'
+compiling MultiRotor_app.c...
+linking...
+Program Size: Code=35908 RO-data=3532 RW-data=788 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling led.c...
+compiling Spi.c...
+compiling I2C.c...
+compiling eeprom.c...
+compiling pwm_in.c...
+compiling hard_i2c.c...
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling mpu6050.c...
+compiling hmc5883.c...
+compiling NRF24L01.c...
+compiling Algorithm_filter.c...
+compiling Algorithm_math.c...
+compiling Algorithm_sqLite.c...
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(93): error:  #136: struct "<unnamed>" has no field "ParamSave"
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(94): error:  #136: struct "<unnamed>" has no field "ParamSave"
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(96): error:  #20: identifier "EE_PID_CORE_PITCH_P" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(98): error:  #20: identifier "EE_PID_CORE_PITCH_I" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(100): error:  #20: identifier "EE_PID_CORE_PITCH_D" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(102): error:  #20: identifier "EE_PID_CORE_ROLL_P" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(104): error:  #20: identifier "EE_PID_CORE_ROLL_I" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(106): error:  #20: identifier "EE_PID_CORE_ROLL_D" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(108): error:  #20: identifier "EE_PID_CORE_YAW_P" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(110): error:  #20: identifier "EE_PID_CORE_YAW_I" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(112): error:  #20: identifier "EE_PID_CORE_YAW_D" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(127): error:  #20: identifier "EE_PID_CORE_PITCH_P" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(129): error:  #20: identifier "EE_PID_CORE_PITCH_I" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(131): error:  #20: identifier "EE_PID_CORE_PITCH_D" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(133): error:  #20: identifier "EE_PID_CORE_ROLL_P" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(135): error:  #20: identifier "EE_PID_CORE_ROLL_I" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(137): error:  #20: identifier "EE_PID_CORE_ROLL_D" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(139): error:  #20: identifier "EE_PID_CORE_YAW_P" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(141): error:  #20: identifier "EE_PID_CORE_YAW_I" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(143): error:  #20: identifier "EE_PID_CORE_YAW_D" is undefined
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(187): error:  #136: struct "<unnamed>" has no field "ParamSave"
+compiling Algorithm_quaternion.c...
+compiling MultiRotor_rc.c...
+compiling MultiRotor_app.c...
+compiling MultiRotor_ahrs.c...
+compiling MultiRotor_radio.c...
+compiling MultiRotor_control.c...
+compiling main.c...
+compiling stm32f10x_it.c...
+Target not created
+Build target 'Flash'
+compiling led.c...
+compiling Spi.c...
+compiling I2C.c...
+compiling pwm_in.c...
+compiling hard_i2c.c...
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling mpu6050.c...
+compiling hmc5883.c...
+compiling NRF24L01.c...
+compiling Algorithm_filter.c...
+compiling Algorithm_math.c...
+compiling Algorithm_sqLite.c...
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(93): error:  #136: struct "<unnamed>" has no field "ParamSave"
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(94): error:  #136: struct "<unnamed>" has no field "ParamSave"
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(187): error:  #136: struct "<unnamed>" has no field "ParamSave"
+compiling Algorithm_quaternion.c...
+compiling MultiRotor_rc.c...
+compiling MultiRotor_app.c...
+compiling MultiRotor_ahrs.c...
+compiling MultiRotor_radio.c...
+compiling MultiRotor_control.c...
+compiling main.c...
+compiling stm32f10x_it.c...
+Target not created
+Build target 'Flash'
+compiling led.c...
+compiling Spi.c...
+compiling I2C.c...
+compiling pwm_in.c...
+compiling hard_i2c.c...
+..\..\User\Driver\IIC\hard_i2c.c(125): warning:  #188-D: enumerated type mixed with another type
+..\..\User\Driver\IIC\hard_i2c.c(169): warning:  #188-D: enumerated type mixed with another type
+compiling mpu6050.c...
+compiling hmc5883.c...
+compiling NRF24L01.c...
+compiling Algorithm_filter.c...
+compiling Algorithm_math.c...
+compiling Algorithm_sqLite.c...
+compiling Algorithm_quaternion.c...
+compiling MultiRotor_rc.c...
+compiling MultiRotor_app.c...
+compiling MultiRotor_ahrs.c...
+compiling MultiRotor_radio.c...
+compiling MultiRotor_control.c...
+compiling main.c...
+compiling stm32f10x_it.c...
+linking...
+Program Size: Code=36220 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 2 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(124): warning:  #177-D: function "EE_READ_Attitude_PID" was declared but never referenced
+linking...
+Program Size: Code=35908 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 1 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+linking...
+Program Size: Code=36220 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=36220 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=36584 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Build target 'Flash'
+linking...
+Program Size: Code=36584 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_app.c...
+linking...
+Program Size: Code=36940 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_app.c...
+linking...
+Program Size: Code=36596 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+linking...
+Program Size: Code=36396 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+linking...
+Program Size: Code=36400 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+linking...
+Program Size: Code=36292 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(124): warning:  #177-D: function "EE_READ_Attitude_PID" was declared but never referenced
+linking...
+Program Size: Code=35980 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 1 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35920 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(392): warning:  #550-D: variable "ucData" was set but never used
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(393): warning:  #177-D: variable "aCmdBuf" was declared but never referenced
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(394): warning:  #550-D: variable "usPos" was set but never used
+linking...
+Program Size: Code=35864 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 3 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(392): warning:  #550-D: variable "ucData" was set but never used
+..\..\User\Function\MultiRotor_radio\MultiRotor_radio.c(394): warning:  #550-D: variable "usPos" was set but never used
+linking...
+Program Size: Code=35900 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 2 Warning(s).
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35920 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35920 RO-data=3528 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35916 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35916 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35932 RO-data=3532 RW-data=908 ZI-data=13204  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=35992 RO-data=3528 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.c(124): warning:  #177-D: function "EE_READ_Attitude_PID" was declared but never referenced
+linking...
+Program Size: Code=36300 RO-data=3532 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 1 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_app.c...
+linking...
+Program Size: Code=36644 RO-data=3532 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+linking...
+Program Size: Code=36956 RO-data=3532 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+linking...
+Program Size: Code=36956 RO-data=3532 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling MultiRotor_radio.c...
+linking...
+Program Size: Code=37020 RO-data=3532 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
+Build target 'Flash'
+compiling Algorithm_sqLite.c...
+linking...
+Program Size: Code=37032 RO-data=3528 RW-data=908 ZI-data=13228  
+FromELF: creating hex file...
+User command #1: CopyHex_Flash.bat
+C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)>copy Flash\Obj\output.hex Flash\output.hex 
+已复制         1 个文件。
+".\Flash\Obj\output.axf" - 0 Error(s), 0 Warning(s).
+Load "C:\\Users\\Administrator\\Desktop\\5、HT-Hawk飞控源代码(KEIL MDK)\\Project\\MDK-ARM(uV4)\\Flash\\Obj\\output.AXF" 
+* JLink Info: Device "STM32F103ZE" selected (512 KB flash, 64 KB RAM).
+Set JLink Project File to "C:\Users\Administrator\Desktop\5、HT-Hawk飞控源代码(KEIL MDK)\Project\MDK-ARM(uV4)\JLinkSettings.ini"
+ 
+JLink info:
+------------
+DLL: V4.40c, compiled Jan 24 2012 09:30:33
+Firmware: J-Link ARM-OB STM32 compiled Aug 22 2012 19:52:04
+Hardware: V7.00
+S/N : 20090928 
+Feature(s) : RDI,FlashDL,FlashBP,JFlash,GDBFull 
+ 
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ROMTableAddr = 0xE00FF003
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+ 
+Target info:
+------------
+Device: STM32F103ZE
+VTarget = 3.300V
+State of Pins: 
+TCK: 0, TDI: 1, TDO: 1, TMS: 0, TRES: 1, TRST: 1
+Hardware-Breakpoints: 6
+Software-Breakpoints: 8192
+Watchpoints:          4
+JTAG speed: 4000 kHz
+ 
+Erase Done.
+Programming Done.
+Verify OK.
+* JLink Info: Found SWD-DP with ID 0x1BA01477
+* JLink Info: TPIU fitted.
+* JLink Info: ETM fitted.
+* JLink Info:   FPUnit: 6 code (BP) slots and 2 literal slots
+* JLink Info: Found Cortex-M3 r1p1, Little endian.
+Application running ...
