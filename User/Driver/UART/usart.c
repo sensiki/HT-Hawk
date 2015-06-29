@@ -1,7 +1,18 @@
+/*
+******************* (C) COPYRIGHT 2015 Air Nano Team ***************************
+ * 文件名  ：usart.c
+ * 描述    ：usart配置         
+ * 实验平台：Air Nano四轴飞行器
+ * 库版本  ：ST3.5.0
+ * 作者    ：Air Nano Team 
+ * 淘宝    ：http://byd2.taobao.com
+             http://hengtuo.taobao.com
+*********************************************************************************
+*/
 #include "usart.h"
 #include <stdarg.h>
 
-void usart1_config(void)
+void USART1_Config(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
@@ -17,14 +28,25 @@ void usart1_config(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 	
-	  USART_InitStructure.USART_BaudRate = 115200;                 /*设置波特率为115200*/
-    USART_InitStructure.USART_WordLength = USART_WordLength_8b;  /*设置数据位为8位*/
-    USART_InitStructure.USART_StopBits = USART_StopBits_1;       /*设置停止位为1位*/
-    USART_InitStructure.USART_Parity = USART_Parity_No;          /*无奇偶校验*/    
-    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; /*没有硬件流控*/
-    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;      /*发送与接收*/
-    /*完成串口COM1的时钟配置、GPIO配置，根据上述参数初始化并使能*/
+	// 设置波特率
+	USART_InitStructure.USART_BaudRate = 57600;   
 	
+	// 设置数据位为8位
+  USART_InitStructure.USART_WordLength = USART_WordLength_8b; 
+
+  // 设置停止位为1位	
+  USART_InitStructure.USART_StopBits = USART_StopBits_1;  
+
+  // 无奇偶校验
+  USART_InitStructure.USART_Parity = USART_Parity_No;  
+
+  // 没有硬件流控
+  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; 
+	
+	// 发送与接收
+  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;     
+    
+	/*完成串口COM1的时钟配置、GPIO配置，根据上述参数初始化并使能*/
 	USART_Init(USART1, &USART_InitStructure);
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	USART_Cmd(USART1, ENABLE);
@@ -47,21 +69,6 @@ uint8_t UART1_Put_Char(unsigned char DataToSend)
 }
 
 
-// /*
-//  * 函数名：fputc
-//  * 描述  ：重定向c库函数printf到USART1
-//  * 输入  ：无
-//  * 输出  ：无
-//  * 调用  ：由printf调用
-//  */
-// int fputc(int ch, FILE *f)
-// {
-// /* 将Printf内容发往串口 */
-//   USART_SendData(USART1, (unsigned char) ch);
-//   while (!(USART1->SR & USART_FLAG_TXE));
-//  
-//   return (ch);
-// }
 
 /*
  * 函数名：itoa

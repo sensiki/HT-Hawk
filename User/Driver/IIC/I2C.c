@@ -31,6 +31,7 @@ void I2C_INIT(void)
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
   GPIO_Init(GPIO_I2C, &GPIO_InitStructure);
+	delay(0XFFF);
 }
 /*******************************************************************************
 * Function Name  : I2C_delay
@@ -222,17 +223,6 @@ uint16_t Single_Write(unsigned char SlaveAddress,unsigned char REG_Address,unsig
     return TRUE;
 }
 
-uint16_t Single_Write_MS5611(unsigned char SlaveAddress,unsigned char REG_Address)		     //void
-{
-  	if(!I2C_Start())return FALSE;
-    I2C_SendByte(SlaveAddress);   //发送设备地址+写信号//I2C_SendByte(((REG_Address & 0x0700) >>7) | SlaveAddress & 0xFFFE);//设置高起始地址+器件地址 
-    if(!I2C_WaitAck()){I2C_Stop(); return FALSE;}
-    I2C_SendByte(REG_Address );   //设置低起始地址      
-    I2C_WaitAck();	 
-    I2C_Stop(); 
-    delay5ms();
-    return TRUE;
-}
 
 //单字节读取*****************************************
 unsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address)
@@ -254,3 +244,33 @@ unsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address)
 	return REG_data;
 }	
 
+void I2C_Read(u8 addr_, u8 reg_, u8 len, u8 *buf)
+{
+	u8 i;
+	 // 起始信号
+	I2C_Start();
+	
+	// 发送设备地址
+	I2C_SendByte(addr_);   
+	
+	I2C_WaitAck();
+	
+	//发送存储单元地址
+	I2C_SendByte(reg_);                   
+	I2C_WaitAck();
+	
+	// 起始信号
+	I2C_Start();
+
+	//发送设备地址+读信号
+	I2C_SendByte(addr_+1);     
+	I2C_WaitAck();
+	for (i=0; i<len; i++)                   //连续读取6个地址数据，存储中BUF
+	{
+		*(buf+i) = I2C_RadeByte();          //BUF[0]存储数据
+		if (i == len-1)		I2C_NoAck();                   //最后一个数据需要回NOACK
+		else		I2C_Ack();                     //回应ACK
+	}
+	I2C_Stop();                           //停止信号
+	I2C_delay();
+}

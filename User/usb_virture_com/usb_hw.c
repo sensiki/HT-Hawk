@@ -12,6 +12,7 @@
 */
 
 #include "stm32f10x.h"
+#include "board_config.h"
 
 #include "stm32f10x_it.h"
 #include "usb_lib.h"
@@ -266,10 +267,47 @@ static void IntToUnicode (uint32_t _ulValue , uint8_t *_pBuf , uint8_t _ucLen)
 *	返 回 值: 无
 *********************************************************************************************************
 */
+void exeplay_write_appmask(u16 val)
+{
+  RCC->APB1ENR|=1<<28;  	//使能电源时钟	    
+	RCC->APB1ENR|=1<<27; 	//使能备份时钟	    
+	PWR->CR|=1<<8;      	//取消备份区写保护 
+	BKP->DR2=val;			//标记要要写入标志值
+}
+/*
+*********************************************************************************************************
+*	函 数 名: SaveHostDataToBuf
+*	功能说明: 将USB主机发送的数据缓存到全局缓冲区。该函数被USB中断服务程序调用。
+*	形    参: _pInBuf :输入缓冲区；PC发到设备的数据 
+*			  _pBuf : 目标缓冲区
+*			 _ucLen : 目标码长度
+*	返 回 值: 无
+*********************************************************************************************************
+*/
 void usb_SaveHostDataToBuf(uint8_t *_pInBuf, uint16_t _usLen)
 {
 	uint16_t i;
+	u8 datacheck=0;
 	
+	extern void delay_ms(u16 nms);
+	extern void STMFLASH_Write(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite);
+	if(_pInBuf[0]==0x8A)//这下大件事咯，要更新FLASH啊！PID修改工具上位机下发的更新FLASH命令
+	if(_pInBuf[1]==0x5B)
+	if(_pInBuf[2]==0x1C)
+	if(_pInBuf[3]==0xAC)
+	{
+					 
+		 for(i=0;i<4;i++)datacheck+=_pInBuf[i];
+		 if(datacheck ==_pInBuf[4])
+			{
+				exeplay_write_appmask(0x5050);//写入要更新程序
+				i=0x0000;
+				STMFLASH_Write(pro_FALG_ADD,&i,1);
+				USB_CABLE_DISABLE();	/* 断开USB设备 */
+				delay_ms(1500);    //1.5秒后复位
+				NVIC_SystemReset();//软复位一下
+			}
+		}
 	/* 未考虑缓冲区填满的情况 */
 	for (i = 0 ; i < _usLen; i++)
 	{
@@ -281,7 +319,6 @@ void usb_SaveHostDataToBuf(uint8_t *_pInBuf, uint16_t _usLen)
 		}
 	}
 }
-
 /*
 *********************************************************************************************************
 *	函 数 名: usb_GetRxByte

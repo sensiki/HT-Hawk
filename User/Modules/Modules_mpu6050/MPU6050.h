@@ -28,7 +28,7 @@
 #define	GYRO_ZOUT_L		0x48
 #define	PWR_MGMT_1		0x6B	//电源管理，典型值：0x00(正常启用)
 #define	WHO_AM_I		0x75	//IIC地址寄存器(默认数值0x68，只读)
-#define MPU6050_ADDRESS 0x68    //IIC写入时的地址字节数据，+1为读取
+#define MPU6050_ADDRESS 0xD0    //IIC写入时的地址字节数据，+1为读取
 
 
 #define MPU6050_DLPF_BW_256         0x00

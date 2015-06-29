@@ -25,18 +25,17 @@ int16_t  *mag_limt = HMC58X3_limit;
 /*====================================================================================================*/
 u8 Init_HMC5883L(void)
 {
-	u8 sig = 0;
 	u8 ack; 
 	
-	ack = i2cRead(MAG_ADDRESS, 0x0A, 1, &sig);
+	ack = Single_Read(MAG_ADDRESS, 0x0A);
 	
-	if (!ack || sig != 'H')
+	if (!ack)
 			return FALSE;
 
 	// leave test mode
-	i2cWrite(MAG_ADDRESS, HMC58X3_R_CONFA, 0x70);   // Configuration Register A  -- 0 11 100 00  num samples: 8 ; output rate: 15Hz ; normal measurement mode
-	i2cWrite(MAG_ADDRESS, HMC58X3_R_CONFB, 0x20);   // Configuration Register B  -- 001 00000    configuration gain 1.3Ga
-	i2cWrite(MAG_ADDRESS, HMC58X3_R_MODE, 0x00);    // Mode register             -- 000000 00    continuous Conversion Mode
+	Single_Write(MAG_ADDRESS, HMC58X3_R_CONFA, 0x70);   // Configuration Register A  -- 0 11 100 00  num samples: 8 ; output rate: 15Hz ; normal measurement mode
+	Single_Write(MAG_ADDRESS, HMC58X3_R_CONFB, 0x20);   // Configuration Register B  -- 001 00000    configuration gain 1.3Ga
+	Single_Write(MAG_ADDRESS, HMC58X3_R_MODE, 0x00);    // Mode register             -- 000000 00    continuous Conversion Mode
 	delay(100);
 
 	return TRUE;	 
@@ -59,7 +58,7 @@ void HMC5883lRead(int16_t *magData)
 	static int32_t An[3] = {0,0,0};
 	
 	// 读取寄存器数据
-	i2cRead(MAG_ADDRESS, MAG_DATA_REGISTER, 6, buf);
+	I2C_Read(MAG_ADDRESS, MAG_DATA_REGISTER, 6, buf);
 
 	// 十位深度滤波
 	An[0] -= An[0]/10;

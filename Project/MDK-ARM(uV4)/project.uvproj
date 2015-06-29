@@ -44,7 +44,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Flash\Obj\</OutputDirectory>
-          <OutputName>output</OutputName>
+          <OutputName>HT_Hawk</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -73,11 +73,11 @@
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </BeforeMake>
           <AfterMake>
-            <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>CopyHex_Flash.bat</UserProg1Name>
-            <UserProg2Name></UserProg2Name>
-            <UserProg1Dos16Mode>1</UserProg1Dos16Mode>
+            <RunUserProg1>0</RunUserProg1>
+            <RunUserProg2>1</RunUserProg2>
+            <UserProg1Name></UserProg1Name>
+            <UserProg2Name>C:\Keil\ARM\BIN40\fromelf.exe  --bin -o  .\Flash\HT_Hawk.bin .\Flash\Obj\HT_Hawk.axf</UserProg2Name>
+            <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>
           <SelectedForBatchBuild>0</SelectedForBatchBuild>
@@ -295,7 +295,7 @@
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
-                <StartAddress>0x8000000</StartAddress>
+                <StartAddress>0x8020000</StartAddress>
                 <Size>0x80000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
@@ -348,7 +348,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Libraries\STM32_USB-FS-Device_Driver\inc;..\..\User\usb_virture_com;..\..\User;..\..\User\bsp;..\..\User\Driver\IIC;..\..\User\Driver\LED;..\..\User\Driver\TIM;..\..\User\Driver\SPI;..\..\User\Driver\ADC;..\..\User\Driver\Delay;..\..\User\Driver\UART;..\..\User\Driver\MOTOR;..\..\User\Driver\PWM_IN;..\..\User\Driver\EEPROM;..\..\User\Modules\Modules_mpu6050;..\..\User\Modules\Modules_nrf24L01;..\..\User\Modules\Modules_hmc5883;..\..\User\Algorithm\Algorithm_filter;..\..\User\Algorithm\Algorithm_math;..\..\User\Algorithm\Algorithm_sqLite;..\..\User\Algorithm\Algorithm_quaternion;..\..\User\Function\MultiRotor_rc;..\..\User\Function\MultiRotor_app;..\..\User\Function\MultiRotor_ahrs;..\..\User\Function\MultiRotor_radio;..\..\User\Function\MultiRotor_control;..\..\User\Modules\Modules_oled</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\CM3\CoreSupport;..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;..\..\Libraries\STM32F10x_StdPeriph_Driver\inc;..\..\Libraries\STM32_USB-FS-Device_Driver\inc;..\..\User\usb_virture_com;..\..\User;..\..\User\bsp;..\..\User\Driver\IIC;..\..\User\Driver\LED;..\..\User\Driver\TIM;..\..\User\Driver\SPI;..\..\User\Driver\ADC;..\..\User\Driver\Delay;..\..\User\Driver\UART;..\..\User\Driver\MOTOR;..\..\User\Driver\PWM_IN;..\..\User\Driver\EEPROM;..\..\User\Modules\Modules_mpu6050;..\..\User\Modules\Modules_nrf24L01;..\..\User\Modules\Modules_hmc5883;..\..\User\Algorithm\Algorithm_filter;..\..\User\Algorithm\Algorithm_math;..\..\User\Algorithm\Algorithm_sqLite;..\..\User\Algorithm\Algorithm_quaternion;..\..\User\Function\MultiRotor_rc;..\..\User\Function\MultiRotor_app;..\..\User\Function\MultiRotor_ahrs;..\..\User\Function\MultiRotor_radio;..\..\User\Function\MultiRotor_control;..\..\User\Modules\Modules_oled;..\..\User\Driver\STMFLASH</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -612,6 +612,11 @@
               <FileName>hard_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Driver\IIC\hard_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Driver\STMFLASH\stmflash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1324,6 +1329,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\Driver\IIC\hard_i2c.c</FilePath>
             </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Driver\STMFLASH\stmflash.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2034,6 +2044,11 @@
               <FileName>hard_i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Driver\IIC\hard_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Driver\STMFLASH\stmflash.c</FilePath>
             </File>
           </Files>
         </Group>

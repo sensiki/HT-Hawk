@@ -2,7 +2,7 @@
 #define __TIME_H__
 #include "stm32f10x.h"
 
-#define EnTIM3()  TIM_Cmd(TIM3,ENABLE)
+#define EnTIMER  TIM_Cmd(TIM5,ENABLE)
 void Nvic_Init(void);
-void TIM3_Config(void);
+void TIM5_Config(void);
 #endif 

@@ -13,8 +13,7 @@ struct _sensor sensor;
 
 
 
- 
- 
+
 /*====================================================================================================*/
 /*====================================================================================================*
 **函数 : InitMPU6050
@@ -27,17 +26,16 @@ struct _sensor sensor;
 u8 InitMPU6050(void)
 {
 	u8 ack;
-  u8 sig;
-
-	ack = i2cRead(MPU6050_ADDRESS, WHO_AM_I, 1, &sig);
+	
+	ack = Single_Read(MPU6050_ADDRESS, WHO_AM_I);
 	if (!ack)
      return FALSE;
 	
-	i2cWrite(MPU6050_ADDRESS, PWR_MGMT_1, 0x00);  	//解除休眠状态
-	i2cWrite(MPU6050_ADDRESS, SMPLRT_DIV, 0x07);     
-	i2cWrite(MPU6050_ADDRESS, CONFIGL, MPU6050_DLPF);              //低通滤波
-	i2cWrite(MPU6050_ADDRESS, GYRO_CONFIG, MPU6050_GYRO_FS_1000);  //陀螺仪量程 +-1000
-	i2cWrite(MPU6050_ADDRESS, ACCEL_CONFIG, MPU6050_ACCEL_FS_4);   //加速度量程 +-4G
+	Single_Write(MPU6050_ADDRESS, PWR_MGMT_1, 0x00);  	//解除休眠状态
+	Single_Write(MPU6050_ADDRESS, SMPLRT_DIV, 0x07);     
+	Single_Write(MPU6050_ADDRESS, CONFIGL, MPU6050_DLPF);              //低通滤波
+	Single_Write(MPU6050_ADDRESS, GYRO_CONFIG, MPU6050_GYRO_FS_1000);  //陀螺仪量程 +-1000
+	Single_Write(MPU6050_ADDRESS, ACCEL_CONFIG, MPU6050_ACCEL_FS_4);   //加速度量程 +-4G
 	return TRUE;
 }
 
@@ -46,7 +44,18 @@ u8 InitMPU6050(void)
 //******************************************************************************
 void MPU6050_Read(void)
 {
-	i2cRead(MPU6050_ADDRESS,0x3B,14,mpu6050_buffer);
+	mpu6050_buffer[0]=Single_Read(MPU6050_ADDRESS, 0x3B);
+	mpu6050_buffer[1]=Single_Read(MPU6050_ADDRESS, 0x3C);
+	mpu6050_buffer[2]=Single_Read(MPU6050_ADDRESS, 0x3D);
+	mpu6050_buffer[3]=Single_Read(MPU6050_ADDRESS, 0x3E);
+	mpu6050_buffer[4]=Single_Read(MPU6050_ADDRESS, 0x3F);
+	mpu6050_buffer[5]=Single_Read(MPU6050_ADDRESS, 0x40);
+	mpu6050_buffer[8]=Single_Read(MPU6050_ADDRESS, 0x43);
+	mpu6050_buffer[9]=Single_Read(MPU6050_ADDRESS, 0x44);
+	mpu6050_buffer[10]=Single_Read(MPU6050_ADDRESS, 0x45);
+	mpu6050_buffer[11]=Single_Read(MPU6050_ADDRESS, 0x46);
+	mpu6050_buffer[12]=Single_Read(MPU6050_ADDRESS, 0x47);
+	mpu6050_buffer[13]=Single_Read(MPU6050_ADDRESS, 0x48);
 	
 }
 /**************************实现函数********************************************
@@ -101,6 +110,22 @@ void MPU6050_Dataanl(void)
 				cnt_a++;		
 			}	
 }
+/*====================================================================================================*/
+/*====================================================================================================*
+**函数 : Gyro_Calculateoffest
+**功能 : 计算陀螺仪零偏
+**输入 : 
+**输出 : None
+**使用 : Hto_Gyro_Calculateoffest();
+**====================================================================================================*/
+/*====================================================================================================*/
+void Gyro_Caloffest(s32 x,s32 y,s32 z,u16 amount)
+{
+   sensor.gyro.quiet.x = x/amount;
+	 sensor.gyro.quiet.y = y/amount;
+	 sensor.gyro.quiet.z = z/amount;
+}
+
 
 /*====================================================================================================*/
 /*====================================================================================================*
@@ -113,53 +138,46 @@ void MPU6050_Dataanl(void)
 /*====================================================================================================*/
 void Gyro_OFFSET(void)
 {
-   uint16_t cnt_g = 0;
-	 int32_t tempgx = GYRO_GATHER;
-	 int32_t tempgy = GYRO_GATHER;
-	 int32_t tempgz = GYRO_GATHER;
-	 int16_t gx_last=0,gy_last=0,gz_last=0;
-	 sensor.gyro.quiet.x=0;
-	 sensor.gyro.quiet.y=0;
-	 sensor.gyro.quiet.z=0;
+	static u8 over_flag=0;
+	u8  i,cnt_g = 0;
+	s32 Integral[3] = {0,0,0};
+	s32 tempg[3]={0,0,0};
+	s16 gx_last=0,gy_last=0,gz_last=0;
 
-	 while(tempgx>=GYRO_GATHER || tempgy>=GYRO_GATHER || tempgz>= GYRO_GATHER)	//此循环是确保四轴处于完全静止状态
-	 {
-		 tempgx=0;tempgy=0;tempgz=0;cnt_g=30;
-		 while(cnt_g--)
-		 {
-			 MPU6050_Read();
-			 
-			 sensor.gyro.origin.x = ((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]);
-		   sensor.gyro.origin.y = ((((int16_t)mpu6050_buffer[10]) << 8)| mpu6050_buffer[11]);
-		   sensor.gyro.origin.z = ((((int16_t)mpu6050_buffer[12]) << 8)| mpu6050_buffer[13]);
-		
-	     tempgx += absu16(sensor.gyro.origin.x - gx_last);
-			 tempgy += absu16(sensor.gyro.origin.y - gy_last);
-			 tempgz += absu16(sensor.gyro.origin.z - gz_last);
-	
-			 gx_last = sensor.gyro.origin.x;
-			 gy_last = sensor.gyro.origin.y;
-			 gz_last =	sensor.gyro.origin.z;
-	  }	 
-	}
-	tempgx=0;tempgy=0;tempgz=0;cnt_g=2000;
-
-	while(cnt_g--)	 //此循环进行陀螺仪标定，前提是四轴已经处于完全静止状态
+	while(!over_flag)	//此循环是确保四轴处于完全静止状态
 	{
-		MPU6050_Read();
-		 
-		sensor.gyro.origin.x = ((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]);
-	  sensor.gyro.origin.y = ((((int16_t)mpu6050_buffer[10]) << 8)| mpu6050_buffer[11]);
-	  sensor.gyro.origin.z = ((((int16_t)mpu6050_buffer[12]) << 8)| mpu6050_buffer[13]);
-	
-    tempgx += sensor.gyro.origin.x;
-		tempgy += sensor.gyro.origin.y;
-		tempgz += sensor.gyro.origin.z;
-	}
+		if(cnt_g < 50)
+		{
+			MPU6050_Dataanl();
 
-	 sensor.gyro.quiet.x = tempgx/2000;
-	 sensor.gyro.quiet.y = tempgy/2000;
-	 sensor.gyro.quiet.z = tempgz/2000;	
+			tempg[0] += sensor.gyro.origin.x;
+			tempg[1] += sensor.gyro.origin.y;
+			tempg[2] += sensor.gyro.origin.z;
+
+			Integral[0] += absu16(gx_last - sensor.gyro.origin.x);
+			Integral[1] += absu16(gy_last - sensor.gyro.origin.y);
+			Integral[2] += absu16(gz_last - sensor.gyro.origin.z);
+
+			gx_last = sensor.gyro.origin.x;
+			gy_last = sensor.gyro.origin.y;
+			gz_last = sensor.gyro.origin.z;
+		}
+		else{
+			// 未校准成功
+			if(Integral[0]>=GYRO_GATHER || Integral[1]>=GYRO_GATHER || Integral[2]>= GYRO_GATHER){
+				cnt_g = 0;
+				for(i=0;i<3;i++){
+					tempg[i]=Integral[i]=0;
+				}
+			}
+			// 校准成功 
+			else{				
+				   Gyro_Caloffest(tempg[0],tempg[1],tempg[2],50);
+				   over_flag = 1;
+			}
+		}
+		cnt_g++;
+	}
 }
 
 

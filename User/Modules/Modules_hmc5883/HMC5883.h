@@ -57,7 +57,7 @@
  *              1  |  0   |  Negative Bias
  *              1  |  1   |  Sleep Mode
  */
-#define MAG_ADDRESS 0x1E
+#define MAG_ADDRESS 0x3c
 #define MAG_DATA_REGISTER 0x03
 
 #define HMC58X3_R_CONFA 0

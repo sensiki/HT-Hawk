@@ -3,9 +3,10 @@
  * 模块名称 : 控制程序
  * 文件名   ：
  * 描述     ：    
- * 实验平台 ：Air Nano四轴飞行器
+ * 实验平台 ：HT_Hawk
  * 库版本   ：ST3.5.0
  * 作者     ：Air Nano Team 
+ * 论坛    ：http://www.airnano.cn 
  * 淘宝     ：http://byd2.taobao.com   
  *            http://hengtuo.taobao.com   
 *********************************************************************************
@@ -129,7 +130,7 @@ void Attitude_RatePID(void)
 	
 	// 积分
 	ctrl.pitch.core.increment += E_pitch;
-	data_limit(ctrl.pitch.core.increment,10,-10);
+	ctrl.pitch.core.increment = data_limit(ctrl.pitch.core.increment,20,-20);
 	ctrl.pitch.core.ki_out = ctrl.pitch.core.ki/10 * ctrl.pitch.core.increment;
 
 	// 微分
@@ -144,7 +145,7 @@ void Attitude_RatePID(void)
 	
 	// 积分
 	ctrl.roll.core.increment += E_roll;
-	data_limit(ctrl.roll.core.increment,10,-10);
+	ctrl.roll.core.increment = data_limit(ctrl.roll.core.increment,20,-20);
 	ctrl.roll.core.ki_out = ctrl.roll.core.ki/10 * ctrl.roll.core.increment;
 	
 	// 微分
@@ -159,7 +160,7 @@ void Attitude_RatePID(void)
 	
 	// 积分
 	ctrl.yaw.core.increment += E_yaw;
-	data_limit(ctrl.yaw.core.increment,10,-10);
+	ctrl.yaw.core.increment = data_limit(ctrl.yaw.core.increment,20,-20);
 	ctrl.yaw.core.ki_out = ctrl.yaw.core.ki * ctrl.yaw.core.increment;
 	
 	// 微分

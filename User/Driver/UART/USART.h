@@ -3,7 +3,7 @@
 #include "stm32f10x.h"
 #include <stdio.h>
 
-void usart1_config(void);
+void USART1_Config(void);
 uint8_t UART1_Put_Char(unsigned char DataToSend);
 int fputc(int ch, FILE *f);
 void USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);

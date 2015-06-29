@@ -25,6 +25,7 @@ typedef struct {
 extern Flag_t flag;
 
 void loop(void);
+void Bootloader_Set(void);
 void InitBoard(void);
 void Sensor_Init(void);
 void Screen_Update(void);

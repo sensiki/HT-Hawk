@@ -1,9 +1,10 @@
 /******************** (C) COPYRIGHT 2014 Air Nano Team ***************************
  * 文件名  ：IMU.c
  * 描述    ：姿态解算         
- * 实验平台：Air Nano四轴飞行器
+ * 实验平台：HT_Hawk
  * 库版本  ：ST3.5.0
  * 作者    ：Air Nano Team 
+ * 论坛    ：http://www.airnano.cn
  * 淘宝     ：http://byd2.taobao.com   
  *            http://hengtuo.taobao.com   
 **********************************************************************************/
@@ -49,13 +50,9 @@ void AHRS_getValues(void)
 	sensor.acc.averag.z = IIR_I_Filter(sensor.acc.origin.z, InPut_IIR[2], OutPut_IIR[2], b_IIR, IIR_ORDER+1, a_IIR, IIR_ORDER+1);
 	
 	// 陀螺仪一阶低通滤波
- 	sensor.gyro.averag.x = LPF_1st(x,sensor.gyro.radian.x,0.386f);
- 	sensor.gyro.averag.y = LPF_1st(y,sensor.gyro.radian.y,0.386f);
- 	sensor.gyro.averag.z = LPF_1st(z,sensor.gyro.radian.z,0.386f);
-	
-	x = sensor.gyro.averag.x;
-	y = sensor.gyro.averag.y;
-	z = sensor.gyro.averag.z;
+ 	sensor.gyro.averag.x = LPF_1st(x,sensor.gyro.radian.x,0.386f);	x = sensor.gyro.averag.x;
+ 	sensor.gyro.averag.y = LPF_1st(y,sensor.gyro.radian.y,0.386f);	y = sensor.gyro.averag.y;
+ 	sensor.gyro.averag.z = LPF_1st(z,sensor.gyro.radian.z,0.386f);	z = sensor.gyro.averag.z;
 }
 
 /*====================================================================================================*/
@@ -94,9 +91,9 @@ void AHRS_GetQ( Quaternion *pNumQ )
   eyInt = eyInt + ErrY * KiDef;
   ezInt = ezInt + ErrZ * KiDef;
 
-  GyrX = sensor.gyro.radian.x * Gyro_Gr + KpDef * VariableParameter(ErrX) * ErrX  +  exInt;
-  GyrY = sensor.gyro.radian.y * Gyro_Gr + KpDef * VariableParameter(ErrY) * ErrY  +  eyInt;
-	GyrZ = sensor.gyro.radian.z * Gyro_Gr + KpDef * VariableParameter(ErrZ) * ErrZ  +  ezInt;
+  GyrX = sensor.gyro.averag.x * Gyro_Gr + KpDef * VariableParameter(ErrX) * ErrX  +  exInt;
+  GyrY = sensor.gyro.averag.y * Gyro_Gr + KpDef * VariableParameter(ErrY) * ErrY  +  eyInt;
+	GyrZ = sensor.gyro.averag.z * Gyro_Gr + KpDef * VariableParameter(ErrZ) * ErrZ  +  ezInt;
 	
 	
 	// 一阶龙格库塔法, 更新四元数
@@ -134,7 +131,7 @@ void AHRS_Geteuler(void)
   cos_pitch = cos(AngE.Pitch);
 	
 	//  地磁不存在或地磁数据不正常则停用地磁数据
-	if(!flag.MagIssue || flag.MagExist){
+	if(!flag.MagIssue && flag.MagExist){
 		// 地磁倾角补偿
 		fp32 hx = MAG[0]*cos_pitch + MAG[1]*sin_pitch*sin_roll - MAG[2]*cos_roll*sin_pitch; 
 		fp32 hy = MAG[1]*cos_roll + MAG[2]*sin_roll;
@@ -143,7 +140,7 @@ void AHRS_Geteuler(void)
 		fp32 mag_yaw = -Degree(atan2((fp64)hy,(fp64)hx));
 		 
 		// 陀螺仪积分解算航向角
-		AngE.Yaw += Degree(sensor.gyro.radian.z * Gyro_Gr * 2 * SampleRateHalf);
+		AngE.Yaw += Degree(sensor.gyro.averag.z * Gyro_Gr * 2 * SampleRateHalf);
 		
 		// 地磁解算的航向角与陀螺仪积分解算的航向角进行互补融合 
 		if((mag_yaw>90 && AngE.Yaw<-90) || (mag_yaw<-90 && AngE.Yaw>90)) 

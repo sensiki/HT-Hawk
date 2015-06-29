@@ -1,9 +1,10 @@
 /******************** (C) COPYRIGHT 2014 Air Nano Team ***************************
  * 文件名  ：RC.c
  * 描述    ：接收遥控器数据         
- * 实验平台：Air Nano四轴飞行器
+ * 实验平台：HT_Hawk
  * 库版本  ：ST3.5.0
  * 作者    ：Air Nano Team 
+ * 论坛    ：http://www.airnano.cn
  * 淘宝    ：http://byd2.taobao.com  
  *           http://hengtuo.taobao.com  
 **********************************************************************************/

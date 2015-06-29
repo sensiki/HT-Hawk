@@ -1,7 +1,7 @@
 /******************** (C) COPYRIGHT 2014 Air Nano Team ***************************
  * 文件名  ：INIT.c
  * 描述    ：系统初始化         
- * 实验平台：Air Nano四轴飞行器
+ * 实验平台：HT_Hawk
  * 库版本  ：ST3.5.0
  * 作者    ：Air Nano Team 
  * 淘宝    ：http://byd2.taobao.com   
@@ -13,8 +13,25 @@
 fp32 Battery_Voltage;
 Flag_t flag;
 
-
-
+/*====================================================================================================*/
+/*====================================================================================================*
+**函数 : Bootloader_Set
+**功能 : BOOT相关设置
+**输入 : None
+**輸出 : None
+**备注 : None
+**====================================================================================================*/
+/*====================================================================================================*/
+void Bootloader_Set(void)
+{
+ 	u16 i;
+	
+	// 设置偏移量 
+	SCB->VTOR = FLASH_BASE | FLASH_EXCURSION ; 
+	
+	i=0x0505;
+	STMFLASH_Write(pro_FALG_ADD,&i,1);   
+}
 /*====================================================================================================*/
 /*====================================================================================================*
 **函数 : Sensor_Init
@@ -26,19 +43,24 @@ Flag_t flag;
 /*====================================================================================================*/
 void InitBoard(void)
 {
-	 delay_init(72);
-	 Nvic_Init();
-   LED_GPIO_Config();
-   i2cInit(I2CDEV_2);
-	 TIM3_Config();
-	 PWM_OUT_Config();
-	 PWM_IN_Config();
-	 ADC1_Init();	
-	 OLED_Init();
-	 NRF24L01_Init();
- 	 LED_SHOW();
- 	 FLASH_Unlock();
- 	 EE_Init();
+	delay_init(72);
+	Nvic_Init();
+	
+	/* 初始化USB设备 */
+  bsp_InitUsb();
+	 
+	ADC1_Init();	
+	OLED_Init();
+	I2C_INIT();
+  LED_GPIO_Config();
+	USART1_Config();
+	TIM5_Config();
+	PWM_OUT_Config();
+	PWM_IN_Config();
+	NRF24L01_Init();
+ 	LED_SHOW();
+ 	FLASH_Unlock();
+ 	EE_Init();
 }
 /*====================================================================================================*/
 /*====================================================================================================*
@@ -56,8 +78,7 @@ void Sensor_Init(void)
   flag.NrfExist = NRF24L01_Check();
   NRF24L01_Mode(1);
 	
-	
-	
+
 	OLED_P6x8Str(0,1,"ROLL:");
 	OLED_P6x8Str(0,2,"PITCH:"); 
 	OLED_P6x8Str(0,3,"YAW:");
@@ -102,7 +123,7 @@ void loop(void)
 	if(flag.Loop_100Hz){
 		flag.Loop_100Hz=0;
     mavlink();
-		Screen_Update();
+	//	Screen_Update();
 	}
 		if(flag.Loop_10Hz){
 		flag.Loop_10Hz=0;

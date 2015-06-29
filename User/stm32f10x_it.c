@@ -12,10 +12,10 @@
 #include "stm32f10x_it.h"
 #include "board_config.h"
 
-void TIM3_IRQHandler(void)		    //2ms中断一次
+void TIM5_IRQHandler(void)		    //2ms中断一次
 {	
-	if(TIM3->SR & TIM_IT_Update)	{    
-    TIM3->SR = ~TIM_FLAG_Update;//清除中断标志	
+	if(TIM5->SR & TIM_IT_Update)	{    
+    TIM5->SR = ~TIM_FLAG_Update;//清除中断标志	
 		
 		Time_slice();
 		RDAU();

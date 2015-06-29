@@ -1,11 +1,12 @@
 /******************** (C) COPYRIGHT 2014 Air Nano Team ***************************
  * 文件名  ：IMU.c
  * 描述    ：姿态解算         
- * 实验平台：Air Nano四轴飞行器
+ * 实验平台：HT_Hawk
  * 库版本  ：ST3.5.0
- * 作者    ：Air Nano Team 
- * 淘宝     ：http://byd2.taobao.com   
- *            http://hengtuo.taobao.com   
+ * 作者    ：Air Nano Team
+ * 论坛    ：http://www.airnano.cn
+ * 淘宝    ：http://byd2.taobao.com   
+ *           http://hengtuo.taobao.com   
 **********************************************************************************/
 #include "board_config.h"
 #include "MultiRotor_radio.h"
@@ -360,6 +361,8 @@ s8 fg=10;
 
 void mavlink(void)
 {
+	u8 ht;
+	
 	switch(sw) //循环发送各模块数据
 	{
 			case 1: F = HtoEs_Chart_Data_Generate();    break;  //测试独立通道,返回需发送字节数
@@ -378,6 +381,8 @@ void mavlink(void)
 	sw++; 
 		
 	usb_SendDataToHost(&HtoEs_OutPut_Buffer[0], F);
+	
+
 }
 
 

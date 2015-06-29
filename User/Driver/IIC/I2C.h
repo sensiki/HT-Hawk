@@ -36,6 +36,6 @@ unsigned char I2C_RadeByte(void);
 uint16_t Single_Write(unsigned char SlaveAddress,unsigned char REG_Address,unsigned char REG_data);
 uint16_t Single_Write_MS5611(unsigned char SlaveAddress,unsigned char REG_Address);	
 unsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address);
-
+void I2C_Read(u8 addr_, u8 reg_, u8 len, u8 *buf);
 
 #endif // __MYI2C_H__

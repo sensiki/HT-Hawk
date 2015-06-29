@@ -33,6 +33,7 @@ typedef double         fp64;                    /* double precision floating poi
 #include "MOTO.h"
 #include "eeprom.h"
 #include "pwm_in.h"
+#include "stmflash.h"
 
 #include "oled.h"
 #include "MPU6050.h"
