@@ -1,4 +1,15 @@
 L 1 "..\..\User\Driver\UART\usart.c"
+N/*
+N******************* (C) COPYRIGHT 2015 Air Nano Team ***************************
+N * 文件名  ：usart.c
+N * 描述    ：usart配置         
+N * 实验平台：Air Nano四轴飞行器
+N * 库版本  ：ST3.5.0
+N * 作者    ：Air Nano Team 
+N * 淘宝    ：http://byd2.taobao.com
+N             http://hengtuo.taobao.com
+N*********************************************************************************
+N*/
 N#include "usart.h"
 L 1 "..\..\User\Driver\UART\usart.h" 1
 N#ifndef __USART_H_
@@ -29924,7 +29935,7 @@ N/* end of stdio.h */
 N
 L 5 "..\..\User\Driver\UART\usart.h" 2
 N
-Nvoid usart1_config(void);
+Nvoid USART1_Config(void);
 Nuint8_t UART1_Put_Char(unsigned char DataToSend);
 Nint fputc(int ch, FILE *f);
 Nvoid USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);
@@ -29936,7 +29947,7 @@ N
 Nvoid USART3_Config(void);
 Nuint8_t UART3_Put_Char(unsigned char DataToSend);
 N#endif
-L 2 "..\..\User\Driver\UART\usart.c" 2
+L 13 "..\..\User\Driver\UART\usart.c" 2
 N#include <stdarg.h>
 L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h" 1
 N/* stdarg.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.8 */
@@ -30089,9 +30100,9 @@ N#endif
 N
 N/* end of stdarg.h */
 N
-L 3 "..\..\User\Driver\UART\usart.c" 2
+L 14 "..\..\User\Driver\UART\usart.c" 2
 N
-Nvoid usart1_config(void)
+Nvoid USART1_Config(void)
 N{
 N	GPIO_InitTypeDef GPIO_InitStructure;
 N	USART_InitTypeDef USART_InitStructure;
@@ -30112,19 +30123,30 @@ N	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 N	GPIO_Init(GPIOA, &GPIO_InitStructure);
 X	GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)), &GPIO_InitStructure);
 N	
-N	  USART_InitStructure.USART_BaudRate = 115200;                 /*设置波特率为115200*/
-N    USART_InitStructure.USART_WordLength = USART_WordLength_8b;  /*设置数据位为8位*/
-X    USART_InitStructure.USART_WordLength = ((uint16_t)0x0000);   
-N    USART_InitStructure.USART_StopBits = USART_StopBits_1;       /*设置停止位为1位*/
-X    USART_InitStructure.USART_StopBits = ((uint16_t)0x0000);        
-N    USART_InitStructure.USART_Parity = USART_Parity_No;          /*无奇偶校验*/    
-X    USART_InitStructure.USART_Parity = ((uint16_t)0x0000);               
-N    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; /*没有硬件流控*/
-X    USART_InitStructure.USART_HardwareFlowControl = ((uint16_t)0x0000);  
-N    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;      /*发送与接收*/
-X    USART_InitStructure.USART_Mode = ((uint16_t)0x0004) | ((uint16_t)0x0008);       
-N    /*完成串口COM1的时钟配置、GPIO配置，根据上述参数初始化并使能*/
+N	// 设置波特率
+N	USART_InitStructure.USART_BaudRate = 57600;   
 N	
+N	// 设置数据位为8位
+N  USART_InitStructure.USART_WordLength = USART_WordLength_8b; 
+X  USART_InitStructure.USART_WordLength = ((uint16_t)0x0000); 
+N
+N  // 设置停止位为1位	
+N  USART_InitStructure.USART_StopBits = USART_StopBits_1;  
+X  USART_InitStructure.USART_StopBits = ((uint16_t)0x0000);  
+N
+N  // 无奇偶校验
+N  USART_InitStructure.USART_Parity = USART_Parity_No;  
+X  USART_InitStructure.USART_Parity = ((uint16_t)0x0000);  
+N
+N  // 没有硬件流控
+N  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None; 
+X  USART_InitStructure.USART_HardwareFlowControl = ((uint16_t)0x0000); 
+N	
+N	// 发送与接收
+N  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;     
+X  USART_InitStructure.USART_Mode = ((uint16_t)0x0004) | ((uint16_t)0x0008);     
+N    
+N	/*完成串口COM1的时钟配置、GPIO配置，根据上述参数初始化并使能*/
 N	USART_Init(USART1, &USART_InitStructure);
 X	USART_Init(((USART_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x3800)), &USART_InitStructure);
 N	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
@@ -30152,21 +30174,6 @@ N	return DataToSend;
 N}
 N
 N
-N// /*
-N//  * 函数名：fputc
-N//  * 描述  ：重定向c库函数printf到USART1
-N//  * 输入  ：无
-N//  * 输出  ：无
-N//  * 调用  ：由printf调用
-N//  */
-N// int fputc(int ch, FILE *f)
-N// {
-N// /* 将Printf内容发往串口 */
-N//   USART_SendData(USART1, (unsigned char) ch);
-N//   while (!(USART1->SR & USART_FLAG_TXE));
-N//  
-N//   return (ch);
-N// }
 N
 N/*
 N * 函数名：itoa

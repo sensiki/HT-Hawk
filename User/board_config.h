@@ -3,6 +3,18 @@
 
 #include "include.h"
 
+
+#define QUADROTOR 
+//#define HEXRCOPTER 
+
+#ifdef QUADROTOR 
+		#define MOTOR_NUM 4
+#elif defined HEXRCOPTER
+		#define MOTOR_NUM 6
+#endif 
+
+
+
 /*-------------向量表偏移量----------------------*/
 /*-------------重要  不要动----------------------*/
 #define FLASH_EXCURSION  0x20000

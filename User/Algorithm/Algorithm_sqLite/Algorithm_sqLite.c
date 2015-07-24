@@ -201,21 +201,21 @@ void Data_Parser(u16 *rxBuffer)
 void	paramLoad(void)
 {
 
-	ctrl.pitch.shell.kp = 5;    //5
+	ctrl.pitch.shell.kp = 4;    //5
 	ctrl.pitch.shell.ki = 0.02;
 	
 	ctrl.pitch.core.kp = 1.4;   //1.5
 	ctrl.pitch.core.ki = 0.07;   
-	ctrl.pitch.core.kd = 0.4;  //0.16
+	ctrl.pitch.core.kd = 0.35;  //0.16
 	
 	//The data of roll
-	ctrl.roll.shell.kp = 5;
+	ctrl.roll.shell.kp = 4;
 	ctrl.roll.shell.ki = 0.02;
 
 
 	ctrl.roll.core.kp = 1.4;
 	ctrl.roll.core.ki = 0.07;
-	ctrl.roll.core.kd = 0.4;
+	ctrl.roll.core.kd = 0.35;
 	
 	//The data of yaw
 	ctrl.yaw.shell.kp = 5;

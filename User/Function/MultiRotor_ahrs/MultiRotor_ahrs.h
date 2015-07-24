@@ -10,13 +10,7 @@
 #define Gyro_Gr	0.0005426
 
 
-struct _angle{
-        float pitch;
-				float roll;
-        float yaw;};
 
-
-extern struct _angle angle;
 extern int16_t MAG[3];			
 
 

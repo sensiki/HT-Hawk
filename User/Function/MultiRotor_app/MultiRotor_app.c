@@ -123,7 +123,7 @@ void loop(void)
 	if(flag.Loop_100Hz){
 		flag.Loop_100Hz=0;
     mavlink();
-	//	Screen_Update();
+		Screen_Update();
 	}
 		if(flag.Loop_10Hz){
 		flag.Loop_10Hz=0;

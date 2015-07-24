@@ -111,7 +111,7 @@ float VariableParameter(float error)
 输入参数：    角度
 输出参数：    弧度
 *******************************************************************************/
-double rad(double angle)
+double Rad(double angle)
 {
     return (angle * M_PI / 180.0);
 }

@@ -30450,29 +30450,25 @@ N};
 N
 Nconst uint8_t Virtual_Com_Port_StringVendor[VIRTUAL_COM_PORT_SIZ_STRING_VENDOR] =
 Xconst uint8_t Virtual_Com_Port_StringVendor[38] =
-N{
+N  {
 N    VIRTUAL_COM_PORT_SIZ_STRING_VENDOR,     /* Size of Vendor string */
 X    38,      
 N    USB_STRING_DESCRIPTOR_TYPE,             /* bDescriptorType*/
 X    0x03,              
 N    /* Manufacturer: "STMicroelectronics" */
-N    'S', 0, 'T', 0, 'M', 0, 'i', 0, 'c', 0, 'r', 0, 'o', 0, 'e', 0,
-N    'l', 0, 'e', 0, 'c', 0, 't', 0, 'r', 0, 'o', 0, 'n', 0, 'i', 0,
-N    'c', 0, 's', 0
-N};
+N    'H', 0, 'T', 0, '-', 0, 'H', 0, 'a', 0, 'w', 0, 'k', 0
+N  };
 N
 Nconst uint8_t Virtual_Com_Port_StringProduct[VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT] =
 Xconst uint8_t Virtual_Com_Port_StringProduct[50] =
-N{
+N  {
 N    VIRTUAL_COM_PORT_SIZ_STRING_PRODUCT,          /* bLength */
 X    50,           
 N    USB_STRING_DESCRIPTOR_TYPE,        /* bDescriptorType */
 X    0x03,         
 N    /* Product name: "STM32 Virtual COM Port" */
-N    'S', 0, 'T', 0, 'M', 0, '3', 0, '2', 0, ' ', 0, 'V', 0, 'i', 0,
-N    'r', 0, 't', 0, 'u', 0, 'a', 0, 'l', 0, ' ', 0, 'C', 0, 'O', 0,
-N    'M', 0, ' ', 0, 'P', 0, 'o', 0, 'r', 0, 't', 0, ' ', 0, ' ', 0
-N};
+N    'H', 0, 'T', 0, '-', 0, 'H', 0, 'a', 0, 'w', 0, 'k', 0
+N  };
 N
 Nuint8_t Virtual_Com_Port_StringSerial[VIRTUAL_COM_PORT_SIZ_STRING_SERIAL] =
 Xuint8_t Virtual_Com_Port_StringSerial[26] =

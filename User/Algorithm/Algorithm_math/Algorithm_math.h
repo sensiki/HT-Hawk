@@ -17,4 +17,5 @@ void array_assign(u16 *array,s16 value,u16 length);
 void array_astrict(s16 *array,s16 lower,s16 upper);
 float data_limit(float data,float toplimit,float lowerlimit);
 double Degree(double rad);
+double Rad(double angle);
 #endif /* __Algorithm_math_H */

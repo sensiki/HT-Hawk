@@ -28893,6 +28893,11 @@ S#define	__BOARD_CONFIG_H
 S
 S#include "include.h"
 S
+S/*-------------向量表偏移量----------------------*/
+S/*-------------重要  不要动----------------------*/
+S#define FLASH_EXCURSION  0x20000
+S#define pro_FALG_ADD 0x0801FFF0
+S
 S/*----------------电机怠速----------------------*/
 S#define IDLING 210
 S
@@ -33350,7 +33355,7 @@ Nunsigned char I2C_RadeByte(void);
 Nuint16_t Single_Write(unsigned char SlaveAddress,unsigned char REG_Address,unsigned char REG_data);
 Nuint16_t Single_Write_MS5611(unsigned char SlaveAddress,unsigned char REG_Address);	
 Nunsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address);
-N
+Nvoid I2C_Read(u8 addr_, u8 reg_, u8 len, u8 *buf);
 N
 N#endif // __MYI2C_H__
 L 28 "..\..\User\include.h" 2
@@ -33687,9 +33692,9 @@ N#ifndef __TIME_H__
 N#define __TIME_H__
 N#include "stm32f10x.h"
 N
-N#define EnTIM3()  TIM_Cmd(TIM3,ENABLE)
+N#define EnTIMER  TIM_Cmd(TIM5,ENABLE)
 Nvoid Nvic_Init(void);
-Nvoid TIM3_Config(void);
+Nvoid TIM5_Config(void);
 N#endif 
 L 31 "..\..\User\include.h" 2
 N#include "USART.h"
@@ -33699,7 +33704,7 @@ N#define __USART_H_
 N#include "stm32f10x.h"
 N#include <stdio.h>
 N
-Nvoid usart1_config(void);
+Nvoid USART1_Config(void);
 Nuint8_t UART1_Put_Char(unsigned char DataToSend);
 Nint fputc(int ch, FILE *f);
 Nvoid USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);
@@ -33753,11 +33758,12 @@ S#include "spi.h"
 S#include "MOTO.h"
 S#include "eeprom.h"
 S#include "pwm_in.h"
+S#include "stmflash.h"
 S
 S#include "oled.h"
 S#include "MPU6050.h"
 S#include "HMC5883.h"
-S// #include "MS5611.h"
+S#include "MS5611.h"
 S#include "NRF24L01.h"
 S
 S#include "MultiRotor_rc.h"
@@ -33896,12 +33902,17 @@ S#include "stm32f10x.h"
 S#include "board_config.h"
 S
 S
-S#define GPIO_TIM4	     GPIOA
-S#define TIM4_CH1       GPIO_Pin_0
-S#define TIM4_CH2       GPIO_Pin_1
-S#define TIM4_CH3       GPIO_Pin_2
-S#define TIM4_CH4       GPIO_Pin_3
-S#define RCC_GPIO_TIM4  RCC_APB2Periph_GPIOA
+S#define GPIO_TIM2	     GPIOA
+S#define TIM2_CH1       GPIO_Pin_0
+S#define TIM2_CH2       GPIO_Pin_1
+S#define TIM2_CH3       GPIO_Pin_2
+S#define TIM2_CH4       GPIO_Pin_3
+S#define RCC_GPIO_TIM2  RCC_APB2Periph_GPIOA
+S
+S#define GPIO_TIM3	     GPIOA
+S#define TIM3_CH1       GPIO_Pin_6
+S#define TIM3_CH2       GPIO_Pin_7
+S#define RCC_GPIO_TIM3  RCC_APB2Periph_GPIOA
 S
 Sextern u16  RC_Pwm_In[8];
 Sextern u16  RC_Pwm_In_his[8];
@@ -33910,6 +33921,53 @@ Svoid PWM_IN_Config(void);
 S
 N#endif
 L 36 "..\..\User\include.h" 2
+N#include "stmflash.h"
+L 1 "..\..\User\Driver\STMFLASH\stmflash.h" 1
+N#ifndef __STMFLASH_H__
+N#define __STMFLASH_H__
+N#include "include.h"  
+N//////////////////////////////////////////////////////////////////////////////////	 						  
+N//////////////////////////////////////////////////////////////////////////////////
+N
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N//用户根据自己的需要设置
+N#define STM32_FLASH_SIZE 512 	 		//所选STM32的FLASH容量大小(单位为K)
+N#define STM32_FLASH_WREN 1              //使能FLASH写入(0，不是能;1，使能)
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N
+N//FLASH起始地址
+N#define STM32_FLASH_BASE 0x08000000 	//STM32 FLASH的起始地址
+N//FLASH解锁键值
+N 
+N
+Nu16 STMFLASH_ReadHalfWord(u32 faddr);		  //读出半字  
+Nvoid STMFLASH_WriteLenByte(u32 WriteAddr,u32 DataToWrite,u16 Len);	//指定地址开始写入指定长度的数据
+Nu32 STMFLASH_ReadLenByte(u32 ReadAddr,u16 Len);						//指定地址开始读取指定长度数据
+Nvoid STMFLASH_Write(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite);		//从指定地址开始写入指定长度的数据
+Nvoid STMFLASH_Read(u32 ReadAddr,u16 *pBuffer,u16 NumToRead);   		//从指定地址开始读出指定长度的数据
+Nextern uint16_t VirtAddVarTab[NumbOfVar];
+Xextern uint16_t VirtAddVarTab[((uint8_t)75)];
+N//测试写入
+Nvoid Test_Write(u32 WriteAddr,u16 WriteData);								   
+N#endif
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+L 37 "..\..\User\include.h" 2
 N
 N#include "oled.h"
 L 1 "..\..\User\Modules\Modules_oled\oled.h" 1
@@ -33978,7 +34036,7 @@ N  void Dis_Float2(unsigned char Y,unsigned char X,double real,unsigned char N1,
 N  void OLED_P6x8Num_8bit(unsigned char x,unsigned char y,unsigned char Number); 
 N  void OLED_Num5(unsigned char x,unsigned char y,unsigned int number);
 N#endif
-L 38 "..\..\User\include.h" 2
+L 39 "..\..\User\include.h" 2
 N#include "MPU6050.h"
 L 1 "..\..\User\Modules\Modules_mpu6050\MPU6050.h" 1
 N#ifndef __MPU6050_H_
@@ -34011,7 +34069,7 @@ N#define	GYRO_ZOUT_H		0x47
 N#define	GYRO_ZOUT_L		0x48
 N#define	PWR_MGMT_1		0x6B	//电源管理，典型值：0x00(正常启用)
 N#define	WHO_AM_I		0x75	//IIC地址寄存器(默认数值0x68，只读)
-N#define MPU6050_ADDRESS 0x68    //IIC写入时的地址字节数据，+1为读取
+N#define MPU6050_ADDRESS 0xD0    //IIC写入时的地址字节数据，+1为读取
 N
 N
 N#define MPU6050_DLPF_BW_256         0x00
@@ -34089,7 +34147,7 @@ Nvoid UART1_ReportIMU(void);
 Nvoid Gyro_OFFSET(void);
 N
 N#endif // __MPU6050_H__
-L 39 "..\..\User\include.h" 2
+L 40 "..\..\User\include.h" 2
 N#include "HMC5883.h"
 L 1 "..\..\User\Modules\Modules_hmc5883\HMC5883.h" 1
 N#ifndef __HMC5883_H_
@@ -34151,7 +34209,7 @@ N *              0  |  1   |  Single-Conversion Mode
 N *              1  |  0   |  Negative Bias
 N *              1  |  1   |  Sleep Mode
 N */
-N#define MAG_ADDRESS 0x1E
+N#define MAG_ADDRESS 0x3c
 N#define MAG_DATA_REGISTER 0x03
 N
 N#define HMC58X3_R_CONFA 0
@@ -34172,8 +34230,36 @@ Nu8 Init_HMC5883L(void);
 Nvoid HMC5883lRead(int16_t *magData);
 Nvoid Mag_Calibration(int16_t *array);
 N#endif // __MPU6050_H__
-L 40 "..\..\User\include.h" 2
-N// #include "MS5611.h"
+L 41 "..\..\User\include.h" 2
+N#include "MS5611.h"
+L 1 "..\..\User\Modules\Modules_ms5611\MS5611.h" 1
+N#ifndef __MS5611_H
+N#define	__MS5611_H
+N#include "stm32f10x.h"
+N/* MPU6050 Register Address ------------------------------------------------------------*/
+N#define MS561101BA_ADC_RD          0x00
+N#define	MS561101BA_PROM_RD 	       0xA0
+N#define MS561101BA_PROM_CRC        0xAE
+N
+N#define MS561101BA_SlaveAddress    0xEE  //MS5611的地址
+N#define MS561101BA_RST             0x1E  //cmd 复位
+N
+N#define	MS561101BA_D2_OSR_4096   0x58	// 9.04 mSec conversion time ( 110.62 Hz)
+N#define	MS561101BA_D1_OSR_4096   0x48
+N
+N#define MS5611_OSR256					 		 0x40
+N#define MS5611_OSR512					 		 0x42
+N#define MS5611_OSR1024					   0x44
+N#define MS5611_OSR2048					   0x46
+N#define MS5611_OSR4096					   0x48
+N#define FILTER_num 20
+N
+Nu8  MS5611_init(void);
+Nvoid MS561101BA_getTemperature(void);
+Nfloat Get_High(void);
+Nvoid Sethigh_Mode(void);
+N#endif
+L 42 "..\..\User\include.h" 2
 N#include "NRF24L01.h"
 L 1 "..\..\User\Modules\Modules_nrf24L01\NRF24L01.h" 1
 N#ifndef __NRF24L01_H
@@ -34270,7 +34356,7 @@ N
 N
 N
 N
-L 42 "..\..\User\include.h" 2
+L 43 "..\..\User\include.h" 2
 N
 N#include "MultiRotor_rc.h"
 L 1 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.h" 1
@@ -34322,7 +34408,7 @@ Nvoid RC_directive(void);
 Nvoid RDAU(void);
 Nvoid RC_Data_Refine(void);
 N#endif
-L 44 "..\..\User\include.h" 2
+L 45 "..\..\User\include.h" 2
 N#include "MultiRotor_app.h"
 L 1 "..\..\User\Function\MultiRotor_app\MultiRotor_app.h" 1
 N#ifndef _MultiRotor_app_H_
@@ -34352,6 +34438,7 @@ N
 Nextern Flag_t flag;
 N
 Nvoid loop(void);
+Nvoid Bootloader_Set(void);
 Nvoid InitBoard(void);
 Nvoid Sensor_Init(void);
 Nvoid Screen_Update(void);
@@ -34360,7 +34447,7 @@ N#endif /* __MultiRotor_app_H */
 N
 N
 N
-L 45 "..\..\User\include.h" 2
+L 46 "..\..\User\include.h" 2
 N#include "MultiRotor_ahrs.h"
 L 1 "..\..\User\Function\MultiRotor_ahrs\MultiRotor_ahrs.h" 1
 N#ifndef __MultiRotor_ahrs_H
@@ -34375,13 +34462,7 @@ N#define Gyro_G 	0.03051756
 N#define Gyro_Gr	0.0005426
 N
 N
-Nstruct _angle{
-N        float pitch;
-N				float roll;
-N        float yaw;};
 N
-N
-Nextern struct _angle angle;
 Nextern int16_t MAG[3];			
 N
 N
@@ -34401,7 +34482,7 @@ N
 N
 N
 N
-L 46 "..\..\User\include.h" 2
+L 47 "..\..\User\include.h" 2
 N#include "MultiRotor_radio.h"
 L 1 "..\..\User\Function\MultiRotor_radio\MultiRotor_radio.h" 1
 N#ifndef __MultiRotor_radio_H
@@ -34426,7 +34507,7 @@ N
 N
 N
 N
-L 47 "..\..\User\include.h" 2
+L 48 "..\..\User\include.h" 2
 N#include "Algorithm_sqLite.h"
 L 1 "..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.h" 1
 N#ifndef _Algorithm_sqLite_H_
@@ -34460,7 +34541,7 @@ N#endif /* __Algorithm_sqLite_H */
 N
 N
 N
-L 48 "..\..\User\include.h" 2
+L 49 "..\..\User\include.h" 2
 N#include "MultiRotor_control.h"
 L 1 "..\..\User\Function\MultiRotor_control\MultiRotor_control.h" 1
 N#ifndef _MultiRotor_control_H_
@@ -34508,7 +34589,7 @@ Nvoid Attitude_RatePID(void);
 Nvoid Motor_Conter(void);
 Nvoid Reset_Integral(void);
 N#endif
-L 49 "..\..\User\include.h" 2
+L 50 "..\..\User\include.h" 2
 N
 N#include "Algorithm_math.h"
 L 1 "..\..\User\Algorithm\Algorithm_math\Algorithm_math.h" 1
@@ -34529,10 +34610,10 @@ Nfloat Q_rsqrt(float number);
 Nfloat VariableParameter(float error);
 Nvoid array_assign(u16 *array,s16 value,u16 length);
 Nvoid array_astrict(s16 *array,s16 lower,s16 upper);
-Nvoid data_limit(float data,float toplimit,float lowerlimit);
+Nfloat data_limit(float data,float toplimit,float lowerlimit);
 Ndouble Degree(double rad);
 N#endif /* __Algorithm_math_H */
-L 51 "..\..\User\include.h" 2
+L 52 "..\..\User\include.h" 2
 N#include "Algorithm_filter.h"
 L 1 "..\..\User\Algorithm\Algorithm_filter\Algorithm_filter.h" 1
 N#ifndef __Algorithm_filter_H
@@ -34543,7 +34624,7 @@ N
 Ndouble IIR_I_Filter(double InData, double *x, double *y, double *b, short nb, double *a, short na);
 Nfp32 LPF_1st(fp32 oldData, fp32 newData, fp32 lpf_factor);
 N#endif /* __Algorithm_filter_H */
-L 52 "..\..\User\include.h" 2
+L 53 "..\..\User\include.h" 2
 N#include "Algorithm_quaternion.h"
 L 1 "..\..\User\Algorithm\Algorithm_quaternion\Algorithm_quaternion.h" 1
 N#ifndef __Algorithm_quaternion_H
@@ -34582,10 +34663,15 @@ NQuaternion Quaternion_Multiply( Quaternion NowQ, Quaternion OldQ );
 Nvoid Quaternion_Normalize( Quaternion *pNumQ );
 Nvoid Quaternion_RungeKutta( Quaternion *pNumQ, float GyrX, float GyrY, float GyrZ, float helfTimes );
 N#endif /* __Algorithm_quaternion_H */
-L 53 "..\..\User\include.h" 2
+L 54 "..\..\User\include.h" 2
 N
 N#endif /* __INCLUDE_H */
 L 5 "..\..\User\board_config.h" 2
+N
+N/*-------------向量表偏移量----------------------*/
+N/*-------------重要  不要动----------------------*/
+N#define FLASH_EXCURSION  0x20000
+N#define pro_FALG_ADD 0x0801FFF0
 N
 N/*----------------电机怠速----------------------*/
 N#define IDLING 210
@@ -34611,12 +34697,17 @@ N#endif /* __BOARD_CONFIG_H */
 L 5 "..\..\User\Driver\PWM_IN\pwm_in.h" 2
 N
 N
-N#define GPIO_TIM4	     GPIOA
-N#define TIM4_CH1       GPIO_Pin_0
-N#define TIM4_CH2       GPIO_Pin_1
-N#define TIM4_CH3       GPIO_Pin_2
-N#define TIM4_CH4       GPIO_Pin_3
-N#define RCC_GPIO_TIM4  RCC_APB2Periph_GPIOA
+N#define GPIO_TIM2	     GPIOA
+N#define TIM2_CH1       GPIO_Pin_0
+N#define TIM2_CH2       GPIO_Pin_1
+N#define TIM2_CH3       GPIO_Pin_2
+N#define TIM2_CH4       GPIO_Pin_3
+N#define RCC_GPIO_TIM2  RCC_APB2Periph_GPIOA
+N
+N#define GPIO_TIM3	     GPIOA
+N#define TIM3_CH1       GPIO_Pin_6
+N#define TIM3_CH2       GPIO_Pin_7
+N#define RCC_GPIO_TIM3  RCC_APB2Periph_GPIOA
 N
 Nextern u16  RC_Pwm_In[8];
 Nextern u16  RC_Pwm_In_his[8];
@@ -34627,9 +34718,14 @@ N#endif
 L 10 "..\..\User\Driver\PWM_IN\pwm_in.c" 2
 N
 N
-Nu16  Rise[4],Drop[4];
+Nu16  Rise[7],Drop[7];
 Nu16  RC_Pwm_In[8];
 Nu16  RC_Pwm_In_his[8];
+N
+N
+N
+N
+N
 N/*====================================================================================================*/
 N/*====================================================================================================*
 N**函数 : PWM_IN_Config
@@ -34643,22 +34739,30 @@ Nvoid PWM_IN_Config(void)
 N{
 N	  GPIO_InitTypeDef         GPIO_InitStructure;
 N	  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
-N	  TIM_ICInitTypeDef  TIM4_ICInitStructure;
+N	  TIM_ICInitTypeDef  TIM2_ICInitStructure;
 N
-N	  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);	 //使能TIM4时钟
-X	  RCC_APB1PeriphClockCmd(((uint32_t)0x00000001), ENABLE);	 
-N 	  RCC_APB2PeriphClockCmd(RCC_GPIO_TIM4, ENABLE);  
-X 	  RCC_APB2PeriphClockCmd(((uint32_t)0x00000004), ENABLE);  
+N	  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 | RCC_APB1Periph_TIM3, ENABLE);	 //使能TIM2时钟
+X	  RCC_APB1PeriphClockCmd(((uint32_t)0x00000001) | ((uint32_t)0x00000002), ENABLE);	 
+N 	  RCC_APB2PeriphClockCmd(RCC_GPIO_TIM2 | RCC_GPIO_TIM3 |RCC_APB2Periph_GPIOB, ENABLE);  
+X 	  RCC_APB2PeriphClockCmd(((uint32_t)0x00000004) | ((uint32_t)0x00000004) |((uint32_t)0x00000008), ENABLE);  
 N
-N	  GPIO_InitStructure.GPIO_Pin  = TIM4_CH1 | TIM4_CH2 | TIM4_CH3 | TIM4_CH4;             
+N	  GPIO_InitStructure.GPIO_Pin  = TIM2_CH1 | TIM2_CH2 | TIM2_CH3 | TIM2_CH4;             
 X	  GPIO_InitStructure.GPIO_Pin  = ((uint16_t)0x0001) | ((uint16_t)0x0002) | ((uint16_t)0x0004) | ((uint16_t)0x0008);             
 N	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;            
-N	  GPIO_Init(GPIOB, &GPIO_InitStructure);
-X	  GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0C00)), &GPIO_InitStructure);
-N	  GPIO_ResetBits(GPIO_TIM4,TIM4_CH1 | TIM4_CH2 | TIM4_CH3 | TIM4_CH4);		
-X	  GPIO_ResetBits(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0001) | ((uint16_t)0x0002) | ((uint16_t)0x0004) | ((uint16_t)0x0008));		
+N	  GPIO_Init(GPIO_TIM2, &GPIO_InitStructure);	
+X	  GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)), &GPIO_InitStructure);	
 N
-N	  //初始化定时器4 TIM4	 
+N    GPIO_InitStructure.GPIO_Pin  = TIM3_CH1 | TIM3_CH2;	
+X    GPIO_InitStructure.GPIO_Pin  = ((uint16_t)0x0040) | ((uint16_t)0x0080);	
+N	  GPIO_Init(GPIO_TIM3, &GPIO_InitStructure);	
+X	  GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)), &GPIO_InitStructure);	
+N	
+N	  GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0;	
+X	  GPIO_InitStructure.GPIO_Pin  = ((uint16_t)0x0001);	
+N	  GPIO_Init(GPIOB, &GPIO_InitStructure);	
+X	  GPIO_Init(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0C00)), &GPIO_InitStructure);	
+N
+N	  //初始化定时器2 TIM2	 
 N	  TIM_TimeBaseStructure.TIM_Period = 0XFFFF;                   //设定计数器自动重装值 
 N	  TIM_TimeBaseStructure.TIM_Prescaler =71; 	                   //预分频器   
 N	  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;      //设置时钟分割:TDTS = Tck_tim
@@ -34667,58 +34771,68 @@ N	  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模
 X	  TIM_TimeBaseStructure.TIM_CounterMode = ((uint16_t)0x0000);  
 N	  TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);              //根据TIM_TimeBaseInitStruct中指定的参数初始化TIMx的时间基数单位
 X	  TIM_TimeBaseInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM_TimeBaseStructure);              
-N  
-N	  //初始化TIM4输入捕获参数
-N	  TIM4_ICInitStructure.TIM_Channel = TIM_Channel_1;                //CC1S=01 	选择输入端 IC1映射到TI1上
-X	  TIM4_ICInitStructure.TIM_Channel = ((uint16_t)0x0000);                
-N  	TIM4_ICInitStructure.TIM_ICPolarity =TIM_ICPolarity_Rising;	   //上升沿捕获
-X  	TIM4_ICInitStructure.TIM_ICPolarity =((uint16_t)0x0000);	   
-N  	TIM4_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
-X  	TIM4_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
-N  	TIM4_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
-X  	TIM4_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
-N  	TIM4_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
-N  	TIM_ICInit(TIM2, &TIM4_ICInitStructure);
-X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM4_ICInitStructure);
+N    TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); 
+X    TIM_TimeBaseInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), &TIM_TimeBaseStructure); 
 N	
-N	  TIM4_ICInitStructure.TIM_Channel = TIM_Channel_2;                //CC1S=01 	选择输入端 IC1映射到TI1上
-X	  TIM4_ICInitStructure.TIM_Channel = ((uint16_t)0x0004);                
-N  	TIM4_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	   //上升沿捕获
-X  	TIM4_ICInitStructure.TIM_ICPolarity = ((uint16_t)0x0000);	   
-N  	TIM4_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
-X  	TIM4_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
-N  	TIM4_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
-X  	TIM4_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
-N  	TIM4_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
-N  	TIM_ICInit(TIM2, &TIM4_ICInitStructure);
-X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM4_ICInitStructure);
+N	  //初始化TIM2输入捕获参数
+N	  TIM2_ICInitStructure.TIM_Channel = TIM_Channel_1;                //CC1S=01 	选择输入端 IC1映射到TI1上
+X	  TIM2_ICInitStructure.TIM_Channel = ((uint16_t)0x0000);                
+N  	TIM2_ICInitStructure.TIM_ICPolarity =TIM_ICPolarity_Rising;	   //上升沿捕获
+X  	TIM2_ICInitStructure.TIM_ICPolarity =((uint16_t)0x0000);	   
+N  	TIM2_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
+X  	TIM2_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
+N  	TIM2_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
+X  	TIM2_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
+N  	TIM2_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
+N  	TIM_ICInit(TIM2, &TIM2_ICInitStructure);
+X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM2_ICInitStructure);
+N		TIM_ICInit(TIM3, &TIM2_ICInitStructure);
+X		TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), &TIM2_ICInitStructure);
+N	
+N	  TIM2_ICInitStructure.TIM_Channel = TIM_Channel_2;                //CC1S=01 	选择输入端 IC1映射到TI1上
+X	  TIM2_ICInitStructure.TIM_Channel = ((uint16_t)0x0004);                
+N  	TIM2_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	   //上升沿捕获
+X  	TIM2_ICInitStructure.TIM_ICPolarity = ((uint16_t)0x0000);	   
+N  	TIM2_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
+X  	TIM2_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
+N  	TIM2_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
+X  	TIM2_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
+N  	TIM2_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
+N  	TIM_ICInit(TIM2, &TIM2_ICInitStructure);
+X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM2_ICInitStructure);
+N		TIM_ICInit(TIM3, &TIM2_ICInitStructure);
+X		TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), &TIM2_ICInitStructure);
 N		
-N		TIM4_ICInitStructure.TIM_Channel = TIM_Channel_3;                //CC1S=01 	选择输入端 IC1映射到TI1上
-X		TIM4_ICInitStructure.TIM_Channel = ((uint16_t)0x0008);                
-N  	TIM4_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	   //上升沿捕获
-X  	TIM4_ICInitStructure.TIM_ICPolarity = ((uint16_t)0x0000);	   
-N  	TIM4_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
-X  	TIM4_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
-N  	TIM4_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
-X  	TIM4_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
-N  	TIM4_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
-N  	TIM_ICInit(TIM2, &TIM4_ICInitStructure);
-X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM4_ICInitStructure);
+N		TIM2_ICInitStructure.TIM_Channel = TIM_Channel_3;                //CC1S=01 	选择输入端 IC1映射到TI1上
+X		TIM2_ICInitStructure.TIM_Channel = ((uint16_t)0x0008);                
+N  	TIM2_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	   //上升沿捕获
+X  	TIM2_ICInitStructure.TIM_ICPolarity = ((uint16_t)0x0000);	   
+N  	TIM2_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
+X  	TIM2_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
+N  	TIM2_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
+X  	TIM2_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
+N  	TIM2_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
+N  	TIM_ICInit(TIM2, &TIM2_ICInitStructure);
+X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM2_ICInitStructure);
+N		TIM_ICInit(TIM3, &TIM2_ICInitStructure);
+X		TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), &TIM2_ICInitStructure);
 N		
-N		TIM4_ICInitStructure.TIM_Channel = TIM_Channel_4;                //CC1S=01 	选择输入端 IC1映射到TI1上
-X		TIM4_ICInitStructure.TIM_Channel = ((uint16_t)0x000C);                
-N  	TIM4_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	   //上升沿捕获
-X  	TIM4_ICInitStructure.TIM_ICPolarity = ((uint16_t)0x0000);	   
-N  	TIM4_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
-X  	TIM4_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
-N  	TIM4_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
-X  	TIM4_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
-N  	TIM4_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
-N  	TIM_ICInit(TIM2, &TIM4_ICInitStructure);
-X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM4_ICInitStructure);
+N		TIM2_ICInitStructure.TIM_Channel = TIM_Channel_4;                //CC1S=01 	选择输入端 IC1映射到TI1上
+X		TIM2_ICInitStructure.TIM_Channel = ((uint16_t)0x000C);                
+N  	TIM2_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	   //上升沿捕获
+X  	TIM2_ICInitStructure.TIM_ICPolarity = ((uint16_t)0x0000);	   
+N  	TIM2_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
+X  	TIM2_ICInitStructure.TIM_ICSelection = ((uint16_t)0x0001); 
+N  	TIM2_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	         //配置输入分频,不分频 
+X  	TIM2_ICInitStructure.TIM_ICPrescaler = ((uint16_t)0x0000);	         
+N  	TIM2_ICInitStructure.TIM_ICFilter = 0x00;                        //IC1F=0000 配置输入滤波器 不滤波
+N  	TIM_ICInit(TIM2, &TIM2_ICInitStructure);
+X  	TIM_ICInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), &TIM2_ICInitStructure);
 N	
 N	  TIM_Cmd(TIM2,ENABLE ); 
 X	  TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)),ENABLE ); 
+N		TIM_Cmd(TIM3,ENABLE );
+X		TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),ENABLE );
 N		
 N	  TIM_ITConfig(TIM2, TIM_IT_CC1, ENABLE);        //允许更新中断 ,允许CC1IE捕获中断	
 X	  TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0002), ENABLE);        
@@ -34726,14 +34840,20 @@ N	  TIM_ITConfig(TIM2, TIM_IT_CC2, ENABLE);
 X	  TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0004), ENABLE);
 N	  TIM_ITConfig(TIM2, TIM_IT_CC3, ENABLE);
 X	  TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0008), ENABLE);
-N	  TIM_ITConfig(TIM2, TIM_IT_CC4, ENABLE);
-X	  TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0010), ENABLE);
-N			
+N	  TIM_ITConfig(TIM2, TIM_IT_CC4, ENABLE);	
+X	  TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0010), ENABLE);	
+N		
+N		TIM_ITConfig(TIM3, TIM_IT_CC1, ENABLE);        //允许更新中断 ,允许CC1IE捕获中断	
+X		TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0002), ENABLE);        
+N	  TIM_ITConfig(TIM3, TIM_IT_CC2, ENABLE);
+X	  TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0004), ENABLE);
+N		TIM_ITConfig(TIM3, TIM_IT_CC3, ENABLE);
+X		TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0008), ENABLE);
 N}
 N/*====================================================================================================*/
 N/*====================================================================================================*
-N**函数 : TIM4_IRQHandler
-N**功能 : TIM4中断服务
+N**函数 : TIM2_IRQHandler
+N**功能 : TIM2中断服务
 N**输入 : None
 N**輸出 : None
 N**备注 : None
@@ -34746,7 +34866,7 @@ X    if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((
 N		{	
 N			TIM_ClearITPendingBit(TIM2, TIM_IT_CC1); //清除中断标志位
 X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0002)); 
-N			if(GPIO_ReadInputDataBit(GPIO_TIM4,TIM4_CH1) == 1) 
+N			if(GPIO_ReadInputDataBit(GPIO_TIM2,TIM2_CH1) == 1) 
 X			if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0001)) == 1) 
 N			{
 N				  TIM_OC1PolarityConfig(TIM2,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
@@ -34770,7 +34890,7 @@ X		if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((ui
 N		{	
 N			TIM_ClearITPendingBit(TIM2, TIM_IT_CC2); //清除中断标志位
 X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0004)); 
-N			if(GPIO_ReadInputDataBit(GPIO_TIM4,TIM4_CH2) == 1) 
+N			if(GPIO_ReadInputDataBit(GPIO_TIM2,TIM2_CH2) == 1) 
 X			if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0002)) == 1) 
 N			{
 N				  TIM_OC2PolarityConfig(TIM2,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
@@ -34794,7 +34914,7 @@ X    if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((
 N		{	
 N			TIM_ClearITPendingBit(TIM2, TIM_IT_CC3); //清除中断标志位
 X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0008)); 
-N			if(GPIO_ReadInputDataBit(GPIO_TIM4,TIM4_CH3) == 1) 
+N			if(GPIO_ReadInputDataBit(GPIO_TIM2,TIM2_CH3) == 1) 
 X			if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0004)) == 1) 
 N			{
 N				  TIM_OC3PolarityConfig(TIM2,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
@@ -34818,7 +34938,7 @@ X    if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((
 N		{	
 N			TIM_ClearITPendingBit(TIM2, TIM_IT_CC4); //清除中断标志位
 X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0000)), ((uint16_t)0x0010)); 
-N		  if(GPIO_ReadInputDataBit(GPIO_TIM4,TIM4_CH4) == 1) 
+N		  if(GPIO_ReadInputDataBit(GPIO_TIM2,TIM2_CH4) == 1) 
 X		  if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0008)) == 1) 
 N			{
 N				  TIM_OC4PolarityConfig(TIM2,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
@@ -34837,6 +34957,111 @@ N					else 	               RC_Pwm_In[3] = Drop[3] - Rise[3];
 N      }	  
 N		}		
 N}
+N
+N
+Nvu16 US100_Alt_Temp=0,Alt_Last=0; 
+Nfloat Alt_CuntTmep1=0,Alt_CuntTmep2=0;
+Nfloat Alt_V_CuntTmep1=0,Alt_V_CuntTmep2=0;
+Nfloat US100_Alt_Last=0;
+N/*====================================================================================================*/
+N/*====================================================================================================*
+N**函数 : TIM3_IRQHandler
+N**功能 : TIM3中断服务
+N**输入 : None
+N**輸出 : None
+N**备注 : None
+N**====================================================================================================*/
+N/*====================================================================================================*/
+Nvoid TIM3_IRQHandler(void)
+N{ 
+N    if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET)   //捕获1发生捕获事件
+X    if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0002)) != RESET)   
+N		{	
+N			TIM_ClearITPendingBit(TIM3, TIM_IT_CC1); //清除中断标志位
+X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0002)); 
+N			if(GPIO_ReadInputDataBit(GPIO_TIM3,TIM3_CH1) == 1) 
+X			if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0040)) == 1) 
+N			{
+N				  TIM_OC1PolarityConfig(TIM3,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
+X				  TIM_OC1PolarityConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0002));		
+N          Rise[4]=TIM_GetCapture1(TIM3);
+X          Rise[4]=TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N      }
+N			else 
+N			{
+N				  TIM_OC1PolarityConfig(TIM3,TIM_ICPolarity_Rising); //CC1P=0 设置为上升沿捕获
+X				  TIM_OC1PolarityConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0000)); 
+N          Drop[4]=TIM_GetCapture1(TIM3);
+X          Drop[4]=TIM_GetCapture1(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N				  if(Rise[4]>Drop[4])  RC_Pwm_In[4] = 65535-Rise[4] + Drop[4];
+N					else 	               RC_Pwm_In[4] = Drop[4] - Rise[4];
+N      }			
+N		}	
+N	  
+N		if (TIM_GetITStatus(TIM3, TIM_IT_CC2) != RESET)   //捕获1发生捕获事件
+X		if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0004)) != RESET)   
+N		{	
+N			TIM_ClearITPendingBit(TIM3, TIM_IT_CC2); //清除中断标志位
+X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0004)); 
+N			if(GPIO_ReadInputDataBit(GPIO_TIM3,TIM3_CH2) == 1) 
+X			if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0800)),((uint16_t)0x0080)) == 1) 
+N			{
+N				  TIM_OC2PolarityConfig(TIM3,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
+X				  TIM_OC2PolarityConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0002));		
+N          Rise[5]=TIM_GetCapture2(TIM3);
+X          Rise[5]=TIM_GetCapture2(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N      }
+N			else 
+N			{
+N				  TIM_OC2PolarityConfig(TIM3,TIM_ICPolarity_Rising); //CC1P=0 设置为上升沿捕获
+X				  TIM_OC2PolarityConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0000)); 
+N          Drop[5]=TIM_GetCapture2(TIM3);
+X          Drop[5]=TIM_GetCapture2(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N				  if(Rise[5]>Drop[5])  RC_Pwm_In[5] = 65535-Rise[5] + Drop[5];
+N					else 	               RC_Pwm_In[5] = Drop[5] - Rise[5];
+N      }			
+N		}	
+N		
+N	  if (TIM_GetITStatus(TIM3, TIM_IT_CC3) != RESET)   //捕获1发生捕获事件
+X	  if (TIM_GetITStatus(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0008)) != RESET)   
+N		{	
+N			TIM_ClearITPendingBit(TIM3, TIM_IT_CC3); //清除中断标志位
+X			TIM_ClearITPendingBit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)), ((uint16_t)0x0008)); 
+N			if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0) == 1) 
+X			if(GPIO_ReadInputDataBit(((GPIO_TypeDef *) ((((uint32_t)0x40000000) + 0x10000) + 0x0C00)),((uint16_t)0x0001)) == 1) 
+N			{
+N				TIM_OC3PolarityConfig(TIM3,TIM_ICPolarity_Falling);		//CC1P=1 设置为下降沿捕获
+X				TIM_OC3PolarityConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0002));		
+N				Rise[6]=TIM_GetCapture3(TIM3);
+X				Rise[6]=TIM_GetCapture3(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N      }
+N			else 
+N			{
+N				TIM_OC3PolarityConfig(TIM3,TIM_ICPolarity_Rising); //CC1P=0 设置为上升沿捕获
+X				TIM_OC3PolarityConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0000)); 
+N				Drop[6]=TIM_GetCapture3(TIM3);
+X				Drop[6]=TIM_GetCapture3(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N				if(Rise[6]>Drop[6])  US100_Alt_Temp = 65535-Rise[6] + Drop[6];
+N				else 	               US100_Alt_Temp = Drop[6] - Rise[6];
+N
+N				if(US100_Alt_Temp>10000)   US100_Alt_Temp=Alt_Last; 
+N				else    					          Alt_Last=US100_Alt_Temp; 
+N
+N				Alt_CuntTmep2=Alt_CuntTmep1;        //滑动平均滤波
+N				Alt_CuntTmep1=US100_Alt_Temp;//*((float)cos(angle.pitch/57.295779f))*((float)cos(angle.roll/57.295779f));        //姿态补偿
+N
+N				//US100_Alt=((Alt_CuntTmep1+Alt_CuntTmep2)/2)*34/2000;  //转化为CM
+N
+N// 				Alt_V_CuntTmep2=Alt_V_CuntTmep1;//滑动平均滤波
+N// 				Alt_V_CuntTmep1=(US100_Alt-US100_Alt_Last)/ 2;   //除以0.05s获得速度单位：m/S 
+N
+N// 				US100_Alt_V= (Alt_V_CuntTmep1+Alt_V_CuntTmep2)/2;   
+N// 				US100_Alt_Last=US100_Alt; 
+N// 				fff=1;
+N      }			
+N		}	
+N}
+N
 N
 N
 N

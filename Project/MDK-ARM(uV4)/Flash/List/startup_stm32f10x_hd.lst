@@ -554,11 +554,11 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
 ork --depend=.\flash\obj\startup_stm32f10x_hd.d -o.\flash\obj\startup_stm32f10x
-_hd.o -Id:\Keil_v5\ARM\RV31\INC -Id:\Keil_v5\ARM\CMSIS\Include -Id:\Keil_v5\ARM
-\PACK\ARM\CMSIS\4.2.0\Device\ARM\ARMCM3\Include --predefine="__MICROLIB SETA 1"
- --predefine="__UVISION_VERSION SETA 514" --list=.\flash\list\startup_stm32f10x
-_hd.lst ..\..\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\startup\arm\startu
-p_stm32f10x_hd.s
+_hd.o -IE:\GitHub\HT-Hawk\Project\MDK-ARM(uV4)\RTE -Id:\Keil_v5\ARM\PACK\Keil\S
+TM32F1xx_DFP\1.1.0\Device\Include -Id:\Keil_v5\ARM\CMSIS\Include --predefine="_
+_MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 514" --predefine="STM32F1
+0X_HD SETA 1" --list=.\flash\list\startup_stm32f10x_hd.lst ..\..\Libraries\CMSI
+S\CM3\DeviceSupport\ST\STM32F10x\startup\arm\startup_stm32f10x_hd.s
 
 
 
@@ -1694,4 +1694,4 @@ startup\arm\startup_stm32f10x_hd.s
 startup\arm\startup_stm32f10x_hd.s
 Comment: __main used once
 2 symbols
-421 symbols in table
+422 symbols in table

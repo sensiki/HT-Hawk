@@ -51,9 +51,11 @@
 .\flash\obj\multirotor_rc.o: ..\..\User\Driver\MOTOR\MOTO.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Driver\EEPROM\eeprom.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Driver\PWM_IN\pwm_in.h
+.\flash\obj\multirotor_rc.o: ..\..\User\Driver\STMFLASH\stmflash.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Modules\Modules_oled\oled.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Modules\Modules_mpu6050\MPU6050.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Modules\Modules_hmc5883\HMC5883.h
+.\flash\obj\multirotor_rc.o: ..\..\User\Modules\Modules_ms5611\MS5611.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Modules\Modules_nrf24L01\NRF24L01.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Function\MultiRotor_app\MultiRotor_app.h
 .\flash\obj\multirotor_rc.o: ..\..\User\Function\MultiRotor_ahrs\MultiRotor_ahrs.h

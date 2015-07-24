@@ -7,6 +7,54 @@
  * 淘宝    ：http://byd2.taobao.com
 **********************************************************************************/
 #include "moto.h"
+#include "board_config.h"
+
+void Tim1_init(void)
+{
+	TIM_TimeBaseInitTypeDef		TIM_TimeBaseStructure;
+	TIM_OCInitTypeDef  				TIM_OCInitStructure;
+	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+	GPIO_PinRemapConfig(GPIO_FullRemap_TIM1 ,ENABLE);  
+	
+	/**********************************************************
+	72 000 000/72=1M
+	1000 000/2500=400Hz
+	所以产生的PWM为400Hz
+	周期为2.5ms，对应2500的计算值，1ms~2ms对应的计算值为1000~2000；
+	**********************************************************/
+	TIM_TimeBaseStructure.TIM_Period = 2499;		//计数上线	
+	TIM_TimeBaseStructure.TIM_Prescaler = 71;	//pwm时钟分频
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;	
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;		//向上计数
+	TIM_TimeBaseStructure.TIM_RepetitionCounter=0;//重复寄存器，用于自动更新pwm占空比
+	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
+	
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = 1000;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+	
+	//下面几个参数是高级定时器才会用到，通用定时器不用配置
+  TIM_OCInitStructure.TIM_OCNPolarity=TIM_OCNPolarity_Low; //设置互补端输出极性
+	TIM_OCInitStructure.TIM_OutputNState=TIM_OutputNState_Enable;//使能互补端输出
+	TIM_OCInitStructure.TIM_OCIdleState=TIM_OCIdleState_Reset;   //死区后输出状态
+	TIM_OCInitStructure.TIM_OCNIdleState=TIM_OCNIdleState_Reset;//死区后互补端输出状态
+	
+	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC2Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	TIM_OC4Init(TIM1, &TIM_OCInitStructure);
+	TIM_OC4PreloadConfig(TIM1, TIM_OCPreload_Enable);
+	
+	TIM_ARRPreloadConfig(TIM1, ENABLE);
+	TIM_Cmd(TIM1, ENABLE);
+  TIM_CtrlPWMOutputs(TIM1, ENABLE);
+}
+
 
 
 void Tim4_init(void)
@@ -56,7 +104,16 @@ void PWM_OUT_Config(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;		    // 复用推挽输出
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE, ENABLE); 
+
+	GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_9 | GPIO_Pin_11 | GPIO_Pin_13 | GPIO_Pin_14;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;		    // 复用推挽输出
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);
+	
 	Tim4_init();	
+	Tim1_init();
 }
 
 
@@ -88,26 +145,48 @@ void writeMotors(int16_t *Moter)
 
 
 
-void moto_PwmRflash(int16_t *Moter)
+void moto_PwmRflash(s16 *Moter)
 {		
-	for(u8 i=0;i<4;i++)
+	for(u8 i=0;i<MOTOR_NUM;i++)
 	{
      if(*(Moter+i) > Moto_PwmMax)  *(Moter+i) = Moto_PwmMax;
   }
-	for(u8 i=0;i<4;i++)
+	for(u8 i=0;i<MOTOR_NUM;i++)
 	{
      if(*(Moter+i) <= 0 )  *(Moter+i) = 0;
   }
-	TIM4->CCR1 = 1000 + *(Moter++);
-	TIM4->CCR2 = 1000 + *(Moter++);
-	TIM4->CCR3 = 1000 + *(Moter++);
-	TIM4->CCR4 = 1000 + *Moter;
+	
+	if(MOTOR_NUM ==4 ){
+		TIM4->CCR1 = 1000 + *(Moter++);
+		TIM4->CCR2 = 1000 + *(Moter++);
+		TIM4->CCR3 = 1000 + *(Moter++);
+		TIM4->CCR4 = 1000 + *Moter;
+	}
+	else if(MOTOR_NUM == 6){
+		TIM4->CCR1 = 1000 + *(Moter++);
+		TIM4->CCR2 = 1000 + *(Moter++);
+		TIM4->CCR3 = 1000 + *(Moter++);
+		TIM4->CCR4 = 1000 + *(Moter++);
+		TIM1->CCR1 = 1000 + *(Moter++);
+		TIM1->CCR2 = 1000 + *Moter;
+	}
 }
 
 void moto_STOP(void)
 {
-  TIM4->CCR1 = 1000;
-	TIM4->CCR2 = 1000;
-	TIM4->CCR3 = 1000;
-	TIM4->CCR4 = 1000;
+	if(MOTOR_NUM ==4 ){	
+		TIM4->CCR1 = 1000;
+		TIM4->CCR2 = 1000;
+		TIM4->CCR3 = 1000;
+		TIM4->CCR4 = 1000;
+	}
+	else if(MOTOR_NUM == 6){
+		TIM4->CCR1 = 1000;
+		TIM4->CCR2 = 1000;
+		TIM4->CCR3 = 1000;
+		TIM4->CCR4 = 1000;
+		TIM1->CCR1 = 1000;
+		TIM1->CCR2 = 1000;
+	}
 }
+

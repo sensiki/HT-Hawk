@@ -361,7 +361,7 @@ s8 fg=10;
 
 void mavlink(void)
 {
-	u8 ht;
+
 	
 	switch(sw) //循环发送各模块数据
 	{
@@ -381,8 +381,6 @@ void mavlink(void)
 	sw++; 
 		
 	usb_SendDataToHost(&HtoEs_OutPut_Buffer[0], F);
-	
-
 }
 
 

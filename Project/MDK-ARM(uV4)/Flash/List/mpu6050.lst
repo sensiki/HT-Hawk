@@ -28918,11 +28918,12 @@ S#include "spi.h"
 S#include "MOTO.h"
 S#include "eeprom.h"
 S#include "pwm_in.h"
+S#include "stmflash.h"
 S
 S#include "oled.h"
 S#include "MPU6050.h"
 S#include "HMC5883.h"
-S// #include "MS5611.h"
+S#include "MS5611.h"
 S#include "NRF24L01.h"
 S
 S#include "MultiRotor_rc.h"
@@ -28938,6 +28939,11 @@ S#include "Algorithm_quaternion.h"
 S
 N#endif /* __INCLUDE_H */
 L 5 "..\..\User\board_config.h" 2
+N
+N/*-------------向量表偏移量----------------------*/
+N/*-------------重要  不要动----------------------*/
+N#define FLASH_EXCURSION  0x20000
+N#define pro_FALG_ADD 0x0801FFF0
 N
 N/*----------------电机怠速----------------------*/
 N#define IDLING 210
@@ -33396,7 +33402,7 @@ Nunsigned char I2C_RadeByte(void);
 Nuint16_t Single_Write(unsigned char SlaveAddress,unsigned char REG_Address,unsigned char REG_data);
 Nuint16_t Single_Write_MS5611(unsigned char SlaveAddress,unsigned char REG_Address);	
 Nunsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address);
-N
+Nvoid I2C_Read(u8 addr_, u8 reg_, u8 len, u8 *buf);
 N
 N#endif // __MYI2C_H__
 L 28 "..\..\User\include.h" 2
@@ -33733,9 +33739,9 @@ N#ifndef __TIME_H__
 N#define __TIME_H__
 N#include "stm32f10x.h"
 N
-N#define EnTIM3()  TIM_Cmd(TIM3,ENABLE)
+N#define EnTIMER  TIM_Cmd(TIM5,ENABLE)
 Nvoid Nvic_Init(void);
-Nvoid TIM3_Config(void);
+Nvoid TIM5_Config(void);
 N#endif 
 L 31 "..\..\User\include.h" 2
 N#include "USART.h"
@@ -33745,7 +33751,7 @@ N#define __USART_H_
 N#include "stm32f10x.h"
 N#include <stdio.h>
 N
-Nvoid usart1_config(void);
+Nvoid USART1_Config(void);
 Nuint8_t UART1_Put_Char(unsigned char DataToSend);
 Nint fputc(int ch, FILE *f);
 Nvoid USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);
@@ -33886,12 +33892,17 @@ N#include "stm32f10x.h"
 N#include "board_config.h"
 N
 N
-N#define GPIO_TIM4	     GPIOA
-N#define TIM4_CH1       GPIO_Pin_0
-N#define TIM4_CH2       GPIO_Pin_1
-N#define TIM4_CH3       GPIO_Pin_2
-N#define TIM4_CH4       GPIO_Pin_3
-N#define RCC_GPIO_TIM4  RCC_APB2Periph_GPIOA
+N#define GPIO_TIM2	     GPIOA
+N#define TIM2_CH1       GPIO_Pin_0
+N#define TIM2_CH2       GPIO_Pin_1
+N#define TIM2_CH3       GPIO_Pin_2
+N#define TIM2_CH4       GPIO_Pin_3
+N#define RCC_GPIO_TIM2  RCC_APB2Periph_GPIOA
+N
+N#define GPIO_TIM3	     GPIOA
+N#define TIM3_CH1       GPIO_Pin_6
+N#define TIM3_CH2       GPIO_Pin_7
+N#define RCC_GPIO_TIM3  RCC_APB2Periph_GPIOA
 N
 Nextern u16  RC_Pwm_In[8];
 Nextern u16  RC_Pwm_In_his[8];
@@ -33900,6 +33911,53 @@ Nvoid PWM_IN_Config(void);
 N
 N#endif
 L 36 "..\..\User\include.h" 2
+N#include "stmflash.h"
+L 1 "..\..\User\Driver\STMFLASH\stmflash.h" 1
+N#ifndef __STMFLASH_H__
+N#define __STMFLASH_H__
+N#include "include.h"  
+N//////////////////////////////////////////////////////////////////////////////////	 						  
+N//////////////////////////////////////////////////////////////////////////////////
+N
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N//用户根据自己的需要设置
+N#define STM32_FLASH_SIZE 512 	 		//所选STM32的FLASH容量大小(单位为K)
+N#define STM32_FLASH_WREN 1              //使能FLASH写入(0，不是能;1，使能)
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N
+N//FLASH起始地址
+N#define STM32_FLASH_BASE 0x08000000 	//STM32 FLASH的起始地址
+N//FLASH解锁键值
+N 
+N
+Nu16 STMFLASH_ReadHalfWord(u32 faddr);		  //读出半字  
+Nvoid STMFLASH_WriteLenByte(u32 WriteAddr,u32 DataToWrite,u16 Len);	//指定地址开始写入指定长度的数据
+Nu32 STMFLASH_ReadLenByte(u32 ReadAddr,u16 Len);						//指定地址开始读取指定长度数据
+Nvoid STMFLASH_Write(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite);		//从指定地址开始写入指定长度的数据
+Nvoid STMFLASH_Read(u32 ReadAddr,u16 *pBuffer,u16 NumToRead);   		//从指定地址开始读出指定长度的数据
+Nextern uint16_t VirtAddVarTab[NumbOfVar];
+Xextern uint16_t VirtAddVarTab[((uint8_t)75)];
+N//测试写入
+Nvoid Test_Write(u32 WriteAddr,u16 WriteData);								   
+N#endif
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+L 37 "..\..\User\include.h" 2
 N
 N#include "oled.h"
 L 1 "..\..\User\Modules\Modules_oled\oled.h" 1
@@ -33968,7 +34026,7 @@ N  void Dis_Float2(unsigned char Y,unsigned char X,double real,unsigned char N1,
 N  void OLED_P6x8Num_8bit(unsigned char x,unsigned char y,unsigned char Number); 
 N  void OLED_Num5(unsigned char x,unsigned char y,unsigned int number);
 N#endif
-L 38 "..\..\User\include.h" 2
+L 39 "..\..\User\include.h" 2
 N#include "MPU6050.h"
 L 1 "..\..\User\Modules\Modules_mpu6050\MPU6050.h" 1
 N#ifndef __MPU6050_H_
@@ -34001,7 +34059,7 @@ N#define	GYRO_ZOUT_H		0x47
 N#define	GYRO_ZOUT_L		0x48
 N#define	PWR_MGMT_1		0x6B	//电源管理，典型值：0x00(正常启用)
 N#define	WHO_AM_I		0x75	//IIC地址寄存器(默认数值0x68，只读)
-N#define MPU6050_ADDRESS 0x68    //IIC写入时的地址字节数据，+1为读取
+N#define MPU6050_ADDRESS 0xD0    //IIC写入时的地址字节数据，+1为读取
 N
 N
 N#define MPU6050_DLPF_BW_256         0x00
@@ -34079,7 +34137,7 @@ Nvoid UART1_ReportIMU(void);
 Nvoid Gyro_OFFSET(void);
 N
 N#endif // __MPU6050_H__
-L 39 "..\..\User\include.h" 2
+L 40 "..\..\User\include.h" 2
 N#include "HMC5883.h"
 L 1 "..\..\User\Modules\Modules_hmc5883\HMC5883.h" 1
 N#ifndef __HMC5883_H_
@@ -34141,7 +34199,7 @@ N *              0  |  1   |  Single-Conversion Mode
 N *              1  |  0   |  Negative Bias
 N *              1  |  1   |  Sleep Mode
 N */
-N#define MAG_ADDRESS 0x1E
+N#define MAG_ADDRESS 0x3c
 N#define MAG_DATA_REGISTER 0x03
 N
 N#define HMC58X3_R_CONFA 0
@@ -34162,8 +34220,36 @@ Nu8 Init_HMC5883L(void);
 Nvoid HMC5883lRead(int16_t *magData);
 Nvoid Mag_Calibration(int16_t *array);
 N#endif // __MPU6050_H__
-L 40 "..\..\User\include.h" 2
-N// #include "MS5611.h"
+L 41 "..\..\User\include.h" 2
+N#include "MS5611.h"
+L 1 "..\..\User\Modules\Modules_ms5611\MS5611.h" 1
+N#ifndef __MS5611_H
+N#define	__MS5611_H
+N#include "stm32f10x.h"
+N/* MPU6050 Register Address ------------------------------------------------------------*/
+N#define MS561101BA_ADC_RD          0x00
+N#define	MS561101BA_PROM_RD 	       0xA0
+N#define MS561101BA_PROM_CRC        0xAE
+N
+N#define MS561101BA_SlaveAddress    0xEE  //MS5611的地址
+N#define MS561101BA_RST             0x1E  //cmd 复位
+N
+N#define	MS561101BA_D2_OSR_4096   0x58	// 9.04 mSec conversion time ( 110.62 Hz)
+N#define	MS561101BA_D1_OSR_4096   0x48
+N
+N#define MS5611_OSR256					 		 0x40
+N#define MS5611_OSR512					 		 0x42
+N#define MS5611_OSR1024					   0x44
+N#define MS5611_OSR2048					   0x46
+N#define MS5611_OSR4096					   0x48
+N#define FILTER_num 20
+N
+Nu8  MS5611_init(void);
+Nvoid MS561101BA_getTemperature(void);
+Nfloat Get_High(void);
+Nvoid Sethigh_Mode(void);
+N#endif
+L 42 "..\..\User\include.h" 2
 N#include "NRF24L01.h"
 L 1 "..\..\User\Modules\Modules_nrf24L01\NRF24L01.h" 1
 N#ifndef __NRF24L01_H
@@ -34260,7 +34346,7 @@ N
 N
 N
 N
-L 42 "..\..\User\include.h" 2
+L 43 "..\..\User\include.h" 2
 N
 N#include "MultiRotor_rc.h"
 L 1 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.h" 1
@@ -34312,7 +34398,7 @@ Nvoid RC_directive(void);
 Nvoid RDAU(void);
 Nvoid RC_Data_Refine(void);
 N#endif
-L 44 "..\..\User\include.h" 2
+L 45 "..\..\User\include.h" 2
 N#include "MultiRotor_app.h"
 L 1 "..\..\User\Function\MultiRotor_app\MultiRotor_app.h" 1
 N#ifndef _MultiRotor_app_H_
@@ -34342,6 +34428,7 @@ N
 Nextern Flag_t flag;
 N
 Nvoid loop(void);
+Nvoid Bootloader_Set(void);
 Nvoid InitBoard(void);
 Nvoid Sensor_Init(void);
 Nvoid Screen_Update(void);
@@ -34350,7 +34437,7 @@ N#endif /* __MultiRotor_app_H */
 N
 N
 N
-L 45 "..\..\User\include.h" 2
+L 46 "..\..\User\include.h" 2
 N#include "MultiRotor_ahrs.h"
 L 1 "..\..\User\Function\MultiRotor_ahrs\MultiRotor_ahrs.h" 1
 N#ifndef __MultiRotor_ahrs_H
@@ -34365,13 +34452,7 @@ N#define Gyro_G 	0.03051756
 N#define Gyro_Gr	0.0005426
 N
 N
-Nstruct _angle{
-N        float pitch;
-N				float roll;
-N        float yaw;};
 N
-N
-Nextern struct _angle angle;
 Nextern int16_t MAG[3];			
 N
 N
@@ -34391,7 +34472,7 @@ N
 N
 N
 N
-L 46 "..\..\User\include.h" 2
+L 47 "..\..\User\include.h" 2
 N#include "MultiRotor_radio.h"
 L 1 "..\..\User\Function\MultiRotor_radio\MultiRotor_radio.h" 1
 N#ifndef __MultiRotor_radio_H
@@ -34416,7 +34497,7 @@ N
 N
 N
 N
-L 47 "..\..\User\include.h" 2
+L 48 "..\..\User\include.h" 2
 N#include "Algorithm_sqLite.h"
 L 1 "..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.h" 1
 N#ifndef _Algorithm_sqLite_H_
@@ -34450,7 +34531,7 @@ N#endif /* __Algorithm_sqLite_H */
 N
 N
 N
-L 48 "..\..\User\include.h" 2
+L 49 "..\..\User\include.h" 2
 N#include "MultiRotor_control.h"
 L 1 "..\..\User\Function\MultiRotor_control\MultiRotor_control.h" 1
 N#ifndef _MultiRotor_control_H_
@@ -34498,7 +34579,7 @@ Nvoid Attitude_RatePID(void);
 Nvoid Motor_Conter(void);
 Nvoid Reset_Integral(void);
 N#endif
-L 49 "..\..\User\include.h" 2
+L 50 "..\..\User\include.h" 2
 N
 N#include "Algorithm_math.h"
 L 1 "..\..\User\Algorithm\Algorithm_math\Algorithm_math.h" 1
@@ -34519,10 +34600,10 @@ Nfloat Q_rsqrt(float number);
 Nfloat VariableParameter(float error);
 Nvoid array_assign(u16 *array,s16 value,u16 length);
 Nvoid array_astrict(s16 *array,s16 lower,s16 upper);
-Nvoid data_limit(float data,float toplimit,float lowerlimit);
+Nfloat data_limit(float data,float toplimit,float lowerlimit);
 Ndouble Degree(double rad);
 N#endif /* __Algorithm_math_H */
-L 51 "..\..\User\include.h" 2
+L 52 "..\..\User\include.h" 2
 N#include "Algorithm_filter.h"
 L 1 "..\..\User\Algorithm\Algorithm_filter\Algorithm_filter.h" 1
 N#ifndef __Algorithm_filter_H
@@ -34533,7 +34614,7 @@ N
 Ndouble IIR_I_Filter(double InData, double *x, double *y, double *b, short nb, double *a, short na);
 Nfp32 LPF_1st(fp32 oldData, fp32 newData, fp32 lpf_factor);
 N#endif /* __Algorithm_filter_H */
-L 52 "..\..\User\include.h" 2
+L 53 "..\..\User\include.h" 2
 N#include "Algorithm_quaternion.h"
 L 1 "..\..\User\Algorithm\Algorithm_quaternion\Algorithm_quaternion.h" 1
 N#ifndef __Algorithm_quaternion_H
@@ -34572,7 +34653,7 @@ NQuaternion Quaternion_Multiply( Quaternion NowQ, Quaternion OldQ );
 Nvoid Quaternion_Normalize( Quaternion *pNumQ );
 Nvoid Quaternion_RungeKutta( Quaternion *pNumQ, float GyrX, float GyrY, float GyrZ, float helfTimes );
 N#endif /* __Algorithm_quaternion_H */
-L 53 "..\..\User\include.h" 2
+L 54 "..\..\User\include.h" 2
 N
 N#endif /* __INCLUDE_H */
 L 10 "..\..\User\Modules\Modules_mpu6050\mpu6050.c" 2
@@ -34582,8 +34663,7 @@ Nstruct _sensor sensor;
 N
 N
 N
-N 
-N 
+N
 N/*====================================================================================================*/
 N/*====================================================================================================*
 N**函数 : InitMPU6050
@@ -34596,23 +34676,22 @@ N/*=============================================================================
 Nu8 InitMPU6050(void)
 N{
 N	u8 ack;
-N  u8 sig;
-N
-N	ack = i2cRead(MPU6050_ADDRESS, WHO_AM_I, 1, &sig);
-X	ack = i2cRead(0x68, 0x75, 1, &sig);
+N	
+N	ack = Single_Read(MPU6050_ADDRESS, WHO_AM_I);
+X	ack = Single_Read(0xD0, 0x75);
 N	if (!ack)
 N     return FALSE;
 N	
-N	i2cWrite(MPU6050_ADDRESS, PWR_MGMT_1, 0x00);  	//解除休眠状态
-X	i2cWrite(0x68, 0x6B, 0x00);  	
-N	i2cWrite(MPU6050_ADDRESS, SMPLRT_DIV, 0x07);     
-X	i2cWrite(0x68, 0x19, 0x07);     
-N	i2cWrite(MPU6050_ADDRESS, CONFIGL, MPU6050_DLPF);              //低通滤波
-X	i2cWrite(0x68, 0x1A, 0x03);              
-N	i2cWrite(MPU6050_ADDRESS, GYRO_CONFIG, MPU6050_GYRO_FS_1000);  //陀螺仪量程 +-1000
-X	i2cWrite(0x68, 0x1B, 0x10);  
-N	i2cWrite(MPU6050_ADDRESS, ACCEL_CONFIG, MPU6050_ACCEL_FS_4);   //加速度量程 +-4G
-X	i2cWrite(0x68, 0x1C, 0x09);   
+N	Single_Write(MPU6050_ADDRESS, PWR_MGMT_1, 0x00);  	//解除休眠状态
+X	Single_Write(0xD0, 0x6B, 0x00);  	
+N	Single_Write(MPU6050_ADDRESS, SMPLRT_DIV, 0x07);     
+X	Single_Write(0xD0, 0x19, 0x07);     
+N	Single_Write(MPU6050_ADDRESS, CONFIGL, MPU6050_DLPF);              //低通滤波
+X	Single_Write(0xD0, 0x1A, 0x03);              
+N	Single_Write(MPU6050_ADDRESS, GYRO_CONFIG, MPU6050_GYRO_FS_1000);  //陀螺仪量程 +-1000
+X	Single_Write(0xD0, 0x1B, 0x10);  
+N	Single_Write(MPU6050_ADDRESS, ACCEL_CONFIG, MPU6050_ACCEL_FS_4);   //加速度量程 +-4G
+X	Single_Write(0xD0, 0x1C, 0x09);   
 N	return TRUE;
 N}
 N
@@ -34621,8 +34700,30 @@ N//将iic读取到得数据分拆,放入相应寄存器,更新MPU6050_Last
 N//******************************************************************************
 Nvoid MPU6050_Read(void)
 N{
-N	i2cRead(MPU6050_ADDRESS,0x3B,14,mpu6050_buffer);
-X	i2cRead(0x68,0x3B,14,mpu6050_buffer);
+N	mpu6050_buffer[0]=Single_Read(MPU6050_ADDRESS, 0x3B);
+X	mpu6050_buffer[0]=Single_Read(0xD0, 0x3B);
+N	mpu6050_buffer[1]=Single_Read(MPU6050_ADDRESS, 0x3C);
+X	mpu6050_buffer[1]=Single_Read(0xD0, 0x3C);
+N	mpu6050_buffer[2]=Single_Read(MPU6050_ADDRESS, 0x3D);
+X	mpu6050_buffer[2]=Single_Read(0xD0, 0x3D);
+N	mpu6050_buffer[3]=Single_Read(MPU6050_ADDRESS, 0x3E);
+X	mpu6050_buffer[3]=Single_Read(0xD0, 0x3E);
+N	mpu6050_buffer[4]=Single_Read(MPU6050_ADDRESS, 0x3F);
+X	mpu6050_buffer[4]=Single_Read(0xD0, 0x3F);
+N	mpu6050_buffer[5]=Single_Read(MPU6050_ADDRESS, 0x40);
+X	mpu6050_buffer[5]=Single_Read(0xD0, 0x40);
+N	mpu6050_buffer[8]=Single_Read(MPU6050_ADDRESS, 0x43);
+X	mpu6050_buffer[8]=Single_Read(0xD0, 0x43);
+N	mpu6050_buffer[9]=Single_Read(MPU6050_ADDRESS, 0x44);
+X	mpu6050_buffer[9]=Single_Read(0xD0, 0x44);
+N	mpu6050_buffer[10]=Single_Read(MPU6050_ADDRESS, 0x45);
+X	mpu6050_buffer[10]=Single_Read(0xD0, 0x45);
+N	mpu6050_buffer[11]=Single_Read(MPU6050_ADDRESS, 0x46);
+X	mpu6050_buffer[11]=Single_Read(0xD0, 0x46);
+N	mpu6050_buffer[12]=Single_Read(MPU6050_ADDRESS, 0x47);
+X	mpu6050_buffer[12]=Single_Read(0xD0, 0x47);
+N	mpu6050_buffer[13]=Single_Read(MPU6050_ADDRESS, 0x48);
+X	mpu6050_buffer[13]=Single_Read(0xD0, 0x48);
 N	
 N}
 N/**************************实现函数********************************************
@@ -34677,6 +34778,22 @@ N				}
 N				cnt_a++;		
 N			}	
 N}
+N/*====================================================================================================*/
+N/*====================================================================================================*
+N**函数 : Gyro_Calculateoffest
+N**功能 : 计算陀螺仪零偏
+N**输入 : 
+N**输出 : None
+N**使用 : Hto_Gyro_Calculateoffest();
+N**====================================================================================================*/
+N/*====================================================================================================*/
+Nvoid Gyro_Caloffest(s32 x,s32 y,s32 z,u16 amount)
+N{
+N   sensor.gyro.quiet.x = x/amount;
+N	 sensor.gyro.quiet.y = y/amount;
+N	 sensor.gyro.quiet.z = z/amount;
+N}
+N
 N
 N/*====================================================================================================*/
 N/*====================================================================================================*
@@ -34689,60 +34806,50 @@ N**=============================================================================
 N/*====================================================================================================*/
 Nvoid Gyro_OFFSET(void)
 N{
-N   uint16_t cnt_g = 0;
-N	 int32_t tempgx = GYRO_GATHER;
-X	 int32_t tempgx = 100;
-N	 int32_t tempgy = GYRO_GATHER;
-X	 int32_t tempgy = 100;
-N	 int32_t tempgz = GYRO_GATHER;
-X	 int32_t tempgz = 100;
-N	 int16_t gx_last=0,gy_last=0,gz_last=0;
-N	 sensor.gyro.quiet.x=0;
-N	 sensor.gyro.quiet.y=0;
-N	 sensor.gyro.quiet.z=0;
+N	static u8 over_flag=0;
+N	u8  i,cnt_g = 0;
+N	s32 Integral[3] = {0,0,0};
+N	s32 tempg[3]={0,0,0};
+N	s16 gx_last=0,gy_last=0,gz_last=0;
 N
-N	 while(tempgx>=GYRO_GATHER || tempgy>=GYRO_GATHER || tempgz>= GYRO_GATHER)	//此循环是确保四轴处于完全静止状态
-X	 while(tempgx>=100 || tempgy>=100 || tempgz>= 100)	
-N	 {
-N		 tempgx=0;tempgy=0;tempgz=0;cnt_g=30;
-N		 while(cnt_g--)
-N		 {
-N			 MPU6050_Read();
-N			 
-N			 sensor.gyro.origin.x = ((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]);
-N		   sensor.gyro.origin.y = ((((int16_t)mpu6050_buffer[10]) << 8)| mpu6050_buffer[11]);
-N		   sensor.gyro.origin.z = ((((int16_t)mpu6050_buffer[12]) << 8)| mpu6050_buffer[13]);
-N		
-N	     tempgx += absu16(sensor.gyro.origin.x - gx_last);
-X	     tempgx += (sensor . gyro . origin . x - gx_last<0? -sensor . gyro . origin . x - gx_last:sensor . gyro . origin . x - gx_last);
-N			 tempgy += absu16(sensor.gyro.origin.y - gy_last);
-X			 tempgy += (sensor . gyro . origin . y - gy_last<0? -sensor . gyro . origin . y - gy_last:sensor . gyro . origin . y - gy_last);
-N			 tempgz += absu16(sensor.gyro.origin.z - gz_last);
-X			 tempgz += (sensor . gyro . origin . z - gz_last<0? -sensor . gyro . origin . z - gz_last:sensor . gyro . origin . z - gz_last);
-N	
-N			 gx_last = sensor.gyro.origin.x;
-N			 gy_last = sensor.gyro.origin.y;
-N			 gz_last =	sensor.gyro.origin.z;
-N	  }	 
-N	}
-N	tempgx=0;tempgy=0;tempgz=0;cnt_g=2000;
-N
-N	while(cnt_g--)	 //此循环进行陀螺仪标定，前提是四轴已经处于完全静止状态
+N	while(!over_flag)	//此循环是确保四轴处于完全静止状态
 N	{
-N		MPU6050_Read();
-N		 
-N		sensor.gyro.origin.x = ((((int16_t)mpu6050_buffer[8]) << 8) | mpu6050_buffer[9]);
-N	  sensor.gyro.origin.y = ((((int16_t)mpu6050_buffer[10]) << 8)| mpu6050_buffer[11]);
-N	  sensor.gyro.origin.z = ((((int16_t)mpu6050_buffer[12]) << 8)| mpu6050_buffer[13]);
-N	
-N    tempgx += sensor.gyro.origin.x;
-N		tempgy += sensor.gyro.origin.y;
-N		tempgz += sensor.gyro.origin.z;
-N	}
+N		if(cnt_g < 50)
+N		{
+N			MPU6050_Dataanl();
 N
-N	 sensor.gyro.quiet.x = tempgx/2000;
-N	 sensor.gyro.quiet.y = tempgy/2000;
-N	 sensor.gyro.quiet.z = tempgz/2000;	
+N			tempg[0] += sensor.gyro.origin.x;
+N			tempg[1] += sensor.gyro.origin.y;
+N			tempg[2] += sensor.gyro.origin.z;
+N
+N			Integral[0] += absu16(gx_last - sensor.gyro.origin.x);
+X			Integral[0] += (gx_last - sensor . gyro . origin . x<0? -gx_last - sensor . gyro . origin . x:gx_last - sensor . gyro . origin . x);
+N			Integral[1] += absu16(gy_last - sensor.gyro.origin.y);
+X			Integral[1] += (gy_last - sensor . gyro . origin . y<0? -gy_last - sensor . gyro . origin . y:gy_last - sensor . gyro . origin . y);
+N			Integral[2] += absu16(gz_last - sensor.gyro.origin.z);
+X			Integral[2] += (gz_last - sensor . gyro . origin . z<0? -gz_last - sensor . gyro . origin . z:gz_last - sensor . gyro . origin . z);
+N
+N			gx_last = sensor.gyro.origin.x;
+N			gy_last = sensor.gyro.origin.y;
+N			gz_last = sensor.gyro.origin.z;
+N		}
+N		else{
+N			// 未校准成功
+N			if(Integral[0]>=GYRO_GATHER || Integral[1]>=GYRO_GATHER || Integral[2]>= GYRO_GATHER){
+X			if(Integral[0]>=100 || Integral[1]>=100 || Integral[2]>= 100){
+N				cnt_g = 0;
+N				for(i=0;i<3;i++){
+N					tempg[i]=Integral[i]=0;
+N				}
+N			}
+N			// 校准成功 
+N			else{				
+N				   Gyro_Caloffest(tempg[0],tempg[1],tempg[2],50);
+N				   over_flag = 1;
+N			}
+N		}
+N		cnt_g++;
+N	}
 N}
 N
 N

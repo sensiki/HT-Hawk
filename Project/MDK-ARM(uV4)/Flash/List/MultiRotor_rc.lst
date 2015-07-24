@@ -2,9 +2,10 @@ L 1 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.c"
 N/******************** (C) COPYRIGHT 2014 Air Nano Team ***************************
 N * 文件名  ：RC.c
 N * 描述    ：接收遥控器数据         
-N * 实验平台：Air Nano四轴飞行器
+N * 实验平台：HT_Hawk
 N * 库版本  ：ST3.5.0
 N * 作者    ：Air Nano Team 
+N * 论坛    ：http://www.airnano.cn
 N * 淘宝    ：http://byd2.taobao.com  
 N *           http://hengtuo.taobao.com  
 N**********************************************************************************/
@@ -28908,7 +28909,7 @@ Nvoid RC_directive(void);
 Nvoid RDAU(void);
 Nvoid RC_Data_Refine(void);
 N#endif
-L 11 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.c" 2
+L 12 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.c" 2
 N#include "include.h"
 L 1 "..\..\User\include.h" 1
 N#ifndef __INCLUDE_H
@@ -28970,11 +28971,12 @@ S#include "spi.h"
 S#include "MOTO.h"
 S#include "eeprom.h"
 S#include "pwm_in.h"
+S#include "stmflash.h"
 S
 S#include "oled.h"
 S#include "MPU6050.h"
 S#include "HMC5883.h"
-S// #include "MS5611.h"
+S#include "MS5611.h"
 S#include "NRF24L01.h"
 S
 S#include "MultiRotor_rc.h"
@@ -28990,6 +28992,11 @@ S#include "Algorithm_quaternion.h"
 S
 N#endif /* __INCLUDE_H */
 L 5 "..\..\User\board_config.h" 2
+N
+N/*-------------向量表偏移量----------------------*/
+N/*-------------重要  不要动----------------------*/
+N#define FLASH_EXCURSION  0x20000
+N#define pro_FALG_ADD 0x0801FFF0
 N
 N/*----------------电机怠速----------------------*/
 N#define IDLING 210
@@ -33448,7 +33455,7 @@ Nunsigned char I2C_RadeByte(void);
 Nuint16_t Single_Write(unsigned char SlaveAddress,unsigned char REG_Address,unsigned char REG_data);
 Nuint16_t Single_Write_MS5611(unsigned char SlaveAddress,unsigned char REG_Address);	
 Nunsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address);
-N
+Nvoid I2C_Read(u8 addr_, u8 reg_, u8 len, u8 *buf);
 N
 N#endif // __MYI2C_H__
 L 28 "..\..\User\include.h" 2
@@ -33785,9 +33792,9 @@ N#ifndef __TIME_H__
 N#define __TIME_H__
 N#include "stm32f10x.h"
 N
-N#define EnTIM3()  TIM_Cmd(TIM3,ENABLE)
+N#define EnTIMER  TIM_Cmd(TIM5,ENABLE)
 Nvoid Nvic_Init(void);
-Nvoid TIM3_Config(void);
+Nvoid TIM5_Config(void);
 N#endif 
 L 31 "..\..\User\include.h" 2
 N#include "USART.h"
@@ -33797,7 +33804,7 @@ N#define __USART_H_
 N#include "stm32f10x.h"
 N#include <stdio.h>
 N
-Nvoid usart1_config(void);
+Nvoid USART1_Config(void);
 Nuint8_t UART1_Put_Char(unsigned char DataToSend);
 Nint fputc(int ch, FILE *f);
 Nvoid USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);
@@ -33938,12 +33945,17 @@ N#include "stm32f10x.h"
 N#include "board_config.h"
 N
 N
-N#define GPIO_TIM4	     GPIOA
-N#define TIM4_CH1       GPIO_Pin_0
-N#define TIM4_CH2       GPIO_Pin_1
-N#define TIM4_CH3       GPIO_Pin_2
-N#define TIM4_CH4       GPIO_Pin_3
-N#define RCC_GPIO_TIM4  RCC_APB2Periph_GPIOA
+N#define GPIO_TIM2	     GPIOA
+N#define TIM2_CH1       GPIO_Pin_0
+N#define TIM2_CH2       GPIO_Pin_1
+N#define TIM2_CH3       GPIO_Pin_2
+N#define TIM2_CH4       GPIO_Pin_3
+N#define RCC_GPIO_TIM2  RCC_APB2Periph_GPIOA
+N
+N#define GPIO_TIM3	     GPIOA
+N#define TIM3_CH1       GPIO_Pin_6
+N#define TIM3_CH2       GPIO_Pin_7
+N#define RCC_GPIO_TIM3  RCC_APB2Periph_GPIOA
 N
 Nextern u16  RC_Pwm_In[8];
 Nextern u16  RC_Pwm_In_his[8];
@@ -33952,6 +33964,53 @@ Nvoid PWM_IN_Config(void);
 N
 N#endif
 L 36 "..\..\User\include.h" 2
+N#include "stmflash.h"
+L 1 "..\..\User\Driver\STMFLASH\stmflash.h" 1
+N#ifndef __STMFLASH_H__
+N#define __STMFLASH_H__
+N#include "include.h"  
+N//////////////////////////////////////////////////////////////////////////////////	 						  
+N//////////////////////////////////////////////////////////////////////////////////
+N
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N//用户根据自己的需要设置
+N#define STM32_FLASH_SIZE 512 	 		//所选STM32的FLASH容量大小(单位为K)
+N#define STM32_FLASH_WREN 1              //使能FLASH写入(0，不是能;1，使能)
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N
+N//FLASH起始地址
+N#define STM32_FLASH_BASE 0x08000000 	//STM32 FLASH的起始地址
+N//FLASH解锁键值
+N 
+N
+Nu16 STMFLASH_ReadHalfWord(u32 faddr);		  //读出半字  
+Nvoid STMFLASH_WriteLenByte(u32 WriteAddr,u32 DataToWrite,u16 Len);	//指定地址开始写入指定长度的数据
+Nu32 STMFLASH_ReadLenByte(u32 ReadAddr,u16 Len);						//指定地址开始读取指定长度数据
+Nvoid STMFLASH_Write(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite);		//从指定地址开始写入指定长度的数据
+Nvoid STMFLASH_Read(u32 ReadAddr,u16 *pBuffer,u16 NumToRead);   		//从指定地址开始读出指定长度的数据
+Nextern uint16_t VirtAddVarTab[NumbOfVar];
+Xextern uint16_t VirtAddVarTab[((uint8_t)75)];
+N//测试写入
+Nvoid Test_Write(u32 WriteAddr,u16 WriteData);								   
+N#endif
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+L 37 "..\..\User\include.h" 2
 N
 N#include "oled.h"
 L 1 "..\..\User\Modules\Modules_oled\oled.h" 1
@@ -34020,7 +34079,7 @@ N  void Dis_Float2(unsigned char Y,unsigned char X,double real,unsigned char N1,
 N  void OLED_P6x8Num_8bit(unsigned char x,unsigned char y,unsigned char Number); 
 N  void OLED_Num5(unsigned char x,unsigned char y,unsigned int number);
 N#endif
-L 38 "..\..\User\include.h" 2
+L 39 "..\..\User\include.h" 2
 N#include "MPU6050.h"
 L 1 "..\..\User\Modules\Modules_mpu6050\MPU6050.h" 1
 N#ifndef __MPU6050_H_
@@ -34053,7 +34112,7 @@ N#define	GYRO_ZOUT_H		0x47
 N#define	GYRO_ZOUT_L		0x48
 N#define	PWR_MGMT_1		0x6B	//电源管理，典型值：0x00(正常启用)
 N#define	WHO_AM_I		0x75	//IIC地址寄存器(默认数值0x68，只读)
-N#define MPU6050_ADDRESS 0x68    //IIC写入时的地址字节数据，+1为读取
+N#define MPU6050_ADDRESS 0xD0    //IIC写入时的地址字节数据，+1为读取
 N
 N
 N#define MPU6050_DLPF_BW_256         0x00
@@ -34131,7 +34190,7 @@ Nvoid UART1_ReportIMU(void);
 Nvoid Gyro_OFFSET(void);
 N
 N#endif // __MPU6050_H__
-L 39 "..\..\User\include.h" 2
+L 40 "..\..\User\include.h" 2
 N#include "HMC5883.h"
 L 1 "..\..\User\Modules\Modules_hmc5883\HMC5883.h" 1
 N#ifndef __HMC5883_H_
@@ -34193,7 +34252,7 @@ N *              0  |  1   |  Single-Conversion Mode
 N *              1  |  0   |  Negative Bias
 N *              1  |  1   |  Sleep Mode
 N */
-N#define MAG_ADDRESS 0x1E
+N#define MAG_ADDRESS 0x3c
 N#define MAG_DATA_REGISTER 0x03
 N
 N#define HMC58X3_R_CONFA 0
@@ -34214,8 +34273,36 @@ Nu8 Init_HMC5883L(void);
 Nvoid HMC5883lRead(int16_t *magData);
 Nvoid Mag_Calibration(int16_t *array);
 N#endif // __MPU6050_H__
-L 40 "..\..\User\include.h" 2
-N// #include "MS5611.h"
+L 41 "..\..\User\include.h" 2
+N#include "MS5611.h"
+L 1 "..\..\User\Modules\Modules_ms5611\MS5611.h" 1
+N#ifndef __MS5611_H
+N#define	__MS5611_H
+N#include "stm32f10x.h"
+N/* MPU6050 Register Address ------------------------------------------------------------*/
+N#define MS561101BA_ADC_RD          0x00
+N#define	MS561101BA_PROM_RD 	       0xA0
+N#define MS561101BA_PROM_CRC        0xAE
+N
+N#define MS561101BA_SlaveAddress    0xEE  //MS5611的地址
+N#define MS561101BA_RST             0x1E  //cmd 复位
+N
+N#define	MS561101BA_D2_OSR_4096   0x58	// 9.04 mSec conversion time ( 110.62 Hz)
+N#define	MS561101BA_D1_OSR_4096   0x48
+N
+N#define MS5611_OSR256					 		 0x40
+N#define MS5611_OSR512					 		 0x42
+N#define MS5611_OSR1024					   0x44
+N#define MS5611_OSR2048					   0x46
+N#define MS5611_OSR4096					   0x48
+N#define FILTER_num 20
+N
+Nu8  MS5611_init(void);
+Nvoid MS561101BA_getTemperature(void);
+Nfloat Get_High(void);
+Nvoid Sethigh_Mode(void);
+N#endif
+L 42 "..\..\User\include.h" 2
 N#include "NRF24L01.h"
 L 1 "..\..\User\Modules\Modules_nrf24L01\NRF24L01.h" 1
 N#ifndef __NRF24L01_H
@@ -34312,7 +34399,7 @@ N
 N
 N
 N
-L 42 "..\..\User\include.h" 2
+L 43 "..\..\User\include.h" 2
 N
 N#include "MultiRotor_rc.h"
 N#include "MultiRotor_app.h"
@@ -34344,6 +34431,7 @@ N
 Nextern Flag_t flag;
 N
 Nvoid loop(void);
+Nvoid Bootloader_Set(void);
 Nvoid InitBoard(void);
 Nvoid Sensor_Init(void);
 Nvoid Screen_Update(void);
@@ -34352,7 +34440,7 @@ N#endif /* __MultiRotor_app_H */
 N
 N
 N
-L 45 "..\..\User\include.h" 2
+L 46 "..\..\User\include.h" 2
 N#include "MultiRotor_ahrs.h"
 L 1 "..\..\User\Function\MultiRotor_ahrs\MultiRotor_ahrs.h" 1
 N#ifndef __MultiRotor_ahrs_H
@@ -34367,13 +34455,7 @@ N#define Gyro_G 	0.03051756
 N#define Gyro_Gr	0.0005426
 N
 N
-Nstruct _angle{
-N        float pitch;
-N				float roll;
-N        float yaw;};
 N
-N
-Nextern struct _angle angle;
 Nextern int16_t MAG[3];			
 N
 N
@@ -34393,7 +34475,7 @@ N
 N
 N
 N
-L 46 "..\..\User\include.h" 2
+L 47 "..\..\User\include.h" 2
 N#include "MultiRotor_radio.h"
 L 1 "..\..\User\Function\MultiRotor_radio\MultiRotor_radio.h" 1
 N#ifndef __MultiRotor_radio_H
@@ -34418,7 +34500,7 @@ N
 N
 N
 N
-L 47 "..\..\User\include.h" 2
+L 48 "..\..\User\include.h" 2
 N#include "Algorithm_sqLite.h"
 L 1 "..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.h" 1
 N#ifndef _Algorithm_sqLite_H_
@@ -34452,7 +34534,7 @@ N#endif /* __Algorithm_sqLite_H */
 N
 N
 N
-L 48 "..\..\User\include.h" 2
+L 49 "..\..\User\include.h" 2
 N#include "MultiRotor_control.h"
 L 1 "..\..\User\Function\MultiRotor_control\MultiRotor_control.h" 1
 N#ifndef _MultiRotor_control_H_
@@ -34500,7 +34582,7 @@ Nvoid Attitude_RatePID(void);
 Nvoid Motor_Conter(void);
 Nvoid Reset_Integral(void);
 N#endif
-L 49 "..\..\User\include.h" 2
+L 50 "..\..\User\include.h" 2
 N
 N#include "Algorithm_math.h"
 L 1 "..\..\User\Algorithm\Algorithm_math\Algorithm_math.h" 1
@@ -34521,10 +34603,10 @@ Nfloat Q_rsqrt(float number);
 Nfloat VariableParameter(float error);
 Nvoid array_assign(u16 *array,s16 value,u16 length);
 Nvoid array_astrict(s16 *array,s16 lower,s16 upper);
-Nvoid data_limit(float data,float toplimit,float lowerlimit);
+Nfloat data_limit(float data,float toplimit,float lowerlimit);
 Ndouble Degree(double rad);
 N#endif /* __Algorithm_math_H */
-L 51 "..\..\User\include.h" 2
+L 52 "..\..\User\include.h" 2
 N#include "Algorithm_filter.h"
 L 1 "..\..\User\Algorithm\Algorithm_filter\Algorithm_filter.h" 1
 N#ifndef __Algorithm_filter_H
@@ -34535,7 +34617,7 @@ N
 Ndouble IIR_I_Filter(double InData, double *x, double *y, double *b, short nb, double *a, short na);
 Nfp32 LPF_1st(fp32 oldData, fp32 newData, fp32 lpf_factor);
 N#endif /* __Algorithm_filter_H */
-L 52 "..\..\User\include.h" 2
+L 53 "..\..\User\include.h" 2
 N#include "Algorithm_quaternion.h"
 L 1 "..\..\User\Algorithm\Algorithm_quaternion\Algorithm_quaternion.h" 1
 N#ifndef __Algorithm_quaternion_H
@@ -34574,10 +34656,10 @@ NQuaternion Quaternion_Multiply( Quaternion NowQ, Quaternion OldQ );
 Nvoid Quaternion_Normalize( Quaternion *pNumQ );
 Nvoid Quaternion_RungeKutta( Quaternion *pNumQ, float GyrX, float GyrY, float GyrZ, float helfTimes );
 N#endif /* __Algorithm_quaternion_H */
-L 53 "..\..\User\include.h" 2
+L 54 "..\..\User\include.h" 2
 N
 N#endif /* __INCLUDE_H */
-L 12 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.c" 2
+L 13 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.c" 2
 N
 NRC_GETDATA RC_Data;
 NrcReadRawData rcReadRawFunc = RC_Data_Refine;

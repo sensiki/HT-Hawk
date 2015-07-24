@@ -7,5 +7,5 @@
 
 void PWM_OUT_Config(void);
 void moto_STOP(void);
-void moto_PwmRflash(int16_t *Moter);
+void moto_PwmRflash(s16 *Moter);
 #endif

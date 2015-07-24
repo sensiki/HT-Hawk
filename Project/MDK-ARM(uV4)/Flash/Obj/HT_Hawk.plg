@@ -1,0 +1,17 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+I:\工作资料\HT_Hawk资料\恒拓科技_HT-Hawk飞控资料包 6-27\8、HT-Hawk飞控源代码\Project\MDK-ARM(uV4)\project.uvproj
+Project File Date:  07/04/2015
+
+<h2>Output:</h2>
+Build target 'Flash'
+compiling MultiRotor_app.c...
+compiling MultiRotor_control.c...
+linking...
+Program Size: Code=39148 RO-data=3532 RW-data=916 ZI-data=15292  
+FromELF: creating hex file...
+User command #2: fromelf.exe  --bin -o  .\Flash\HT_Hawk.bin .\Flash\Obj\HT_Hawk.axf
+".\Flash\Obj\HT_Hawk.axf" - 0 Error(s), 0 Warning(s).

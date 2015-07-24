@@ -18,7 +18,7 @@
 struct _ctrl ctrl;
 struct _target Target;
 
-int16_t Moto_duty[4];
+s16 Moto_duty[MOTOR_NUM];
 s16 *motor_array = Moto_duty;
 
 /*====================================================================================================*/
@@ -59,15 +59,15 @@ void Calculate_Target(void)
 	}
 }
 
-/***************************************************/
-/*void CONTROL(float rol, float pit, float yaw)    */
-/*输入：rol   横滚角                               */
-/*      pit   俯仰角                               */
-/*			yaw   航向                                 */
-/*输出：                                           */
-/*备注：串级PID 控制   外环（角度环）采用PID调节    */
-/*                     内环（角速度环）采用PD调节  */
-/***************************************************/
+/*====================================================================================================*/
+/*====================================================================================================*
+**函数 : CONTROL(struct _target Goal) 
+**功能 : 串级PID 控?
+**输入 : Goal
+**輸出 : None
+**备注 : None
+**====================================================================================================*/
+/*====================================================================================================*/
 void CONTROL(struct _target Goal)   
 {
 	float  deviation_pitch,deviation_roll,deviation_yaw;
@@ -80,9 +80,8 @@ void CONTROL(struct _target Goal)
 		ctrl.pitch.shell.increment += deviation_pitch;
 		
 		//limit for the max increment
-		if(ctrl.pitch.shell.increment > ctrl.pitch.shell.increment_max)  	ctrl.pitch.shell.increment = ctrl.pitch.shell.increment_max;
-		else if(ctrl.pitch.shell.increment < -ctrl.pitch.shell.increment_max)		ctrl.pitch.shell.increment = -ctrl.pitch.shell.increment_max;
-		
+		ctrl.pitch.shell.increment = data_limit(ctrl.pitch.shell.increment,ctrl.pitch.shell.increment_max,-ctrl.pitch.shell.increment_max);
+
 		ctrl.pitch.shell.pid_out = ctrl.pitch.shell.kp * deviation_pitch + ctrl.pitch.shell.ki * ctrl.pitch.shell.increment;
 		
 		//俯仰计算//////////////
@@ -90,8 +89,7 @@ void CONTROL(struct _target Goal)
 		ctrl.roll.shell.increment += deviation_roll;
 		
 		//limit for the max increment
-		if(ctrl.roll.shell.increment > ctrl.roll.shell.increment_max)  	ctrl.roll.shell.increment = ctrl.roll.shell.increment_max;
-		else if(ctrl.roll.shell.increment < -ctrl.roll.shell.increment_max)		ctrl.roll.shell.increment = -ctrl.roll.shell.increment_max;
+		ctrl.roll.shell.increment = data_limit(ctrl.roll.shell.increment,ctrl.roll.shell.increment_max,-ctrl.roll.shell.increment_max);
 
 		ctrl.roll.shell.pid_out  = ctrl.roll.shell.kp * deviation_roll + ctrl.roll.shell.ki * ctrl.roll.shell.increment;
 		
@@ -107,7 +105,6 @@ void CONTROL(struct _target Goal)
 	}
 	ctrl.ctrlRate ++;
   Attitude_RatePID();
-	
 	Motor_Conter();
 }
 
@@ -124,50 +121,46 @@ void Attitude_RatePID(void)
 {
   fp32 E_pitch,E_roll,E_yaw;
 	
-	// 计算俯仰偏差  
-	E_pitch = ctrl.pitch.shell.pid_out - sensor.gyro.averag.y * Gyro_G;
-	ctrl.pitch.core.kp_out = ctrl.pitch.core.kp * E_pitch;
+	// 计算偏差  
+	E_pitch = ctrl.pitch.shell.pid_out - sensor.gyro.averag.y;
+	E_roll  = ctrl.roll.shell.pid_out  - sensor.gyro.averag.x;
+	E_yaw   = ctrl.yaw.shell.pid_out   - sensor.gyro.averag.z;
 	
 	// 积分
 	ctrl.pitch.core.increment += E_pitch;
+	ctrl.roll.core.increment  += E_roll;
+	ctrl.yaw.core.increment   += E_yaw;
+	
+	// 积分限幅
 	ctrl.pitch.core.increment = data_limit(ctrl.pitch.core.increment,20,-20);
-	ctrl.pitch.core.ki_out = ctrl.pitch.core.ki/10 * ctrl.pitch.core.increment;
-
+	ctrl.roll.core.increment  = data_limit(ctrl.roll.core.increment,20,-20);		
+	ctrl.yaw.core.increment   = data_limit(ctrl.yaw.core.increment,20,-20);
+	
+	ctrl.pitch.core.kp_out = ctrl.pitch.core.kp * E_pitch;
+	ctrl.roll.core.kp_out  = ctrl.roll.core.kp  * E_roll;
+	ctrl.yaw.core.kp_out   = ctrl.yaw.core.kp   * E_yaw;
+	
+	ctrl.pitch.core.ki_out = ctrl.pitch.core.ki * ctrl.pitch.core.increment;
+  ctrl.roll.core.ki_out  = ctrl.roll.core.ki  * ctrl.roll.core.increment;
+	ctrl.yaw.core.ki_out   = ctrl.yaw.core.ki   * ctrl.yaw.core.increment;
+	
 	// 微分
-	ctrl.pitch.core.kd_out = ctrl.pitch.core.kd * (sensor.gyro.histor.y - sensor.gyro.averag.y);
+	ctrl.pitch.core.kd_out = ctrl.pitch.core.kd * (sensor.gyro.histor.y - sensor.gyro.averag.y)*33;
+	ctrl.roll.core.kd_out  = ctrl.roll.core.kd  * (sensor.gyro.histor.x - sensor.gyro.averag.x)*33;
+	ctrl.yaw.core.kd_out   = ctrl.yaw.core.kd   * (sensor.gyro.histor.z - sensor.gyro.averag.z)*33;	
+	
+	sensor.gyro.histor.y = sensor.gyro.averag.y;
+	sensor.gyro.histor.x = sensor.gyro.averag.x; 
+  sensor.gyro.histor.z = sensor.gyro.averag.z;	
 	
 	ctrl.pitch.core.pid_out = ctrl.pitch.core.kp_out + ctrl.pitch.core.ki_out + ctrl.pitch.core.kd_out;
-	sensor.gyro.histor.y = sensor.gyro.averag.y;
+	ctrl.roll.core.pid_out  = ctrl.roll.core.kp_out  + ctrl.roll.core.ki_out  + ctrl.roll.core.kd_out;
+	ctrl.yaw.core.pid_out   = ctrl.yaw.core.kp_out   + ctrl.yaw.core.kd_out;
 	
-	// 计算横滚偏差
-	E_roll = ctrl.roll.shell.pid_out - sensor.gyro.averag.x * Gyro_G;
-	ctrl.roll.core.kp_out = ctrl.roll.core.kp * E_roll;
-	
-	// 积分
-	ctrl.roll.core.increment += E_roll;
-	ctrl.roll.core.increment = data_limit(ctrl.roll.core.increment,20,-20);
-	ctrl.roll.core.ki_out = ctrl.roll.core.ki/10 * ctrl.roll.core.increment;
-	
-	// 微分
-	ctrl.roll.core.kd_out = ctrl.roll.core.kd * (sensor.gyro.histor.x - sensor.gyro.averag.x);
-	
-	ctrl.roll.core.pid_out = ctrl.roll.core.kp_out + ctrl.roll.core.ki_out + ctrl.roll.core.kd_out;
-	sensor.gyro.histor.x = sensor.gyro.averag.x;   
-	
-	// 计算航向偏差
-	E_yaw = ctrl.yaw.shell.pid_out - sensor.gyro.averag.z * Gyro_G;
-	ctrl.yaw.core.kp_out = ctrl.yaw.core.kp * E_yaw;
-	
-	// 积分
-	ctrl.yaw.core.increment += E_yaw;
-	ctrl.yaw.core.increment = data_limit(ctrl.yaw.core.increment,20,-20);
-	ctrl.yaw.core.ki_out = ctrl.yaw.core.ki * ctrl.yaw.core.increment;
-	
-	// 微分
-	ctrl.yaw.core.kd_out = ctrl.yaw.core.kd * (sensor.gyro.histor.z - sensor.gyro.averag.z);
-	
-	ctrl.yaw.core.pid_out = ctrl.yaw.core.kp_out + ctrl.yaw.core.kd_out;
-  sensor.gyro.histor.z = sensor.gyro.averag.z;
+	ctrl.pitch.core.pid_out = ctrl.pitch.core.pid_out*0.8 + ctrl.pitch.shell.pid_out/2;
+	ctrl.roll.core.pid_out  = ctrl.roll.core.pid_out *0.8 + ctrl.roll.shell.pid_out/2; 
+	ctrl.yaw.core.pid_out   = ctrl.yaw.core.pid_out;
+
 }
 /*====================================================================================================*/
 /*====================================================================================================*
@@ -187,16 +180,25 @@ void Motor_Conter(void)
  	yaw   = -ctrl.yaw.core.pid_out;
 	
   if(RC_Data.THROTTLE > RC_MINCHECK) {
-		int date_throttle	= (RC_Data.THROTTLE-1000)/cos(angle.roll/RtA)/cos(angle.pitch/RtA);
+		int date_throttle	= (RC_Data.THROTTLE-1000)/cos(AngE.Roll/RtA)/cos(AngE.Pitch/RtA);
 		
-		Moto_duty[0] = date_throttle - pitch - roll + yaw;
-	  Moto_duty[1] = date_throttle - pitch + roll - yaw;
-		Moto_duty[2] = date_throttle + pitch + roll + yaw;
-	  Moto_duty[3] = date_throttle + pitch - roll - yaw;
+		#ifdef QUADROTOR 
+			Moto_duty[0] = date_throttle - pitch - roll + yaw;
+			Moto_duty[1] = date_throttle - pitch + roll - yaw;
+			Moto_duty[2] = date_throttle + pitch + roll + yaw;
+			Moto_duty[3] = date_throttle + pitch - roll - yaw;
+		#elif defined HEXRCOPTER
+			Moto_duty[0] = date_throttle - pitch + 0.5*roll - yaw;
+			Moto_duty[1] = date_throttle         +     roll + yaw;
+			Moto_duty[2] = date_throttle + pitch + 0.5*roll - yaw;
+			Moto_duty[3] = date_throttle + pitch - 0.5*roll + yaw;	
+			Moto_duty[4] = date_throttle         -     roll - yaw;
+			Moto_duty[5] = date_throttle - pitch - 0.5*roll + yaw;	
+		#endif 	
 	}
 	else
 	{	
-    Moto_duty[0] = Moto_duty[1] = Moto_duty[2] = Moto_duty[3] = IDLING;	
+		array_assign(&Moto_duty[0],IDLING,MOTOR_NUM);
 		Reset_Integral();		
 	}
 	if(flag.ARMED)  moto_PwmRflash(&Moto_duty[0]);		

@@ -601,18 +601,40 @@ N
 N#define __CORTEX_M                (0x03)                                                       /*!< Cortex core                    */
 N
 N#include <stdint.h>                           /* Include standard types */
-L 1 "C:\Keil\ARM\RV31\Inc\stdint.h" 1
-N/* Copyright (C) ARM Ltd., 1999 */
+L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h" 1
+N/* Copyright (C) ARM Ltd., 1999,2014 */
 N/* All rights reserved */
 N
 N/*
-N * RCS $Revision: 137748 $
-N * Checkin $Date: 2008-09-11 17:34:24 +0100 (Thu, 11 Sep 2008) $
+N * RCS $Revision: 185525 $
+N * Checkin $Date: 2014-05-29 12:44:48 +0100 (Thu, 29 May 2014) $
 N * Revising $Author: agrant $
 N */
 N
 N#ifndef __stdint_h
 N#define __stdint_h
+N#define __ARMCLIB_VERSION 5050106
+N
+N  #ifdef __INT64_TYPE__
+S    /* armclang predefines '__INT64_TYPE__' and '__INT64_C_SUFFIX__' */
+S    #define __INT64 __INT64_TYPE__
+N  #else
+N    /* armcc has builtin '__int64' which can be used in --strict mode */
+N    #define __INT64 __int64
+N    #define __INT64_C_SUFFIX__ ll
+N  #endif
+N  #define __PASTE2(x, y) x ## y
+N  #define __PASTE(x, y) __PASTE2(x, y)
+N  #define __INT64_C(x)  __ESCAPE__(__PASTE(x, __INT64_C_SUFFIX__))
+N  #define __UINT64_C(x)  __ESCAPE__(__PASTE(x ## u, __INT64_C_SUFFIX__))
+N  #if defined(__clang__) || (defined(__ARMCC_VERSION) && !defined(__STRICT_ANSI__))
+X  #if 0L || (1L && !0L)
+N    /* armclang and non-strict armcc allow 'long long' in system headers */
+N    #define __LONGLONG long long
+N  #else
+S    /* strict armcc has '__int64' */
+S    #define __LONGLONG __int64
+N  #endif
 N
 N  #ifndef __STDINT_DECLS
 N  #define __STDINT_DECLS
@@ -631,8 +653,6 @@ N
 N/*
 N * 'signed' is redundant below, except for 'signed char' and if
 N * the typedef is used to declare a bitfield.
-N * '__int64' is used instead of 'long long' so that this header
-N * can be used in --strict mode.
 N */
 N
 N    /* 7.18.1.1 */
@@ -641,13 +661,15 @@ N    /* exact-width signed integer types */
 Ntypedef   signed          char int8_t;
 Ntypedef   signed short     int int16_t;
 Ntypedef   signed           int int32_t;
-Ntypedef   signed       __int64 int64_t;
+Ntypedef   signed       __INT64 int64_t;
+Xtypedef   signed       __int64 int64_t;
 N
 N    /* exact-width unsigned integer types */
 Ntypedef unsigned          char uint8_t;
 Ntypedef unsigned short     int uint16_t;
 Ntypedef unsigned           int uint32_t;
-Ntypedef unsigned       __int64 uint64_t;
+Ntypedef unsigned       __INT64 uint64_t;
+Xtypedef unsigned       __int64 uint64_t;
 N
 N    /* 7.18.1.2 */
 N
@@ -656,13 +678,15 @@ N    /* minimum-width signed integer types */
 Ntypedef   signed          char int_least8_t;
 Ntypedef   signed short     int int_least16_t;
 Ntypedef   signed           int int_least32_t;
-Ntypedef   signed       __int64 int_least64_t;
+Ntypedef   signed       __INT64 int_least64_t;
+Xtypedef   signed       __int64 int_least64_t;
 N
 N    /* minimum-width unsigned integer types */
 Ntypedef unsigned          char uint_least8_t;
 Ntypedef unsigned short     int uint_least16_t;
 Ntypedef unsigned           int uint_least32_t;
-Ntypedef unsigned       __int64 uint_least64_t;
+Ntypedef unsigned       __INT64 uint_least64_t;
+Xtypedef unsigned       __int64 uint_least64_t;
 N
 N    /* 7.18.1.3 */
 N
@@ -670,21 +694,31 @@ N    /* fastest minimum-width signed integer types */
 Ntypedef   signed           int int_fast8_t;
 Ntypedef   signed           int int_fast16_t;
 Ntypedef   signed           int int_fast32_t;
-Ntypedef   signed       __int64 int_fast64_t;
+Ntypedef   signed       __INT64 int_fast64_t;
+Xtypedef   signed       __int64 int_fast64_t;
 N
 N    /* fastest minimum-width unsigned integer types */
 Ntypedef unsigned           int uint_fast8_t;
 Ntypedef unsigned           int uint_fast16_t;
 Ntypedef unsigned           int uint_fast32_t;
-Ntypedef unsigned       __int64 uint_fast64_t;
+Ntypedef unsigned       __INT64 uint_fast64_t;
+Xtypedef unsigned       __int64 uint_fast64_t;
 N
 N    /* 7.18.1.4 integer types capable of holding object pointers */
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+Stypedef   signed       __INT64 intptr_t;
+Stypedef unsigned       __INT64 uintptr_t;
+N#else
 Ntypedef   signed           int intptr_t;
 Ntypedef unsigned           int uintptr_t;
+N#endif
 N
 N    /* 7.18.1.5 greatest-width integer types */
-Ntypedef   signed       __int64 intmax_t;
-Ntypedef unsigned       __int64 uintmax_t;
+Ntypedef   signed     __LONGLONG intmax_t;
+Xtypedef   signed     long long intmax_t;
+Ntypedef unsigned     __LONGLONG uintmax_t;
+Xtypedef unsigned     long long uintmax_t;
 N
 N
 N#if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS)
@@ -696,19 +730,19 @@ N    /* minimum values of exact-width signed integer types */
 N#define INT8_MIN                   -128
 N#define INT16_MIN                -32768
 N#define INT32_MIN          (~0x7fffffff)   /* -2147483648 is unsigned */
-N#define INT64_MIN  __ESCAPE__(~0x7fffffffffffffffll) /* -9223372036854775808 is unsigned */
+N#define INT64_MIN  __INT64_C(~0x7fffffffffffffff) /* -9223372036854775808 is unsigned */
 N
 N    /* maximum values of exact-width signed integer types */
 N#define INT8_MAX                    127
 N#define INT16_MAX                 32767
 N#define INT32_MAX            2147483647
-N#define INT64_MAX  __ESCAPE__(9223372036854775807ll)
+N#define INT64_MAX  __INT64_C(9223372036854775807)
 N
 N    /* maximum values of exact-width unsigned integer types */
 N#define UINT8_MAX                   255
 N#define UINT16_MAX                65535
 N#define UINT32_MAX           4294967295u
-N#define UINT64_MAX __ESCAPE__(18446744073709551615ull)
+N#define UINT64_MAX __UINT64_C(18446744073709551615)
 N
 N    /* 7.18.2.2 */
 N
@@ -716,19 +750,19 @@ N    /* minimum values of minimum-width signed integer types */
 N#define INT_LEAST8_MIN                   -128
 N#define INT_LEAST16_MIN                -32768
 N#define INT_LEAST32_MIN          (~0x7fffffff)
-N#define INT_LEAST64_MIN  __ESCAPE__(~0x7fffffffffffffffll)
+N#define INT_LEAST64_MIN  __INT64_C(~0x7fffffffffffffff)
 N
 N    /* maximum values of minimum-width signed integer types */
 N#define INT_LEAST8_MAX                    127
 N#define INT_LEAST16_MAX                 32767
 N#define INT_LEAST32_MAX            2147483647
-N#define INT_LEAST64_MAX  __ESCAPE__(9223372036854775807ll)
+N#define INT_LEAST64_MAX  __INT64_C(9223372036854775807)
 N
 N    /* maximum values of minimum-width unsigned integer types */
 N#define UINT_LEAST8_MAX                   255
 N#define UINT_LEAST16_MAX                65535
 N#define UINT_LEAST32_MAX           4294967295u
-N#define UINT_LEAST64_MAX __ESCAPE__(18446744073709551615ull)
+N#define UINT_LEAST64_MAX __UINT64_C(18446744073709551615)
 N
 N    /* 7.18.2.3 */
 N
@@ -736,30 +770,45 @@ N    /* minimum values of fastest minimum-width signed integer types */
 N#define INT_FAST8_MIN           (~0x7fffffff)
 N#define INT_FAST16_MIN          (~0x7fffffff)
 N#define INT_FAST32_MIN          (~0x7fffffff)
-N#define INT_FAST64_MIN  __ESCAPE__(~0x7fffffffffffffffll)
+N#define INT_FAST64_MIN  __INT64_C(~0x7fffffffffffffff)
 N
 N    /* maximum values of fastest minimum-width signed integer types */
 N#define INT_FAST8_MAX             2147483647
 N#define INT_FAST16_MAX            2147483647
 N#define INT_FAST32_MAX            2147483647
-N#define INT_FAST64_MAX  __ESCAPE__(9223372036854775807ll)
+N#define INT_FAST64_MAX  __INT64_C(9223372036854775807)
 N
 N    /* maximum values of fastest minimum-width unsigned integer types */
 N#define UINT_FAST8_MAX            4294967295u
 N#define UINT_FAST16_MAX           4294967295u
 N#define UINT_FAST32_MAX           4294967295u
-N#define UINT_FAST64_MAX __ESCAPE__(18446744073709551615ull)
+N#define UINT_FAST64_MAX __UINT64_C(18446744073709551615)
 N
 N    /* 7.18.2.4 */
 N
 N    /* minimum value of pointer-holding signed integer type */
-N#define INTPTR_MIN (~0x7fffffff)
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define INTPTR_MIN INT64_MIN
+N#else
+N#define INTPTR_MIN INT32_MIN
+N#endif
 N
 N    /* maximum value of pointer-holding signed integer type */
-N#define INTPTR_MAX   2147483647
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define INTPTR_MAX INT64_MAX
+N#else
+N#define INTPTR_MAX INT32_MAX
+N#endif
 N
 N    /* maximum value of pointer-holding unsigned integer type */
-N#define UINTPTR_MAX  4294967295u
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define UINTPTR_MAX INT64_MAX
+N#else
+N#define UINTPTR_MAX INT32_MAX
+N#endif
 N
 N    /* 7.18.2.5 */
 N
@@ -775,15 +824,26 @@ N
 N    /* 7.18.3 */
 N
 N    /* limits of ptrdiff_t */
-N#define PTRDIFF_MIN (~0x7fffffff)
-N#define PTRDIFF_MAX   2147483647
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define PTRDIFF_MIN INT64_MIN
+S#define PTRDIFF_MAX INT64_MAX
+N#else
+N#define PTRDIFF_MIN INT32_MIN
+N#define PTRDIFF_MAX INT32_MAX
+N#endif
 N
 N    /* limits of sig_atomic_t */
 N#define SIG_ATOMIC_MIN (~0x7fffffff)
 N#define SIG_ATOMIC_MAX   2147483647
 N
 N    /* limit of size_t */
-N#define SIZE_MAX 4294967295u
+N#if __sizeof_ptr == 8
+X#if 4 == 8
+S#define SIZE_MAX UINT64_MAX
+N#else
+N#define SIZE_MAX UINT32_MAX
+N#endif
 N
 N    /* limits of wchar_t */
 N    /* NB we have to undef and redef because they're defined in both
@@ -791,8 +851,8 @@ N     * stdint.h and wchar.h */
 N#undef WCHAR_MIN
 N#undef WCHAR_MAX
 N
-N#if defined(__WCHAR32)
-X#if 0L
+N#if defined(__WCHAR32) || (defined(__ARM_SIZEOF_WCHAR_T) && __ARM_SIZEOF_WCHAR_T == 4)
+X#if 0L || (0L && __ARM_SIZEOF_WCHAR_T == 4)
 S  #define WCHAR_MIN   0
 S  #define WCHAR_MAX   0xffffffffU
 N#else
@@ -813,12 +873,12 @@ N    /* 7.18.4.1 macros for minimum-width integer constants */
 N#define INT8_C(x)   (x)
 N#define INT16_C(x)  (x)
 N#define INT32_C(x)  (x)
-N#define INT64_C(x)  __ESCAPE__(x ## ll)
+N#define INT64_C(x)  __INT64_C(x)
 N
 N#define UINT8_C(x)  (x ## u)
 N#define UINT16_C(x) (x ## u)
 N#define UINT32_C(x) (x ## u)
-N#define UINT64_C(x) __ESCAPE__(x ## ull)
+N#define UINT64_C(x) __UINT64_C(x)
 N
 N    /* 7.18.4.2 macros for greatest-width integer constants */
 N#define INTMAX_C(x)  __ESCAPE__(x ## ll)
@@ -862,14 +922,15 @@ S      using ::std::intptr_t;
 S      using ::std::uintptr_t;
 S      using ::std::intmax_t;
 S      using ::std::uintmax_t;
-S    #endif 
+S    #endif
 N  #endif /* __cplusplus */
+N
+N#undef __INT64
+N#undef __LONGLONG
 N
 N#endif /* __stdint_h */
 N
 N/* end of stdint.h */
-N
-N
 L 91 "..\..\Libraries\CMSIS\CM3\CoreSupport\core_cm3.h" 2
 N
 N#if defined (__ICCARM__)
@@ -1697,7 +1758,7 @@ Nextern int32_t __REVSH(int16_t value);
 N
 N
 N#if (__ARMCC_VERSION < 400000)
-X#if (410894 < 400000)
+X#if (5050106 < 400000)
 S
 S/**
 S * @brief  Remove the exclusive lock created by ldrex
@@ -28849,7 +28910,7 @@ S#include "usb_hw.h"			/* USBÊ®°Âùó */
 S#include "LED.h"
 S#include "ADC.h"
 S#include "I2C.h"
-S#include "drv_i2c.h"
+S#include "hard_i2c.h"
 S#include "delay.h"
 S#include "TIME.h"
 S#include "USART.h"
@@ -28857,9 +28918,12 @@ S#include "spi.h"
 S#include "MOTO.h"
 S#include "eeprom.h"
 S#include "pwm_in.h"
+S#include "stmflash.h"
 S
+S#include "oled.h"
 S#include "MPU6050.h"
-S// #include "MS5611.h"
+S#include "HMC5883.h"
+S#include "MS5611.h"
 S#include "NRF24L01.h"
 S
 S#include "MultiRotor_rc.h"
@@ -28876,8 +28940,13 @@ S
 N#endif /* __INCLUDE_H */
 L 5 "..\..\User\board_config.h" 2
 N
+N/*-------------œÚ¡ø±Ì∆´“∆¡ø----------------------*/
+N/*-------------÷ÿ“™  ≤ª“™∂Ø----------------------*/
+N#define FLASH_EXCURSION  0x20000
+N#define pro_FALG_ADD 0x0801FFF0
+N
 N/*----------------µÁª˙µ°ÀŸ----------------------*/
-N#define IDLING 50
+N#define IDLING 210
 N
 N/*--------------“£øÿøÿ÷∆∑Ω Ω—°‘Ò----------------*/
 N#define RC_CONTROL_USE_NRF24l01
@@ -28886,19 +28955,12 @@ N/*---------------Õ”¬›“«≤…ºØ---------------------*/
 N#define GYRO_GATHER   100 
 N
 N/*----------------”Õ√≈ºÏ≤È----------------------*/
-N#define RC_MINCHECK   1100
-N#define RC_MAXCHECK   1700
+N#define RC_MINCHECK   1200
+N#define RC_MAXCHECK   1800
 N
 N/*-------------◊‘∂ØΩ‚≥˝Œ‰◊∞ ±º‰-----------------*/
-N// #define 
+N#define AUTODISARMDE_TIME 2500  
 N
-N/*-------------“£øÿ∂™ ßπÿª˙ ±º‰------------------*/
-N
-N
-N#define GPIO_I2C	     GPIOB
-N#define SCL_PIN        GPIO_Pin_10
-N#define SDA_PIN        GPIO_Pin_11
-N#define RCC_GPIO_I2C	 RCC_APB2Periph_GPIOB
 N
 N
 Ntypedef void (*rcReadRawData)(void);        
@@ -28906,16 +28968,16 @@ N
 N#endif /* __BOARD_CONFIG_H */
 L 19 "..\..\User\include.h" 2
 N#include "math.h"
-L 1 "C:\Keil\ARM\RV31\Inc\math.h" 1
+L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h" 1
 N/*
 N * math.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.5
 N * Copyright (C) Codemist Ltd., 1988
-N * Copyright 1991-1998,2004-2006 ARM Limited. All rights reserved
+N * Copyright 1991-1998,2004-2006,2014 ARM Limited. All rights reserved
 N */
 N
 N/*
-N * RCS $Revision: 163268 $ Codemist 0.03
-N * Checkin $Date: 2010-12-03 13:57:26 +0000 (Fri, 03 Dec 2010) $
+N * RCS $Revision: 185525 $ Codemist 0.03
+N * Checkin $Date: 2014-05-29 12:44:48 +0100 (Thu, 29 May 2014) $
 N * Revising $Author: statham $
 N */
 N
@@ -28934,6 +28996,16 @@ N */
 N
 N#ifndef __math_h
 N#define __math_h
+N#define __ARMCLIB_VERSION 5050106
+N
+N#if defined(__clang__) || (defined(__ARMCC_VERSION) && !defined(__STRICT_ANSI__))
+X#if 0L || (1L && !0L)
+N  /* armclang and non-strict armcc allow 'long long' in system headers */
+N  #define __LONGLONG long long
+N#else
+S  /* strict armcc has '__int64' */
+S  #define __LONGLONG __int64
+N#endif
 N
 N/*
 N * Some of these declarations are new in C99.  To access them in C++
@@ -28947,12 +29019,17 @@ N  #endif
 N#endif
 N
 N#define _ARMABI __declspec(__nothrow)
-N#define _ARMABI_SOFTFP __declspec(__nothrow) __softfp
-N#define _ARMABI_PURE __declspec(__nothrow) __pure
+N#ifdef __TARGET_ARCH_AARCH64
+S# define _ARMABI_SOFTFP __declspec(__nothrow)
+N#else
+N# define _ARMABI_SOFTFP __declspec(__nothrow) __attribute__((__pcs__("aapcs")))
+N# define __HAVE_LONGDOUBLE 1
+N#endif
+N#define _ARMABI_PURE __declspec(__nothrow) __attribute__((const))
 N#ifdef __FP_FENV_EXCEPTIONS
 S# define _ARMABI_FPEXCEPT _ARMABI
 N#else
-N# define _ARMABI_FPEXCEPT _ARMABI __pure
+N# define _ARMABI_FPEXCEPT _ARMABI __attribute__((const))
 N#endif
 N
 N#ifdef __cplusplus
@@ -28969,6 +29046,12 @@ N#define _ARMABI_INLINE_DEF static inline
 N#else
 S#define _ARMABI_INLINE __inline
 S#define _ARMABI_INLINE_DEF __inline
+N#endif
+N
+N#ifdef __TARGET_ARCH_AARCH64
+S#  define _SOFTFP
+N#else
+N#  define _SOFTFP __attribute__((__pcs__("aapcs")))
 N#endif
 N
 N   /*
@@ -28995,13 +29078,14 @@ N *
 N * __HI & __LO are affected by the endianness and the target FPU.
 N */
 N#define __FLT(x) (*(unsigned *)&(x))
-N#ifdef __BIG_ENDIAN
+N#if defined(__ARM_BIG_ENDIAN) || defined(__BIG_ENDIAN)
+X#if 0L || 0L
 S#  define __LO(x) (*(1 + (unsigned *)&(x)))
 S#  define __HI(x) (*(unsigned *)&(x))
-N#else /* ndef __BIG_ENDIAN */
+N#else /* !defined(__ARM_BIG_ENDIAN) && !defined(__BIG_ENDIAN) */
 N#  define __HI(x) (*(1 + (unsigned *)&(x)))
 N#  define __LO(x) (*(unsigned *)&(x))
-N#endif /* ndef __BIG_ENDIAN */
+N#endif /* !defined(__ARM_BIG_ENDIAN) && !defined(__BIG_ENDIAN) */
 N
 N#   ifndef __MATH_DECLS
 N#   define __MATH_DECLS
@@ -29020,8 +29104,10 @@ N#   ifdef __cplusplus
 S      extern "C" {
 N#   endif /* __cplusplus */
 N
-Nextern __softfp unsigned __ARM_dcmp4(double /*x*/, double /*y*/);
-Nextern __softfp unsigned __ARM_fcmp4(float /*x*/, float /*y*/);
+Nextern _SOFTFP unsigned __ARM_dcmp4(double /*x*/, double /*y*/);
+Xextern __attribute__((__pcs__("aapcs"))) unsigned __ARM_dcmp4(double  , double  );
+Nextern _SOFTFP unsigned __ARM_fcmp4(float /*x*/, float /*y*/);
+Xextern __attribute__((__pcs__("aapcs"))) unsigned __ARM_fcmp4(float  , float  );
 N    /*
 N     * Compare x and y and return the CPSR in r0.  These means we can test for
 N     * result types with bit pattern matching.
@@ -29030,20 +29116,20 @@ N     * These are a copy of the declarations in rt_fp.h keep in sync.
 N     */
 N
 Nextern _ARMABI_SOFTFP int __ARM_fpclassifyf(float /*x*/);
-Xextern __declspec(__nothrow) __softfp int __ARM_fpclassifyf(float  );
+Xextern __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_fpclassifyf(float  );
 Nextern _ARMABI_SOFTFP int __ARM_fpclassify(double /*x*/);
-Xextern __declspec(__nothrow) __softfp int __ARM_fpclassify(double  );
+Xextern __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_fpclassify(double  );
 N    /* Classify x into NaN, infinite, normal, subnormal, zero */
 N    /* Used by fpclassify macro */
 N
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isfinitef(float __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isfinitef(float __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isfinitef(float __x)
 N{
 N    return ((__FLT(__x) >> 23) & 0xff) != 0xff;
 X    return (((*(unsigned *)&(__x)) >> 23) & 0xff) != 0xff;
 N}
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isfinite(double __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isfinite(double __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isfinite(double __x)
 N{
 N    return ((__HI(__x) >> 20) & 0x7ff) != 0x7ff;
 X    return (((*(1 + (unsigned *)&(__x))) >> 20) & 0x7ff) != 0x7ff;
@@ -29052,13 +29138,13 @@ N    /* Return 1 if __x is finite, 0 otherwise */
 N    /* Used by isfinite macro */
 N
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isinff(float __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isinff(float __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isinff(float __x)
 N{
 N    return (__FLT(__x) << 1) == 0xff000000;
 X    return ((*(unsigned *)&(__x)) << 1) == 0xff000000;
 N}
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isinf(double __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isinf(double __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isinf(double __x)
 N{
 N    return ((__HI(__x) << 1) == 0xffe00000) && (__LO(__x) == 0);
 X    return (((*(1 + (unsigned *)&(__x))) << 1) == 0xffe00000) && ((*(unsigned *)&(__x)) == 0);
@@ -29067,13 +29153,13 @@ N    /* Return 1 if __x is infinite, 0 otherwise */
 N    /* Used by isinf macro */
 N
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_islessgreaterf(float __x, float __y)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_islessgreaterf(float __x, float __y)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_islessgreaterf(float __x, float __y)
 N{
 N    unsigned __f = __ARM_fcmp4(__x, __y) >> 28;
 N    return (__f == 8) || (__f == 2); /* Just N set or Just Z set */
 N}
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_islessgreater(double __x, double __y)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_islessgreater(double __x, double __y)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_islessgreater(double __x, double __y)
 N{
 N    unsigned __f = __ARM_dcmp4(__x, __y) >> 28;
 N    return (__f == 8) || (__f == 2); /* Just N set or Just Z set */
@@ -29084,13 +29170,13 @@ N     * Used by islessgreater macro
 N     */
 N
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isnanf(float __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isnanf(float __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isnanf(float __x)
 N{
 N    return (0x7f800000 - (__FLT(__x) & 0x7fffffff)) >> 31;
 X    return (0x7f800000 - ((*(unsigned *)&(__x)) & 0x7fffffff)) >> 31;
 N}
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isnan(double __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isnan(double __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isnan(double __x)
 N{
 N    unsigned __xf = __HI(__x) | ((__LO(__x) == 0) ? 0 : 1);
 X    unsigned __xf = (*(1 + (unsigned *)&(__x))) | (((*(unsigned *)&(__x)) == 0) ? 0 : 1);
@@ -29100,14 +29186,14 @@ N    /* Return 1 if __x is a NaN, 0 otherwise */
 N    /* Used by isnan macro */
 N
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isnormalf(float __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isnormalf(float __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isnormalf(float __x)
 N{
 N    unsigned __xe = (__FLT(__x) >> 23) & 0xff;
 X    unsigned __xe = ((*(unsigned *)&(__x)) >> 23) & 0xff;
 N    return (__xe != 0xff) && (__xe != 0);
 N}
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_isnormal(double __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_isnormal(double __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_isnormal(double __x)
 N{
 N    unsigned __xe = (__HI(__x) >> 20) & 0x7ff;
 X    unsigned __xe = ((*(1 + (unsigned *)&(__x))) >> 20) & 0x7ff;
@@ -29117,13 +29203,13 @@ N    /* Return 1 if __x is a normalised number, 0 otherwise */
 N    /* used by isnormal macro */
 N
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_signbitf(float __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_signbitf(float __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_signbitf(float __x)
 N{
 N    return __FLT(__x) >> 31;
 X    return (*(unsigned *)&(__x)) >> 31;
 N}
 N_ARMABI_INLINE_DEF _ARMABI_SOFTFP int __ARM_signbit(double __x)
-Xstatic inline __declspec(__nothrow) __softfp int __ARM_signbit(double __x)
+Xstatic inline __declspec(__nothrow) __attribute__((__pcs__("aapcs"))) int __ARM_signbit(double __x)
 N{
 N    return __HI(__x) >> 31;
 X    return (*(1 + (unsigned *)&(__x))) >> 31;
@@ -29147,21 +29233,38 @@ N#       define __CLIBNS
 N#   endif  /* __cplusplus */
 N
 N
+N#ifndef __has_builtin
+N  #define __has_builtin(x) 0
+N#endif
+N
 N#if !defined(__STRICT_ANSI__) || defined(__USE_C99_MATH)
 X#if !0L || 1L
 N  /* C99 additions */
 N  typedef float float_t;
 N  typedef double double_t;
+N#if __has_builtin(__builtin_inf)
+X#if 0
+S#   define HUGE_VALF __builtin_inff()
+S#   define HUGE_VALL __builtin_infl()
+S#   define INFINITY __builtin_inff()
+S#   define NAN __builtin_nanf("")
+N# else
 N#   define HUGE_VALF ((float)__INFINITY__)
 N#   define HUGE_VALL ((long double)__INFINITY__)
 N#   define INFINITY ((float)__INFINITY__)
 N#   define NAN (__ESCAPE__(0f_7FC00000))
+N#endif
 N
 N#   define MATH_ERRNO 1
 N#   define MATH_ERREXCEPT 2
 Nextern const int math_errhandling;
 N#endif
-N#define HUGE_VAL ((double)__INFINITY__)
+N#if __has_builtin(__builtin_inf)
+X#if 0
+S# define HUGE_VAL __builtin_inf()
+N#else
+N# define HUGE_VAL ((double)__INFINITY__)
+N#endif
 N
 Nextern _ARMABI double acos(double /*x*/);
 Xextern __declspec(__nothrow) double acos(double  );
@@ -29176,7 +29279,7 @@ N   /* and -HUGE_VAL is returned. */
 N   /* Returns: the arc sine in the range -Pi/2 to Pi/2. */
 N
 Nextern _ARMABI_PURE double atan(double /*x*/);
-Xextern __declspec(__nothrow) __pure double atan(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double atan(double  );
 N   /* computes the principal value of the arc tangent of x */
 N   /* Returns: the arc tangent in the range -Pi/2 to Pi/2. */
 N
@@ -29226,7 +29329,7 @@ N   /*          if range error; returns -HUGE_VAL or HUGE_VAL depending */
 N   /*          on the sign of the argument */
 N
 Nextern _ARMABI_PURE double tanh(double /*x*/);
-Xextern __declspec(__nothrow) __pure double tanh(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double tanh(double  );
 N   /* computes the hyperbolic tangent of x. */
 N   /* Returns: the hyperbolic tangent value. */
 N
@@ -29307,16 +29410,16 @@ N     * support IEEE exceptions) rather than in errno. These function names
 N     * are not specified in any standard. */
 N
 Nextern _ARMABI_PURE double ceil(double /*x*/);
-Xextern __declspec(__nothrow) __pure double ceil(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double ceil(double  );
 N   /* computes the smallest integer not less than x. */
 N   /* Returns: the smallest integer not less than x, expressed as a double. */
 Nextern _ARMABI_PURE double fabs(double /*x*/);
-Xextern __declspec(__nothrow) __pure double fabs(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double fabs(double  );
 N   /* computes the absolute value of the floating-point number x. */
 N   /* Returns: the absolute value of x. */
 N
 Nextern _ARMABI_PURE double floor(double /*d*/);
-Xextern __declspec(__nothrow) __pure double floor(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double floor(double  );
 N   /* computes the largest integer not greater than x. */
 N   /* Returns: the largest integer not greater than x, expressed as a double */
 N
@@ -29364,7 +29467,7 @@ N    /*
 N     * Cube root.
 N     */
 N_ARMABI_INLINE _ARMABI_PURE double copysign(double __x, double __y)
-Xinline __declspec(__nothrow) __pure double copysign(double __x, double __y)
+Xinline __declspec(__nothrow) __attribute__((const)) double copysign(double __x, double __y)
 N    /*
 N     * Returns x with sign bit replaced by sign of y.
 N     */
@@ -29374,7 +29477,7 @@ X    (*(1 + (unsigned *)&(__x))) = ((*(1 + (unsigned *)&(__x))) & 0x7fffffff) | 
 N    return __x;
 N}
 N_ARMABI_INLINE _ARMABI_PURE float copysignf(float __x, float __y)
-Xinline __declspec(__nothrow) __pure float copysignf(float __x, float __y)
+Xinline __declspec(__nothrow) __attribute__((const)) float copysignf(float __x, float __y)
 N    /*
 N     * Returns x with sign bit replaced by sign of y.
 N     */
@@ -29617,7 +29720,7 @@ N    /*
 N     * Returns the remainder of x by y, in the IEEE 754 sense.
 N     */
 Nextern _ARMABI_FPEXCEPT double rint(double /*x*/);
-Xextern __declspec(__nothrow) __pure double rint(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double rint(double  );
 N    /*
 N     * Rounds x to an integer, in the IEEE 754 sense.
 N     */
@@ -29664,9 +29767,9 @@ N
 N/* C99 float versions of functions.  math.h has always reserved these
 N   identifiers for this purpose (7.13.4). */
 Nextern _ARMABI_PURE float _fabsf(float); /* old ARM name */
-Xextern __declspec(__nothrow) __pure float _fabsf(float);  
+Xextern __declspec(__nothrow) __attribute__((const)) float _fabsf(float);  
 N_ARMABI_INLINE _ARMABI_PURE float fabsf(float __f) { return _fabsf(__f); }
-Xinline __declspec(__nothrow) __pure float fabsf(float __f) { return _fabsf(__f); }
+Xinline __declspec(__nothrow) __attribute__((const)) float fabsf(float __f) { return _fabsf(__f); }
 Nextern _ARMABI float sinf(float /*x*/);
 Xextern __declspec(__nothrow) float sinf(float  );
 Nextern _ARMABI float cosf(float /*x*/);
@@ -29702,9 +29805,9 @@ Xextern __declspec(__nothrow) float ldexpf(float  , int  );
 Nextern _ARMABI float frexpf(float /*value*/, int * /*exp*/) __attribute__((__nonnull__(2)));
 Xextern __declspec(__nothrow) float frexpf(float  , int *  ) __attribute__((__nonnull__(2)));
 Nextern _ARMABI_PURE float ceilf(float /*x*/);
-Xextern __declspec(__nothrow) __pure float ceilf(float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float ceilf(float  );
 Nextern _ARMABI_PURE float floorf(float /*x*/);
-Xextern __declspec(__nothrow) __pure float floorf(float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float floorf(float  );
 Nextern _ARMABI float fmodf(float /*x*/, float /*y*/);
 Xextern __declspec(__nothrow) float fmodf(float  , float  );
 Nextern _ARMABI float modff(float /*value*/, float * /*iptr*/) __attribute__((__nonnull__(2)));
@@ -29862,19 +29965,21 @@ Nextern _ARMABI double fma(double /*x*/, double /*y*/, double /*z*/);
 Xextern __declspec(__nothrow) double fma(double  , double  , double  );
 Nextern _ARMABI float fmaf(float /*x*/, float /*y*/, float /*z*/);
 Xextern __declspec(__nothrow) float fmaf(float  , float  , float  );
+N#ifdef __HAVE_LONGDOUBLE
 N_ARMABI_INLINE _ARMABI long double fmal(long double __x, long double __y, long double __z) \
 N    { return (long double)fma((double)__x, (double)__y, (double)__z); }
 Xinline __declspec(__nothrow) long double fmal(long double __x, long double __y, long double __z)     { return (long double)fma((double)__x, (double)__y, (double)__z); }
+N#endif
 Nextern _ARMABI_FPEXCEPT double fmax(double /*x*/, double /*y*/);
-Xextern __declspec(__nothrow) __pure double fmax(double  , double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double fmax(double  , double  );
 Nextern _ARMABI_FPEXCEPT float fmaxf(float /*x*/, float /*y*/);
-Xextern __declspec(__nothrow) __pure float fmaxf(float  , float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float fmaxf(float  , float  );
 N_ARMDEFLD2(fmax);
 X__declspec(__nothrow) long double fmaxl(long double , long double );
 Nextern _ARMABI_FPEXCEPT double fmin(double /*x*/, double /*y*/);
-Xextern __declspec(__nothrow) __pure double fmin(double  , double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double fmin(double  , double  );
 Nextern _ARMABI_FPEXCEPT float fminf(float /*x*/, float /*y*/);
-Xextern __declspec(__nothrow) __pure float fminf(float  , float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float fminf(float  , float  );
 N_ARMDEFLD2(fmin);
 X__declspec(__nothrow) long double fminl(long double , long double );
 Nextern _ARMABI double log2(double /*x*/); /* * log base 2 of x. */
@@ -29887,60 +29992,74 @@ Nextern _ARMABI long lrint(double /*x*/);
 Xextern __declspec(__nothrow) long lrint(double  );
 Nextern _ARMABI long lrintf(float /*x*/);
 Xextern __declspec(__nothrow) long lrintf(float  );
+N#ifdef __HAVE_LONGDOUBLE
 N_ARMABI_INLINE _ARMABI long lrintl(long double __x) \
 N    { return lrint((double)__x); }
 Xinline __declspec(__nothrow) long lrintl(long double __x)     { return lrint((double)__x); }
-Nextern _ARMABI __int64 llrint(double /*x*/);
-Xextern __declspec(__nothrow) __int64 llrint(double  );
-Nextern _ARMABI __int64 llrintf(float /*x*/);
-Xextern __declspec(__nothrow) __int64 llrintf(float  );
-N_ARMABI_INLINE _ARMABI __int64 llrintl(long double __x) \
+N#endif
+Nextern _ARMABI __LONGLONG llrint(double /*x*/);
+Xextern __declspec(__nothrow) long long llrint(double  );
+Nextern _ARMABI __LONGLONG llrintf(float /*x*/);
+Xextern __declspec(__nothrow) long long llrintf(float  );
+N#ifdef __HAVE_LONGDOUBLE
+N_ARMABI_INLINE _ARMABI __LONGLONG llrintl(long double __x) \
 N    { return llrint((double)__x); }
-Xinline __declspec(__nothrow) __int64 llrintl(long double __x)     { return llrint((double)__x); }
+Xinline __declspec(__nothrow) long long llrintl(long double __x)     { return llrint((double)__x); }
+N#endif
 Nextern _ARMABI long lround(double /*x*/);
 Xextern __declspec(__nothrow) long lround(double  );
 Nextern _ARMABI long lroundf(float /*x*/);
 Xextern __declspec(__nothrow) long lroundf(float  );
+N#ifdef __HAVE_LONGDOUBLE
 N_ARMABI_INLINE _ARMABI long lroundl(long double __x) \
 N    { return lround((double)__x); }
 Xinline __declspec(__nothrow) long lroundl(long double __x)     { return lround((double)__x); }
-Nextern _ARMABI __int64 llround(double /*x*/);
-Xextern __declspec(__nothrow) __int64 llround(double  );
-Nextern _ARMABI __int64 llroundf(float /*x*/);
-Xextern __declspec(__nothrow) __int64 llroundf(float  );
-N_ARMABI_INLINE _ARMABI __int64 llroundl(long double __x) \
+N#endif
+Nextern _ARMABI __LONGLONG llround(double /*x*/);
+Xextern __declspec(__nothrow) long long llround(double  );
+Nextern _ARMABI __LONGLONG llroundf(float /*x*/);
+Xextern __declspec(__nothrow) long long llroundf(float  );
+N#ifdef __HAVE_LONGDOUBLE
+N_ARMABI_INLINE _ARMABI __LONGLONG llroundl(long double __x) \
 N    { return llround((double)__x); }
-Xinline __declspec(__nothrow) __int64 llroundl(long double __x)     { return llround((double)__x); }
+Xinline __declspec(__nothrow) long long llroundl(long double __x)     { return llround((double)__x); }
+N#endif
 Nextern _ARMABI_PURE double nan(const char */*tagp*/);
-Xextern __declspec(__nothrow) __pure double nan(const char * );
+Xextern __declspec(__nothrow) __attribute__((const)) double nan(const char * );
 Nextern _ARMABI_PURE float nanf(const char */*tagp*/);
-Xextern __declspec(__nothrow) __pure float nanf(const char * );
+Xextern __declspec(__nothrow) __attribute__((const)) float nanf(const char * );
+N#ifdef __HAVE_LONGDOUBLE
 N_ARMABI_INLINE _ARMABI_PURE long double nanl(const char *__t) \
 N    { return (long double)nan(__t); }
-Xinline __declspec(__nothrow) __pure long double nanl(const char *__t)     { return (long double)nan(__t); }
+Xinline __declspec(__nothrow) __attribute__((const)) long double nanl(const char *__t)     { return (long double)nan(__t); }
+N#endif
 N#if defined(_WANT_SNAN) && defined(__SUPPORT_SNAN__)
 X#if 0L && 0L
 Sextern _ARMABI_PURE double nans(const char */*tagp*/);
 Sextern _ARMABI_PURE float nansf(const char */*tagp*/);
+S#ifdef __HAVE_LONGDOUBLE
 S_ARMABI_INLINE _ARMABI_FPEXCEPT long double nansl(const char *__t) \
 S    { return (long double)nans(__t); }
 X_ARMABI_INLINE _ARMABI_FPEXCEPT long double nansl(const char *__t)     { return (long double)nans(__t); }
+S#endif
 N#endif 
 Nextern _ARMABI_FPEXCEPT double nearbyint(double /*x*/);
-Xextern __declspec(__nothrow) __pure double nearbyint(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double nearbyint(double  );
 Nextern _ARMABI_FPEXCEPT float nearbyintf(float /*x*/);
-Xextern __declspec(__nothrow) __pure float nearbyintf(float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float nearbyintf(float  );
 N_ARMDEFLD1(nearbyint);
 X__declspec(__nothrow) long double nearbyintl(long double );
 Nextern  double remquo(double /*x*/, double /*y*/, int */*quo*/);
 Nextern  float remquof(float /*x*/, float /*y*/, int */*quo*/);
+N#ifdef __HAVE_LONGDOUBLE
 N_ARMABI_INLINE long double remquol(long double __x, long double __y, int *__q) \
 N    { return (long double)remquo((double)__x, (double)__y, __q); }
 Xinline long double remquol(long double __x, long double __y, int *__q)     { return (long double)remquo((double)__x, (double)__y, __q); }
+N#endif
 Nextern _ARMABI_FPEXCEPT double round(double /*x*/);
-Xextern __declspec(__nothrow) __pure double round(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double round(double  );
 Nextern _ARMABI_FPEXCEPT float roundf(float /*x*/);
-Xextern __declspec(__nothrow) __pure float roundf(float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float roundf(float  );
 N_ARMDEFLD1(round);
 X__declspec(__nothrow) long double roundl(long double );
 Nextern _ARMABI double tgamma(double /*x*/); /* * The gamma function of x. */
@@ -29950,9 +30069,9 @@ Xextern __declspec(__nothrow) float tgammaf(float  );
 N_ARMDEFLD1(tgamma);
 X__declspec(__nothrow) long double tgammal(long double );
 Nextern _ARMABI_FPEXCEPT double trunc(double /*x*/);
-Xextern __declspec(__nothrow) __pure double trunc(double  );
+Xextern __declspec(__nothrow) __attribute__((const)) double trunc(double  );
 Nextern _ARMABI_FPEXCEPT float truncf(float /*x*/);
-Xextern __declspec(__nothrow) __pure float truncf(float  );
+Xextern __declspec(__nothrow) __attribute__((const)) float truncf(float  );
 N_ARMDEFLD1(trunc);
 X__declspec(__nothrow) long double truncl(long double );
 N#endif
@@ -29995,6 +30114,7 @@ S    inline double abs(double __x) { return fabs(__x); }
 S    inline double pow(double __x, int __y)
 S                { return pow(__x, (double) __y); }
 S
+S#ifdef __HAVE_LONGDOUBLE
 S    inline long double abs(long double __x)
 S                { return (long double)fabsl(__x); }
 S    inline long double acos(long double __x)
@@ -30047,6 +30167,7 @@ S    inline long double tan(long double __x)
 S                { return (long double)tanl(__x); }
 S    inline long double tanh(long double __x)
 S                { return (long double)tanhl(__x); }
+S#endif
 S
 S#if !defined(__STRICT_ANSI__) || defined(__USE_C99_MATH)
 S    inline float acosh(float __x) { return acoshf(__x); }
@@ -30071,15 +30192,16 @@ S    inline float fmax(float __x, float __y) { return fmaxf(__x, __y); }
 S    inline float fmin(float __x, float __y) { return fminf(__x, __y); }
 S    inline float log2(float __x) { return log2f(__x); }
 S    inline _ARMABI long lrint(float __x) { return lrintf(__x); }
-S    inline _ARMABI __int64 llrint(float __x) { return llrintf(__x); }
+S    inline _ARMABI __LONGLONG llrint(float __x) { return llrintf(__x); }
 S    inline _ARMABI long lround(float __x) { return lroundf(__x); }
-S    inline _ARMABI __int64 llround(float __x) { return llroundf(__x); }
+S    inline _ARMABI __LONGLONG llround(float __x) { return llroundf(__x); }
 S    inline _ARMABI_FPEXCEPT float nearbyint(float __x) { return nearbyintf(__x); }
 S    inline float remquo(float __x, float __y, int *__q) { return remquof(__x, __y, __q); }
 S    inline _ARMABI_FPEXCEPT float round(float __x) { return roundf(__x); }
 S    inline float tgamma(float __x) { return tgammaf(__x); }
 S    inline _ARMABI_FPEXCEPT float trunc(float __x) { return truncf(__x); }
 S
+S#ifdef __HAVE_LONGDOUBLE
 S    inline long double acosh(long double __x) { return acoshl(__x); }
 S    inline long double asinh(long double __x) { return asinhl(__x); }
 S    inline long double atanh(long double __x) { return atanhl(__x); }
@@ -30099,14 +30221,15 @@ S    inline long double fmax(long double __x, long double __y) { return fmaxl(__
 S    inline long double fmin(long double __x, long double __y) { return fminl(__x, __y); }
 S    inline long double log2(long double __x) { return log2l(__x); }
 S    inline _ARMABI long lrint(long double __x) { return lrintl(__x); }
-S    inline _ARMABI __int64 llrint(long double __x) { return llrintl(__x); }
+S    inline _ARMABI __LONGLONG llrint(long double __x) { return llrintl(__x); }
 S    inline _ARMABI long lround(long double __x) { return lroundl(__x); }
-S    inline _ARMABI __int64 llround(long double __x) { return llroundl(__x); }
+S    inline _ARMABI __LONGLONG llround(long double __x) { return llroundl(__x); }
 S    inline _ARMABI_FPEXCEPT long double nearbyint(long double __x) { return nearbyintl(__x); }
 S    inline long double remquo(long double __x, long double __y, int *__q) { return remquol(__x, __y, __q); }
 S    inline _ARMABI_FPEXCEPT long double round(long double __x) { return roundl(__x); }
 S    inline long double tgamma(long double __x) { return tgammal(__x); }
 S    inline _ARMABI_FPEXCEPT long double trunc(long double __x) { return truncl(__x); }
+S#endif
 S#endif
 S
 S  }
@@ -30273,7 +30396,9 @@ S      using ::std::fdimf;
 S      using ::std::fdiml;
 S      using ::std::fma;
 S      using ::std::fmaf;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::fmal;
+S#endif
 S      using ::std::fmax;
 S      using ::std::fmaxf;
 S      using ::std::fmaxl;
@@ -30285,25 +30410,37 @@ S      using ::std::log2f;
 S      using ::std::log2l;
 S      using ::std::lrint;
 S      using ::std::lrintf;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::lrintl;
+S#endif
 S      using ::std::llrint;
 S      using ::std::llrintf;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::llrintl;
+S#endif
 S      using ::std::lround;
 S      using ::std::lroundf;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::lroundl;
+S#endif
 S      using ::std::llround;
 S      using ::std::llroundf;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::llroundl;
+S#endif
 S      using ::std::nan;
 S      using ::std::nanf;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::nanl;
+S#endif
 S      using ::std::nearbyint;
 S      using ::std::nearbyintf;
 S      using ::std::nearbyintl;
 S      using ::std::remquo;
 S      using ::std::remquof;
+S#ifdef __HAVE_LONGDOUBLE
 S      using ::std::remquol;
+S#endif
 S      using ::std::round;
 S      using ::std::roundf;
 S      using ::std::roundl;
@@ -30316,19 +30453,21 @@ S      using ::std::truncl;
 S    #endif
 N  #endif
 N
+N#undef __LONGLONG
+N
 N#endif /* __math_h */
 N
 N/* end of math.h */
 L 20 "..\..\User\include.h" 2
 N//#include <stdbool.h>
 N#include <stdlib.h>
-L 1 "C:\Keil\ARM\RV31\Inc\stdlib.h" 1
+L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h" 1
 N/* stdlib.h: ANSI draft (X3J11 May 88) library header, section 4.10 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                          */
-N/* Copyright 1991-1998 ARM Limited. All rights reserved.            */
+N/* Copyright 1991-1998,2014 ARM Limited. All rights reserved.       */
 N/*
-N * RCS $Revision: 152811 $
-N * Checkin $Date: 2010-03-04 09:02:00 +0000 (Thu, 04 Mar 2010) $
+N * RCS $Revision: 185525 $
+N * Checkin $Date: 2014-05-29 12:44:48 +0100 (Thu, 29 May 2014) $
 N * Revising $Author: agrant $
 N */
 N 
@@ -30339,9 +30478,19 @@ N */
 N
 N#ifndef __stdlib_h
 N#define __stdlib_h
+N#define __ARMCLIB_VERSION 5050106
+N
+N#if defined(__clang__) || (defined(__ARMCC_VERSION) && !defined(__STRICT_ANSI__))
+X#if 0L || (1L && !0L)
+N  /* armclang and non-strict armcc allow 'long long' in system headers */
+N  #define __LONGLONG long long
+N#else
+S  /* strict armcc has '__int64' */
+S  #define __LONGLONG __int64
+N#endif
 N
 N#define _ARMABI __declspec(__nothrow)
-N#define _ARMABI_PURE __declspec(__nothrow) __pure
+N#define _ARMABI_PURE __declspec(__nothrow) __attribute__((const))
 N#define _ARMABI_NORETURN __declspec(__nothrow) __declspec(__noreturn)
 N#define _ARMABI_THROW
 N
@@ -30372,10 +30521,19 @@ N
 N#if defined(__cplusplus) || !defined(__STRICT_ANSI__)
 X#if 0L || !0L
 N /* unconditional in C++ and non-strict C for consistency of debug info */
-N  typedef unsigned int size_t;
+N  #if __sizeof_ptr == 8
+X  #if 4 == 8
+S    typedef unsigned long size_t;   /* see <stddef.h> */
+N  #else
+N    typedef unsigned int size_t;   /* see <stddef.h> */
+N  #endif
 N#elif !defined(__size_t)
 S  #define __size_t 1
-S  typedef unsigned int size_t;   /* see <stddef.h> */
+S  #if __sizeof_ptr == 8
+S    typedef unsigned long size_t;   /* see <stddef.h> */
+S  #else
+S    typedef unsigned int size_t;   /* see <stddef.h> */
+S  #endif
 N#endif
 N
 N#undef NULL
@@ -30385,15 +30543,15 @@ N#ifndef __cplusplus  /* wchar_t is a builtin type for C++ */
 N  #if !defined(__STRICT_ANSI__)
 X  #if !0L
 N   /* unconditional in non-strict C for consistency of debug info */
-N   #if defined(__WCHAR32)
-X   #if 0L
+N   #if defined(__WCHAR32) || (defined(__ARM_SIZEOF_WCHAR_T) && __ARM_SIZEOF_WCHAR_T == 4)
+X   #if 0L || (0L && __ARM_SIZEOF_WCHAR_T == 4)
 S    typedef unsigned int wchar_t; /* see <stddef.h> */
 N   #else
 N    typedef unsigned short wchar_t; /* see <stddef.h> */
 N   #endif
 N  #elif !defined(__wchar_t)
 S    #define __wchar_t 1
-S   #if defined(__WCHAR32)
+S   #if defined(__WCHAR32) || (defined(__ARM_SIZEOF_WCHAR_T) && __ARM_SIZEOF_WCHAR_T == 4)
 S    typedef unsigned int wchar_t; /* see <stddef.h> */
 S   #else
 S    typedef unsigned short wchar_t; /* see <stddef.h> */
@@ -30407,7 +30565,8 @@ Ntypedef struct ldiv_t { long int quot, rem; } ldiv_t;
 N   /* type of the value returned by the ldiv function. */
 N#if !defined(__STRICT_ANSI__) || __USE_C99_STDLIB
 X#if !0L || 1
-Ntypedef struct lldiv_t { __int64 quot, rem; } lldiv_t;
+Ntypedef struct lldiv_t { __LONGLONG quot, rem; } lldiv_t;
+Xtypedef struct lldiv_t { long long quot, rem; } lldiv_t;
 N   /* type of the value returned by the lldiv function. */
 N#endif
 N
@@ -30489,8 +30648,8 @@ N    * Returns: the converted value.
 N    */
 N#if !defined(__STRICT_ANSI__) || __USE_C99_STDLIB
 X#if !0L || 1
-Nextern _ARMABI __int64 atoll(const char * /*nptr*/) __attribute__((__nonnull__(1)));
-Xextern __declspec(__nothrow) __int64 atoll(const char *  ) __attribute__((__nonnull__(1)));
+Nextern _ARMABI __LONGLONG atoll(const char * /*nptr*/) __attribute__((__nonnull__(1)));
+Xextern __declspec(__nothrow) long long atoll(const char *  ) __attribute__((__nonnull__(1)));
 N   /*
 N    * converts the initial part of the string pointed to by nptr to
 N    * long long int representation.
@@ -30594,18 +30753,20 @@ N    *          the macro ERANGE is stored in errno.
 N    */
 N
 N/* C90 reserves all names beginning with 'str' */
-Nextern _ARMABI __int64 strtoll(const char * __restrict /*nptr*/,
-Xextern __declspec(__nothrow) __int64 strtoll(const char * __restrict  ,
-N                               char ** __restrict /*endptr*/, int /*base*/) __attribute__((__nonnull__(1)));
+Nextern _ARMABI __LONGLONG strtoll(const char * __restrict /*nptr*/,
+Xextern __declspec(__nothrow) long long strtoll(const char * __restrict  ,
+N                                  char ** __restrict /*endptr*/, int /*base*/)
+N                          __attribute__((__nonnull__(1)));
 N   /*
 N    * as strtol but returns a long long int value.  If the correct value is
 N    * outside the range of representable values,  LLONG_MAX or LLONG_MIN is
 N    * returned (according to the sign of the value), and the value of the
 N    * macro ERANGE is stored in errno.
 N    */
-Nextern _ARMABI unsigned __int64 strtoull(const char * __restrict /*nptr*/,
-Xextern __declspec(__nothrow) unsigned __int64 strtoull(const char * __restrict  ,
-N                                         char ** __restrict /*endptr*/, int /*base*/) __attribute__((__nonnull__(1)));
+Nextern _ARMABI unsigned __LONGLONG strtoull(const char * __restrict /*nptr*/,
+Xextern __declspec(__nothrow) unsigned long long strtoull(const char * __restrict  ,
+N                                            char ** __restrict /*endptr*/, int /*base*/)
+N                                   __attribute__((__nonnull__(1)));
 N   /*
 N    * as strtoul but returns an unsigned long long int value.  If the correct
 N    * value is outside the range of representable values, ULLONG_MAX is returned,
@@ -30762,8 +30923,12 @@ N    * arguments at normal program termination. It is possible to register at
 N    * least 32 functions.
 N    * Returns: zero if the registration succeeds, nonzero if it fails.
 N    */
-N#if defined(__cplusplus) && !defined(__GNUC__)
-X#if 0L && !0L
+N#if defined(__EDG__) && !defined(__GNUC__)
+X#if 1L && !0L
+N#define __LANGUAGE_LINKAGE_CHANGES_FUNCTION_TYPE
+N#endif
+N#if defined(__cplusplus) && defined(__LANGUAGE_LINKAGE_CHANGES_FUNCTION_TYPE) 
+X#if 0L && 1L 
 S    /* atexit that takes a ptr to a function with C++ linkage 
 S     * but not in GNU mode  
 S     */
@@ -30850,8 +31015,8 @@ N    * Returns: a pointer to a matching member of the array, or a null pointer
 N    *          if no match is found. If two members compare as equal, which
 N    *          member is matched is unspecified.
 N    */
-N#if defined(__cplusplus) && !defined(__GNUC__)
-X#if 0L && !0L
+N#if defined(__cplusplus) && defined(__LANGUAGE_LINKAGE_CHANGES_FUNCTION_TYPE)
+X#if 0L && 1L
 S    /* bsearch that takes a ptr to a function with C++ linkage 
 S     * but not in GNU mode
 S     */
@@ -30884,8 +31049,8 @@ N    * than the second. If two members compare as equal, their order in the
 N    * sorted array is unspecified.
 N    */
 N
-N#if defined(__cplusplus) && !defined(__GNUC__)
-X#if 0L && !0L
+N#if defined(__cplusplus) && defined(__LANGUAGE_LINKAGE_CHANGES_FUNCTION_TYPE)
+X#if 0L && 1L
 S    /* qsort that takes a ptr to a function with C++ linkage 
 S     * but not in GNU mode
 S     */    
@@ -30900,7 +31065,7 @@ S    }
 N#endif
 N
 Nextern _ARMABI_PURE int abs(int /*j*/);
-Xextern __declspec(__nothrow) __pure int abs(int  );
+Xextern __declspec(__nothrow) __attribute__((const)) int abs(int  );
 N   /*
 N    * computes the absolute value of an integer j. If the result cannot be
 N    * represented, the behaviour is undefined.
@@ -30908,7 +31073,7 @@ N    * Returns: the absolute value.
 N    */
 N
 Nextern _ARMABI_PURE div_t div(int /*numer*/, int /*denom*/);
-Xextern __declspec(__nothrow) __pure div_t div(int  , int  );
+Xextern __declspec(__nothrow) __attribute__((const)) div_t div(int  , int  );
 N   /*
 N    * computes the quotient and remainder of the division of the numerator
 N    * numer by the denominator denom. If the division is inexact, the resulting
@@ -30921,7 +31086,7 @@ N    *          in either order.
 N    *          int quot; int rem;
 N    */
 Nextern _ARMABI_PURE long int labs(long int /*j*/);
-Xextern __declspec(__nothrow) __pure long int labs(long int  );
+Xextern __declspec(__nothrow) __attribute__((const)) long int labs(long int  );
 N   /*
 N    * computes the absolute value of an long integer j. If the result cannot be
 N    * represented, the behaviour is undefined.
@@ -30932,7 +31097,7 @@ S   extern "C++" inline _ARMABI_PURE long abs(long int x) { return labs(x); }
 N#endif
 N
 Nextern _ARMABI_PURE ldiv_t ldiv(long int /*numer*/, long int /*denom*/);
-Xextern __declspec(__nothrow) __pure ldiv_t ldiv(long int  , long int  );
+Xextern __declspec(__nothrow) __attribute__((const)) ldiv_t ldiv(long int  , long int  );
 N   /*
 N    * computes the quotient and remainder of the division of the numerator
 N    * numer by the denominator denom. If the division is inexact, the sign of
@@ -30954,19 +31119,19 @@ N#endif
 N
 N#if !defined(__STRICT_ANSI__) || __USE_C99_STDLIB
 X#if !0L || 1
-Nextern _ARMABI_PURE __int64 llabs(__int64 /*j*/);
-Xextern __declspec(__nothrow) __pure __int64 llabs(__int64  );
+Nextern _ARMABI_PURE __LONGLONG llabs(__LONGLONG /*j*/);
+Xextern __declspec(__nothrow) __attribute__((const)) long long llabs(long long  );
 N   /*
-N    * computes the absolute value of a __int64 integer j. If the
+N    * computes the absolute value of a long long integer j. If the
 N    * result cannot be represented, the behaviour is undefined.
 N    * Returns: the absolute value.
 N    */
 N#ifdef __cplusplus
-S   extern "C++" inline _ARMABI_PURE __int64 abs(__int64 x) { return llabs(x); }
+S   extern "C++" inline _ARMABI_PURE __LONGLONG abs(__LONGLONG x) { return llabs(x); }
 N#endif
 N
-Nextern _ARMABI_PURE lldiv_t lldiv(__int64 /*numer*/, __int64 /*denom*/);
-Xextern __declspec(__nothrow) __pure lldiv_t lldiv(__int64  , __int64  );
+Nextern _ARMABI_PURE lldiv_t lldiv(__LONGLONG /*numer*/, __LONGLONG /*denom*/);
+Xextern __declspec(__nothrow) __attribute__((const)) lldiv_t lldiv(long long  , long long  );
 N   /*
 N    * computes the quotient and remainder of the division of the numerator
 N    * numer by the denominator denom. If the division is inexact, the sign of
@@ -30981,12 +31146,13 @@ N    *          in either order.
 N    *          long long quot; long long rem;
 N    */
 N#ifdef __cplusplus
-S   extern "C++" inline _ARMABI_PURE lldiv_t div(__int64 __numer, __int64 __denom) {
+S   extern "C++" inline _ARMABI_PURE lldiv_t div(__LONGLONG __numer, __LONGLONG __denom) {
 S       return lldiv(__numer, __denom);
 S   }
 N#endif
 N#endif
 N
+N#if !(__ARM_NO_DEPRECATED_FUNCTIONS)
 N/*
 N * ARM real-time divide functions for guaranteed performance
 N */
@@ -30996,26 +31162,27 @@ N   /* used int so that values return in separate regs, although 16-bit */
 Ntypedef struct __sdiv64by32 { int rem, quot; } __sdiv64by32;
 N
 N__value_in_regs extern _ARMABI_PURE __sdiv32by16 __rt_sdiv32by16(
-X__value_in_regs extern __declspec(__nothrow) __pure __sdiv32by16 __rt_sdiv32by16(
+X__value_in_regs extern __declspec(__nothrow) __attribute__((const)) __sdiv32by16 __rt_sdiv32by16(
 N     int /*numer*/,
 N     short int /*denom*/);
 N   /*
 N    * Signed divide: (16-bit quot), (16-bit rem) = (32-bit) / (16-bit)
 N    */
 N__value_in_regs extern _ARMABI_PURE __udiv32by16 __rt_udiv32by16(
-X__value_in_regs extern __declspec(__nothrow) __pure __udiv32by16 __rt_udiv32by16(
+X__value_in_regs extern __declspec(__nothrow) __attribute__((const)) __udiv32by16 __rt_udiv32by16(
 N     unsigned int /*numer*/,
 N     unsigned short /*denom*/);
 N   /*
 N    * Unsigned divide: (16-bit quot), (16-bit rem) = (32-bit) / (16-bit)
 N    */
 N__value_in_regs extern _ARMABI_PURE __sdiv64by32 __rt_sdiv64by32(
-X__value_in_regs extern __declspec(__nothrow) __pure __sdiv64by32 __rt_sdiv64by32(
+X__value_in_regs extern __declspec(__nothrow) __attribute__((const)) __sdiv64by32 __rt_sdiv64by32(
 N     int /*numer_h*/, unsigned int /*numer_l*/,
 N     int /*denom*/);
 N   /*
 N    * Signed divide: (32-bit quot), (32-bit rem) = (64-bit) / (32-bit)
 N    */
+N#endif
 N
 N/*
 N * ARM floating-point mask/status function (for both hardfp and softfp)
@@ -31234,12 +31401,14 @@ S      #if !defined(__STRICT_ANSI__) || __USE_C99_STDLIB
 S        using ::std::llabs;
 S        using ::std::lldiv;
 S      #endif /* !defined(__STRICT_ANSI__) || __USE_C99_STDLIB */
+S#if !(__ARM_NO_DEPRECATED_FUNCTIONS)
 S      using ::std::__sdiv32by16;
 S      using ::std::__udiv32by16;
 S      using ::std::__sdiv64by32;
 S      using ::std::__rt_sdiv32by16;
 S      using ::std::__rt_udiv32by16;
 S      using ::std::__rt_sdiv64by32;
+S#endif
 S      using ::std::__fp_status;
 S      using ::std::mblen;
 S      using ::std::mbtowc;
@@ -31258,18 +31427,21 @@ S      using ::std::__aeabi_MB_CUR_MAX;
 S    #endif /* __STDLIB_NO_EXPORTS */
 N  #endif /* __cplusplus */
 N
-N#endif
+N#undef __LONGLONG
+N
+N#endif /* __stdlib_h */
+N
 N/* end of stdlib.h */
 L 22 "..\..\User\include.h" 2
 N#include <stdio.h>			/* Âõ†‰∏∫Áî®Âà∞‰∫ÜprintfÂáΩÊï∞ÔºåÊâÄ‰ª•ÂøÖÈ°ªÂåÖÂê´Ëøô‰∏™Êñá‰ª∂ */
-L 1 "C:\Keil\ARM\RV31\Inc\stdio.h" 1
+L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h" 1
 N/* stdio.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.9 */
 N/* Copyright (C) Codemist Ltd., 1988-1993                       */
 N/* Copyright 1991-1998 ARM Limited. All rights reserved.        */
 N
 N/*
-N * RCS $Revision: 137287 $
-N * Checkin $Date: 2008-08-27 13:36:52 +0100 (Wed, 27 Aug 2008) $
+N * RCS $Revision: 185531 $
+N * Checkin $Date: 2014-05-29 15:16:06 +0100 (Thu, 29 May 2014) $
 N * Revising $Author: sdouglas $
 N */
 N
@@ -31282,6 +31454,19 @@ N */
 N
 N#ifndef __stdio_h
 N#define __stdio_h
+N#define __ARMCLIB_VERSION 5050106
+N
+N/*
+N * Depending on compiler version __int64 or __INT64_TYPE__ should be defined.
+N */
+N#ifndef __int64
+N  #ifdef __INT64_TYPE__
+S    #define __int64 __INT64_TYPE__
+N  #endif
+N  /* On some architectures neither of these may be defined - if so, fall
+N     through and error out if used. */
+N#endif
+N
 N
 N#define _ARMABI __declspec(__nothrow)
 N
@@ -31300,7 +31485,12 @@ N
 N#if defined(__cplusplus) || !defined(__STRICT_ANSI__) || !defined(__size_t)
 X#if 0L || !0L || !0L
 N /* always defined in C++ and non-strict C for consistency of debug info */
-N  typedef unsigned int size_t;   /* see <stddef.h> */
+N  #if __sizeof_ptr == 8
+X  #if 4 == 8
+S    typedef unsigned long size_t;   /* see <stddef.h> */
+N  #else
+N    typedef unsigned int size_t;   /* see <stddef.h> */
+N  #endif
 N  #if !defined(__cplusplus) && defined(__STRICT_ANSI__)
 X  #if !0L && 0L
 S    #define __size_t 1
@@ -31312,10 +31502,14 @@ N#define NULL 0                   /* see <stddef.h> */
 N
 N/* ANSI forbids va_list to be defined here */
 N/* keep in step with <stdarg.h> and <wchar.h> */
-N#if defined(__cplusplus) || !defined(__STRICT_ANSI__) || !defined(__va_list_defined)
-X#if 0L || !0L || !0L
+N#if !defined(__va_list) && (defined(__cplusplus) || !defined(__STRICT_ANSI__) || !defined(__va_list_defined))
+X#if !0L && (0L || !0L || !0L)
 N/* always defined in C++ and non-strict C for consistency of debug info */
-N  typedef struct __va_list __va_list;
+N  #ifdef __clang__
+S    typedef __builtin_va_list __va_list;
+N  #else
+N    typedef struct __va_list __va_list;
+N  #endif
 N  #if !defined(__cplusplus) && defined(__STRICT_ANSI__)
 X  #if !0L && 0L
 S    #define __va_list_defined 1
@@ -31363,6 +31557,27 @@ N    * error has occurred and an end-of-file indicator that records whether the
 N    * end-of-file has been reached.
 N    * Its structure is not made known to library clients.
 N    */
+N
+N#if defined(__STRICT_ANSI__) && !__FILE_INCOMPLETE
+X#if 0L && !__FILE_INCOMPLETE
+Sstruct __FILE {
+S    union {
+S        long __FILE_alignment;
+S#ifdef __TARGET_ARCH_AARCH64
+S        char __FILE_size[136];
+S#else /* __TARGET_ARCH_AARCH64 */
+S        char __FILE_size[84];
+S#endif /* __TARGET_ARCH_AARCH64 */
+S    } __FILE_opaque;
+S};
+S    /*
+S     * FILE must be an object type (C99 - 7.19.1) and an object type fully
+S     * describes an object [including its static size] (C99 - 6.2.5).
+S     * This definition is a placeholder which matches the struct __FILE in
+S     * size and alignment as used internally by libc.
+S     */
+N#endif
+N
 N
 Nextern FILE __stdin, __stdout, __stderr;
 Nextern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
@@ -31447,9 +31662,9 @@ N     * file.
 N     */
 N#define _IOBIN            0x04     /* binary stream */
 N
-N#define STDIN_BUFSIZ  (64)  /* default stdin buffer size */
-N#define STDOUT_BUFSIZ (64)  /* default stdout buffer size */
-N#define STDERR_BUFSIZ (16)  /* default stderr buffer size */
+N#define __STDIN_BUFSIZ  (64)  /* default stdin buffer size */
+N#define __STDOUT_BUFSIZ (64)  /* default stdout buffer size */
+N#define __STDERR_BUFSIZ (16)  /* default stderr buffer size */
 N
 Nextern _ARMABI int remove(const char * /*filename*/) __attribute__((__nonnull__(1)));
 Xextern __declspec(__nothrow) int remove(const char *  ) __attribute__((__nonnull__(1)));
@@ -32285,17 +32500,18 @@ N
 N#endif /* ndef __stdio_h */
 N
 N/* end of stdio.h */
+N
 L 23 "..\..\User\include.h" 2
 N#include <string.h>			/* Âõ†‰∏∫Áî®Âà∞‰∫ÜmemcmpÂáΩÊï∞ÔºåÊâÄ‰ª•ÂøÖÈ°ªÂåÖÂê´Ëøô‰∏™Êñá‰ª∂ */
-L 1 "C:\Keil\ARM\RV31\Inc\string.h" 1
+L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h" 1
 N/* string.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.11 */
 N/* Copyright (C) Codemist Ltd., 1988-1993.                        */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.          */
 N/* version 0.04 */
 N
 N/*
-N * RCS $Revision: 137748 $
-N * Checkin $Date: 2008-09-11 17:34:24 +0100 (Thu, 11 Sep 2008) $
+N * RCS $Revision: 185525 $
+N * Checkin $Date: 2014-05-29 12:44:48 +0100 (Thu, 29 May 2014) $
 N */
 N
 N/*
@@ -32309,6 +32525,7 @@ N */
 N
 N#ifndef __string_h
 N#define __string_h
+N#define __ARMCLIB_VERSION 5050106
 N
 N#define _ARMABI __declspec(__nothrow)
 N
@@ -32328,10 +32545,19 @@ N
 N#if defined(__cplusplus) || !defined(__STRICT_ANSI__)
 X#if 0L || !0L
 N /* unconditional in C++ and non-strict C for consistency of debug info */
-N  typedef unsigned int size_t;
+N  #if __sizeof_ptr == 8
+X  #if 4 == 8
+S    typedef unsigned long size_t;   /* see <stddef.h> */
+N  #else
+N    typedef unsigned int size_t;   /* see <stddef.h> */
+N  #endif
 N#elif !defined(__size_t)
 S  #define __size_t 1
-S  typedef unsigned int size_t;   /* see <stddef.h> */
+S  #if __sizeof_ptr == 8
+S    typedef unsigned long size_t;   /* see <stddef.h> */
+S  #else
+S    typedef unsigned int size_t;   /* see <stddef.h> */
+S  #endif
 N#endif
 N
 N#undef NULL
@@ -32825,6 +33051,7 @@ N
 N#endif
 N
 N/* end of string.h */
+N
 L 24 "..\..\User\include.h" 2
 N#include "usb_hw.h"			/* USBÊ®°Âùó */
 L 1 "..\..\User\usb_virture_com\usb_hw.h" 1
@@ -33054,28 +33281,67 @@ N#define LED_R          GPIO_Pin_0
 N#define LED_G          GPIO_Pin_1
 N#define LED_B          GPIO_Pin_2
 N#define RCC_GPIO_LED	 RCC_APB2Periph_GPIOD
+N				
+N#define Ledr_off    GPIO_SetBits(GPIO_LED, LED_R)
+N#define Ledr_on   GPIO_ResetBits(GPIO_LED, LED_R)
 N
-N//¥¯≤Œ∫Í£¨ø…“‘œÒƒ⁄¡™∫Ø ˝“ª—˘ π”√
-N#define LED1(a)	if (a)	\
-N					GPIO_SetBits(GPIO_LED,GPIO_Pin_2);\
-N					else		\
-N					GPIO_ResetBits(GPIO_LED,GPIO_Pin_2)
-X#define LED1(a)	if (a)						GPIO_SetBits(GPIO_LED,GPIO_Pin_2);					else							GPIO_ResetBits(GPIO_LED,GPIO_Pin_2)
 N
-N#define LED2(a)	if (a)	\
-N					GPIO_SetBits(GPIO_LED,GPIO_Pin_1);\
-N					else		\
-N					GPIO_ResetBits(GPIO_LED,GPIO_Pin_1)
-X#define LED2(a)	if (a)						GPIO_SetBits(GPIO_LED,GPIO_Pin_1);					else							GPIO_ResetBits(GPIO_LED,GPIO_Pin_1)
-N			
+N#define Ledg_off    GPIO_SetBits(GPIO_LED, LED_G)
+N#define Ledg_on   GPIO_ResetBits(GPIO_LED, LED_G)
+N
+N
+N#define Ledb_off    GPIO_SetBits(GPIO_LED, LED_B)
+N#define Ledb_on   GPIO_ResetBits(GPIO_LED, LED_B)
+N
 N					
 N#define LED_ALLON()					GPIO_ResetBits(GPIO_LED, LED_R | LED_G | LED_B)			
 N#define LED_ALLOFF()				GPIO_SetBits(GPIO_LED, LED_R | LED_G | LED_B)				
+N
+N						
+N#define LED_NUM 3
+N#define LR	    0x01
+N#define LG      0x02
+N#define LB      0x04
+N
+Nenum {
+N    Ht_ARMED = 0,  
+N    Ht_DISARMED,   
+N    Ht_CALIBRATA,  
+N	  Ht_CALIBRATG,  
+N    Ht_CALIBRATM_X,
+N    Ht_CALIBRATM_Y,
+N	  Ht_CALIBRATM_Z,
+N};
+N
+N
+Ntypedef union{
+N	uint8_t byte;
+N	struct 
+N	{
+N			uint8_t R	:1;
+N		  uint8_t G	:1;
+N			uint8_t B	:1;
+N	}bits;
+N}LEDBuf_t;
+N
+N		
+Ntypedef struct Led
+N{
+N  u8 event;
+N  u8 state;
+N  u16 cnt;
+N}led_Fsm;					
+N	
+Nextern led_Fsm LED;
+N
 N
 Nvoid LED_GPIO_Config(void);
 Nvoid LED_SHOW(void);
 Nvoid LED_Running(int tim);
 Nvoid LED_Sailing(int rate);
+Nvoid FailSafeLEDAlarm(void);
+N
+N
 N
 N#endif /* __LED_H */
 L 26 "..\..\User\include.h" 2
@@ -33105,6 +33371,13 @@ N#include "board_config.h"
 N#include "usb_type.h"
 N
 N
+N#define GPIO_I2C	     GPIOB
+N#define SCL_PIN        GPIO_Pin_10
+N#define SDA_PIN        GPIO_Pin_11
+N#define RCC_GPIO_I2C	 RCC_APB2Periph_GPIOB
+N
+N
+N
 N#define SCL_H         GPIO_I2C->BSRR = SCL_PIN /* GPIO_SetBits(GPIOB , GPIO_Pin_10)   */
 N#define SCL_L         GPIO_I2C->BRR  = SCL_PIN /* GPIO_ResetBits(GPIOB , GPIO_Pin_10) */
 N
@@ -33113,6 +33386,8 @@ N#define SDA_L         GPIO_I2C->BRR  = SDA_PIN /* GPIO_ResetBits(GPIOB , GPIO_P
 N
 N#define SCL_read      GPIO_I2C->IDR  & SCL_PIN /* GPIO_ReadInputDataBit(GPIOB , GPIO_Pin_10) */
 N#define SDA_read      GPIO_I2C->IDR  & SDA_PIN /* GPIO_ReadInputDataBit(GPIOB , GPIO_Pin_11) */
+N
+N
 N
 Nvoid I2C_INIT(void);
 Nvoid I2C_delay(void);
@@ -33127,12 +33402,12 @@ Nunsigned char I2C_RadeByte(void);
 Nuint16_t Single_Write(unsigned char SlaveAddress,unsigned char REG_Address,unsigned char REG_data);
 Nuint16_t Single_Write_MS5611(unsigned char SlaveAddress,unsigned char REG_Address);	
 Nunsigned char Single_Read(unsigned char SlaveAddress,unsigned char REG_Address);
-N
+Nvoid I2C_Read(u8 addr_, u8 reg_, u8 len, u8 *buf);
 N
 N#endif // __MYI2C_H__
 L 28 "..\..\User\include.h" 2
-N#include "drv_i2c.h"
-L 1 "..\..\User\Driver\IIC\drv_i2c.h" 1
+N#include "hard_i2c.h"
+L 1 "..\..\User\Driver\IIC\hard_i2c.h" 1
 N
 N#pragma once
 N
@@ -33141,15 +33416,15 @@ N#include "usb_type.h"
 N
 N#include <stdint.h>
 N#include <ctype.h>
-L 1 "C:\Keil\ARM\RV31\Inc\ctype.h" 1
+L 1 "d:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h" 1
 N/* ctype.h: ANSI 'C' (X3J11 Oct 88) library header, section 4.3 */
 N/* Copyright (C) Codemist Ltd. 1988-1993.                       */
 N/* Copyright 1991-1993 ARM Limited. All rights reserved.        */
 N/* version 0.03 */
 N
 N/*
-N * RCS $Revision: 137298 $
-N * Checkin $Date: 2008-08-27 14:28:42 +0100 (Wed, 27 Aug 2008) $
+N * RCS $Revision: 179217 $
+N * Checkin $Date: 2013-03-12 14:03:19 +0000 (Tue, 12 Mar 2013) $
 N * Revising $Author: agrant $
 N */
 N
@@ -33162,16 +33437,19 @@ N */
 N
 N#ifndef __ctype_h
 N#define __ctype_h
+N#define __ARMCLIB_VERSION 5050106
 N
 N#define _ARMABI __declspec(__nothrow)
-N#define _ARMABI_PURE __declspec(__nothrow) __pure
+N#define _ARMABI_PURE __declspec(__nothrow) __attribute__((const))
 N
 N#ifdef __cplusplus
 S#define _ARMABI_INLINE_DEF inline
 N#elif defined(__GNUC__) || (defined(__STDC_VERSION__) && 199901L <= __STDC_VERSION__)
 X#elif 0L || (1L && 199901L <= 199901L)
 N#define _ARMABI_INLINE_DEF static inline
-N#else
+N#elif defined(_USE_STATIC_INLINE)
+S#define _ARMABI_INLINE_DEF static __inline
+S#else
 S#define _ARMABI_INLINE_DEF __inline
 N#endif
 N
@@ -33203,23 +33481,23 @@ N/* ARM internal ctype flag bits */
 N/* N.B. - keep in step with <ctype.c> */
 N
 N/*
-N * __A (alphabetic) is required because characters in some locales
+N * __ARM_CT_A (alphabetic) is required because characters in some locales
 N * (e.g. Japanese) can be alphabetic but neither uppercase nor
 N * lowercase. Unfortunately there wasn't a bit free for this, so
-N * instead we've defined __A as __N+__X (on the grounds that this
+N * instead we've defined __ARM_CT_A as __ARM_CT_N+__ARM_CT_X (on the grounds that this
 N * was a previously unused combination). Hence some of the ctype
 N * predicates below are slightly less than obvious in
 N * implementation.
 N */
-N#define __S 1            /* whitespace           */
-N#define __P 2            /* punctuation          */
-N#define __B 4            /* blank                */
-N#define __L 8            /* lower case letter    */
-N#define __U 16           /* upper case letter    */
-N#define __N 32           /* (decimal) digit      */
-N#define __C 64           /* control chars        */
-N#define __X 128          /* A-F and a-f          */
-N#define __A (__N+__X)    /* alphabetic           */
+N#define __ARM_CT_S 1            /* whitespace           */
+N#define __ARM_CT_P 2            /* punctuation          */
+N#define __ARM_CT_B 4            /* blank                */
+N#define __ARM_CT_L 8            /* lower case letter    */
+N#define __ARM_CT_U 16           /* upper case letter    */
+N#define __ARM_CT_N 32           /* (decimal) digit      */
+N#define __ARM_CT_C 64           /* control chars        */
+N#define __ARM_CT_X 128          /* A-F and a-f          */
+N#define __ARM_CT_A (__ARM_CT_N+__ARM_CT_X)    /* alphabetic           */
 N
 N#if _AEABI_PORTABILITY_LEVEL != 0 && !defined _AEABI_PORTABLE
 X#if _AEABI_PORTABILITY_LEVEL != 0 && !0L
@@ -33276,40 +33554,40 @@ S
 N#else /* __AEABI_PORTABILITY_LEVEL */
 N
 Nextern _ARMABI_PURE unsigned char **__rt_ctype_table(void);
-Xextern __declspec(__nothrow) __pure unsigned char **__rt_ctype_table(void);
+Xextern __declspec(__nothrow) __attribute__((const)) unsigned char **__rt_ctype_table(void);
 N
-N#define __ctype (*__CLIBNS __rt_ctype_table())
+N#define __arm_ctype (*__CLIBNS __rt_ctype_table())
 N
 N#ifdef __cplusplus
-S    inline int isalnum(int __c) { return (__ctype[__c] & (__U+__L+__N)); }
+S    inline int isalnum(int __c) { return (__arm_ctype[__c] & (__ARM_CT_U+__ARM_CT_L+__ARM_CT_N)); }
 N#else
-N    #define isalnum(c) (__ctype[c] & (__U+__L+__N))
+N    #define isalnum(c) (__arm_ctype[c] & (__ARM_CT_U+__ARM_CT_L+__ARM_CT_N))
 N    extern int (isalnum)(int /*c*/);
 N#endif
 N    /* non-0 iff c is alphabetic or numeric */
 N
 N#ifdef __cplusplus
-S    inline int isalpha(int __c) { return (__ctype[__c] & (__U+__L+__X)); }
+S    inline int isalpha(int __c) { return (__arm_ctype[__c] & (__ARM_CT_U+__ARM_CT_L+__ARM_CT_X)); }
 N#else
-N    #define isalpha(c) (__ctype[c] & (__U+__L+__X))
+N    #define isalpha(c) (__arm_ctype[c] & (__ARM_CT_U+__ARM_CT_L+__ARM_CT_X))
 N    extern int (isalpha)(int /*c*/);
 N#endif
 N    /* non-0 iff c is alphabetic */
 N
 N#ifdef __cplusplus
-S    inline int iscntrl(int __c) { return (__ctype[__c] & __C); }
+S    inline int iscntrl(int __c) { return (__arm_ctype[__c] & __ARM_CT_C); }
 N#else
-N    #define iscntrl(c) (__ctype[c] & __C)
+N    #define iscntrl(c) (__arm_ctype[c] & __ARM_CT_C)
 N    extern int (iscntrl)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a control character - in the "C" locale */
 N    /*       this means (c < ' ') || (c > '~')                */
 N
-N/* isdigit must test for the presence of _only_ __N, not just __N at all. */
+N/* isdigit must test for the presence of _only_ __ARM_CT_N, not just __ARM_CT_N at all. */
 N#ifdef __cplusplus
-S    inline int isdigit(int __c) { return (__ctype[__c] == __N); }
+S    inline int isdigit(int __c) { return (__arm_ctype[__c] == __ARM_CT_N); }
 N#else
-N    #define isdigit(c) (__ctype[c] == __N)
+N    #define isdigit(c) (__arm_ctype[c] == __ARM_CT_N)
 N    extern int (isdigit)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a decimal digit */
@@ -33320,63 +33598,63 @@ N    /* word-separating character (there are no others in "C"   */
 N    /* locale) */
 N
 N#ifdef __cplusplus
-S    inline int isgraph(int __c) {return(__ctype[__c] & (__L+__U+__N+__X+__P));}
+S    inline int isgraph(int __c) {return(__arm_ctype[__c] & (__ARM_CT_L+__ARM_CT_U+__ARM_CT_N+__ARM_CT_X+__ARM_CT_P));}
 N#else
-N    #define isgraph(c) (__ctype[c]&(__L+__U+__N+__X+__P))
+N    #define isgraph(c) (__arm_ctype[c]&(__ARM_CT_L+__ARM_CT_U+__ARM_CT_N+__ARM_CT_X+__ARM_CT_P))
 N    extern int (isgraph)(int /*c*/);
 N#endif
 N    /* non-0 iff c is any printing character other than ' ' */
 N
 N#ifdef __cplusplus
-S    inline int islower(int __c) { return (__ctype[__c] & __L); }
+S    inline int islower(int __c) { return (__arm_ctype[__c] & __ARM_CT_L); }
 N#else
-N    #define islower(c) (__ctype[c] & __L)
+N    #define islower(c) (__arm_ctype[c] & __ARM_CT_L)
 N    extern int (islower)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a lower-case letter */
 N
 N#ifdef __cplusplus
-S    inline int isprint(int __c) { return (__ctype[__c] & (__L+__U+__N+__P+__B)); }
+S    inline int isprint(int __c) { return (__arm_ctype[__c] & (__ARM_CT_L+__ARM_CT_U+__ARM_CT_N+__ARM_CT_P+__ARM_CT_B)); }
 N#else
-N    #define isprint(c) (__ctype[c] & (__L+__U+__N+__P+__B))
+N    #define isprint(c) (__arm_ctype[c] & (__ARM_CT_L+__ARM_CT_U+__ARM_CT_N+__ARM_CT_P+__ARM_CT_B))
 N    extern int (isprint)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a printing character - in the "C" locale */
 N    /*       this means 0x20 (space) -> 0x7E (tilde)           */
 N
 N#ifdef __cplusplus
-S    inline int ispunct(int __c) { return (__ctype[__c] & __P); }
+S    inline int ispunct(int __c) { return (__arm_ctype[__c] & __ARM_CT_P); }
 N#else
-N    #define ispunct(c) (__ctype[c] & __P)
+N    #define ispunct(c) (__arm_ctype[c] & __ARM_CT_P)
 N    extern int (ispunct)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a non-space, non-alpha-numeric, printing character */
 N
 N#ifdef __cplusplus
-S    inline int isspace(int __c) { return (__ctype[__c] & __S); }
+S    inline int isspace(int __c) { return (__arm_ctype[__c] & __ARM_CT_S); }
 N#else
-N    #define isspace(c) (__ctype[c] & __S)
+N    #define isspace(c) (__arm_ctype[c] & __ARM_CT_S)
 N    extern int (isspace)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a white-space char: ' ', '\f', '\n', '\r', '\t', '\v'. */
 N
 N#ifdef __cplusplus
-S    inline int isupper(int __c) { return (__ctype[__c] & __U); }
+S    inline int isupper(int __c) { return (__arm_ctype[__c] & __ARM_CT_U); }
 N#else
-N    #define isupper(c) (__ctype[c] & __U)
+N    #define isupper(c) (__arm_ctype[c] & __ARM_CT_U)
 N    extern int (isupper)(int /*c*/);
 N#endif
 N    /* non-0 iff c is an upper-case letter */
 N
-N/* isxdigit must test for the presence of __N or __X but not both. */
+N/* isxdigit must test for the presence of __ARM_CT_N or __ARM_CT_X but not both. */
 N/* This helper function avoids needing to evaluate c twice. */
 N
 N_ARMABI_INLINE_DEF int __isxdigit_helper(int __t) { return (__t ^ (__t << 2)); }
 Xstatic inline int __isxdigit_helper(int __t) { return (__t ^ (__t << 2)); }
 N#ifdef __cplusplus
-S    inline int isxdigit(int __c){return __isxdigit_helper(__ctype[__c]) & __X;}
+S    inline int isxdigit(int __c){return __isxdigit_helper(__arm_ctype[__c]) & __ARM_CT_X;}
 N#else
-N    #define isxdigit(c) (__isxdigit_helper(__ctype[c]) & __X)
+N    #define isxdigit(c) (__isxdigit_helper(__arm_ctype[c]) & __ARM_CT_X)
 N    extern int (isxdigit)(int /*c*/);
 N#endif
 N    /* non-0 iff c is a digit, in 'a'..'f', or in 'A'..'F' */
@@ -33419,7 +33697,8 @@ N
 N#endif
 N
 N/* end of ctype.h */
-L 9 "..\..\User\Driver\IIC\drv_i2c.h" 2
+N
+L 9 "..\..\User\Driver\IIC\hard_i2c.h" 2
 N
 N
 Ntypedef enum I2CDevice {
@@ -33460,9 +33739,9 @@ N#ifndef __TIME_H__
 N#define __TIME_H__
 N#include "stm32f10x.h"
 N
-N#define EnTIM1()  TIM_Cmd(TIM3,ENABLE)
+N#define EnTIMER  TIM_Cmd(TIM5,ENABLE)
 Nvoid Nvic_Init(void);
-Nvoid TIM3_Config(void);
+Nvoid TIM5_Config(void);
 N#endif 
 L 31 "..\..\User\include.h" 2
 N#include "USART.h"
@@ -33472,7 +33751,7 @@ N#define __USART_H_
 N#include "stm32f10x.h"
 N#include <stdio.h>
 N
-Nvoid usart1_config(void);
+Nvoid USART1_Config(void);
 Nuint8_t UART1_Put_Char(unsigned char DataToSend);
 Nint fputc(int ch, FILE *f);
 Nvoid USART1_printf(USART_TypeDef* USARTx, uint8_t *Data,...);
@@ -33492,16 +33771,16 @@ N#define __SPI_H
 N#include "include.h"
 N
 N
-N#define SPI_CE_H()   GPIO_SetBits(GPIOA, GPIO_Pin_11) 
-N#define SPI_CE_L()   GPIO_ResetBits(GPIOA, GPIO_Pin_11)
+N#define SPI_CE_H()   GPIO_SetBits(GPIOD, GPIO_Pin_3) 
+N#define SPI_CE_L()   GPIO_ResetBits(GPIOD, GPIO_Pin_3)
 N
-N#define SPI_CSN_H()  GPIO_SetBits(GPIOA, GPIO_Pin_4)
-N#define SPI_CSN_L()  GPIO_ResetBits(GPIOA, GPIO_Pin_4)
+N#define SPI_CSN_H()  GPIO_SetBits(GPIOA, GPIO_Pin_15)
+N#define SPI_CSN_L()  GPIO_ResetBits(GPIOA, GPIO_Pin_15)
 N
-Nvoid SPI2_Init(void);			 //≥ı ºªØSPIø⁄
-Nvoid SPI1_Config(void);
-Nvoid SPI1_SetSpeed(u8 SpeedSet); //…Ë÷√SPIÀŸ∂»   
-Nu8 SPI1_ReadWriteByte(u8 TxData);
+Nvoid SPI3_Init(void);			 //≥ı ºªØSPIø⁄
+Nvoid SPI3_Config(void);
+Nvoid SPI3_SetSpeed(u8 SpeedSet); //…Ë÷√SPIÀŸ∂»   
+Nu8 SPI3_ReadWriteByte(u8 TxData);
 N	 
 N#endif
 N
@@ -33513,7 +33792,7 @@ N#ifndef _MOTO_H_
 N#define _MOTO_H_
 N#include "stm32f10x.h"
 N
-N#define Moto_PwmMax 3500
+N#define Moto_PwmMax 1000
 N
 N
 Nvoid PWM_OUT_Config(void);
@@ -33592,7 +33871,7 @@ N/* Page full define */
 N#define PAGE_FULL               ((uint8_t)0x80)
 N
 N/* Variables' number */
-N#define NumbOfVar               ((uint8_t)15)
+N#define NumbOfVar               ((uint8_t)75)
 N
 N/* Exported types ------------------------------------------------------------*/
 N/* Exported macro ------------------------------------------------------------*/
@@ -33613,6 +33892,18 @@ N#include "stm32f10x.h"
 N#include "board_config.h"
 N
 N
+N#define GPIO_TIM2	     GPIOA
+N#define TIM2_CH1       GPIO_Pin_0
+N#define TIM2_CH2       GPIO_Pin_1
+N#define TIM2_CH3       GPIO_Pin_2
+N#define TIM2_CH4       GPIO_Pin_3
+N#define RCC_GPIO_TIM2  RCC_APB2Periph_GPIOA
+N
+N#define GPIO_TIM3	     GPIOA
+N#define TIM3_CH1       GPIO_Pin_6
+N#define TIM3_CH2       GPIO_Pin_7
+N#define RCC_GPIO_TIM3  RCC_APB2Periph_GPIOA
+N
 Nextern u16  RC_Pwm_In[8];
 Nextern u16  RC_Pwm_In_his[8];
 N
@@ -33620,7 +33911,122 @@ Nvoid PWM_IN_Config(void);
 N
 N#endif
 L 36 "..\..\User\include.h" 2
+N#include "stmflash.h"
+L 1 "..\..\User\Driver\STMFLASH\stmflash.h" 1
+N#ifndef __STMFLASH_H__
+N#define __STMFLASH_H__
+N#include "include.h"  
+N//////////////////////////////////////////////////////////////////////////////////	 						  
+N//////////////////////////////////////////////////////////////////////////////////
 N
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N//”√ªß∏˘æ›◊‘º∫µƒ–Ë“™…Ë÷√
+N#define STM32_FLASH_SIZE 512 	 		//À˘—°STM32µƒFLASH»›¡ø¥Û–°(µ•ŒªŒ™K)
+N#define STM32_FLASH_WREN 1              // πƒ‹FLASH–¥»Î(0£¨≤ª «ƒ‹;1£¨ πƒ‹)
+N//////////////////////////////////////////////////////////////////////////////////////////////////////
+N
+N//FLASH∆ ºµÿ÷∑
+N#define STM32_FLASH_BASE 0x08000000 	//STM32 FLASHµƒ∆ ºµÿ÷∑
+N//FLASHΩ‚À¯º¸÷µ
+N 
+N
+Nu16 STMFLASH_ReadHalfWord(u32 faddr);		  //∂¡≥ˆ∞Î◊÷  
+Nvoid STMFLASH_WriteLenByte(u32 WriteAddr,u32 DataToWrite,u16 Len);	//÷∏∂®µÿ÷∑ø™ º–¥»Î÷∏∂®≥§∂»µƒ ˝æ›
+Nu32 STMFLASH_ReadLenByte(u32 ReadAddr,u16 Len);						//÷∏∂®µÿ÷∑ø™ º∂¡»°÷∏∂®≥§∂» ˝æ›
+Nvoid STMFLASH_Write(u32 WriteAddr,u16 *pBuffer,u16 NumToWrite);		//¥”÷∏∂®µÿ÷∑ø™ º–¥»Î÷∏∂®≥§∂»µƒ ˝æ›
+Nvoid STMFLASH_Read(u32 ReadAddr,u16 *pBuffer,u16 NumToRead);   		//¥”÷∏∂®µÿ÷∑ø™ º∂¡≥ˆ÷∏∂®≥§∂»µƒ ˝æ›
+Nextern uint16_t VirtAddVarTab[NumbOfVar];
+Xextern uint16_t VirtAddVarTab[((uint8_t)75)];
+N//≤‚ ‘–¥»Î
+Nvoid Test_Write(u32 WriteAddr,u16 WriteData);								   
+N#endif
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+N
+L 37 "..\..\User\include.h" 2
+N
+N#include "oled.h"
+L 1 "..\..\User\Modules\Modules_oled\oled.h" 1
+N#ifndef _OLED_H
+N#define _OLED_H
+N
+N#include "stm32f10x.h"
+N#define OLED_GPIO    GPIOC
+N#define OLED_RCCEN   RCC_APB2Periph_GPIOC
+N#define OLED_SCL     GPIO_Pin_3      //D0
+N#define OLED_SDA     GPIO_Pin_2      //D1
+N#define OLED_RST     GPIO_Pin_1      //RST
+N#define OLED_DC      GPIO_Pin_0      //DC
+N
+N#define OLED_CMD  0	//ÂÜôÂëΩ‰ª§
+N#define OLED_DATA 1	//ÂÜôÊï∞ÊçÆ
+N
+N#define OLED_D0_OL		GPIO_ResetBits(OLED_GPIO, OLED_SCL)	//D0 IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_D0_OH		GPIO_SetBits(OLED_GPIO, OLED_SCL)  	//D0 IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N#define OLED_D1_OL		GPIO_ResetBits(OLED_GPIO, OLED_SDA)	//D1 IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_D1_OH		GPIO_SetBits(OLED_GPIO, OLED_SDA) 	//D1 IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N#define OLED_RST_OL		GPIO_ResetBits(OLED_GPIO, OLED_RST)	//RST IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_RST_OH		GPIO_SetBits(OLED_GPIO, OLED_RST) 	//RST IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N#define OLED_DC_OL		GPIO_ResetBits(OLED_GPIO, OLED_DC)	//DC IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_DC_OH		GPIO_SetBits(OLED_GPIO, OLED_DC) 	//DC IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N
+N
+N#define OLED_RST_Clr()  GPIO_ResetBits(OLED_GPIO, OLED_RST) //RST IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_RST_Set()  GPIO_SetBits(OLED_GPIO, OLED_RST) 	//RST IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N#define OLED_RS_Clr()   GPIO_ResetBits(OLED_GPIO, OLED_DC)	//DC IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_RS_Set()   GPIO_SetBits(OLED_GPIO, OLED_DC) 	  //DC IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N
+N#define OLED_SCLK_Clr() GPIO_ResetBits(OLED_GPIO, OLED_SCL)	//D0 IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_SCLK_Set() GPIO_SetBits(OLED_GPIO, OLED_SCL)  	//D0 IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N#define OLED_SDIN_Clr() GPIO_ResetBits(OLED_GPIO, OLED_SDA)	//D1 IOÂè£ËæìÂá∫‰ΩéÁîµÂπ≥
+N#define OLED_SDIN_Set() GPIO_SetBits(OLED_GPIO, OLED_SDA) 	//D1 IOÂè£ËæìÂá∫È´òÁîµÂπ≥
+N
+N   void setgpio(void);
+N   void OLED_Init(void);
+N   void OLED_CLS(void);
+N   void OLED_4num(unsigned char x,unsigned char y,int number);
+N   void OLED_3num(unsigned char x,unsigned char y,unsigned char number);
+N   void OLED_Num(unsigned char x,unsigned char y,unsigned char asc);
+N   void OLED_P6x8Str(unsigned char x,unsigned char y,unsigned char ch[]);
+N   void OLED_P8x16Str(unsigned char x,unsigned char y,unsigned char ch[]);
+N   void OLED_P14x16Str(unsigned char x,unsigned char y,unsigned char ch[]);
+N  void OLED_Print(unsigned char x, unsigned char y, unsigned char ch[]);
+N  void OLED_PutPixel(unsigned char x,unsigned char y);
+N  void OLED_Rectangle(int16_t acc_x,int16_t acc_y);
+N  void Draw_LQLogo(void);
+N  void Draw_LibLogo(void);
+N  void Draw_BMP(unsigned char x0,unsigned char y0,unsigned char x1,unsigned char y1,unsigned char bmp[]); 
+N void OLED_Fill(unsigned char dat);
+N  void Dis_String(unsigned char y, unsigned char x, unsigned char ch[]);
+N  void Dis_Char(unsigned char y,unsigned char x,unsigned char asc);
+N  void Dis_Num(unsigned char y, unsigned char x, unsigned int num,unsigned char N);
+N  void Dis_Float(unsigned char Y,unsigned char X,double real,unsigned char N);
+N  void Dis_Float2(unsigned char Y,unsigned char X,double real,unsigned char N1,unsigned char N2);
+N  void OLED_P6x8Num_8bit(unsigned char x,unsigned char y,unsigned char Number); 
+N  void OLED_Num5(unsigned char x,unsigned char y,unsigned int number);
+N#endif
+L 39 "..\..\User\include.h" 2
 N#include "MPU6050.h"
 L 1 "..\..\User\Modules\Modules_mpu6050\MPU6050.h" 1
 N#ifndef __MPU6050_H_
@@ -33653,8 +34059,49 @@ N#define	GYRO_ZOUT_H		0x47
 N#define	GYRO_ZOUT_L		0x48
 N#define	PWR_MGMT_1		0x6B	//µÁ‘¥π‹¿Ì£¨µ‰–Õ÷µ£∫0x00(’˝≥£∆Ù”√)
 N#define	WHO_AM_I		0x75	//IICµÿ÷∑ºƒ¥Ê∆˜(ƒ¨»œ ˝÷µ0x68£¨÷ª∂¡)
-N#define MPU6050_ADDRESS 0x68    //IIC–¥»Î ±µƒµÿ÷∑◊÷Ω⁄ ˝æ›£¨+1Œ™∂¡»°
+N#define MPU6050_ADDRESS 0xD0    //IIC–¥»Î ±µƒµÿ÷∑◊÷Ω⁄ ˝æ›£¨+1Œ™∂¡»°
 N
+N
+N#define MPU6050_DLPF_BW_256         0x00
+N
+N#define MPU6050_DLPF_BW_188         0x01
+N
+N#define MPU6050_DLPF_BW_98          0x02
+N
+N#define MPU6050_DLPF_BW_42          0x03
+N
+N#define MPU6050_DLPF_BW_20          0x04
+N
+N#define MPU6050_DLPF_BW_10          0x05
+N
+N#define MPU6050_DLPF_BW_5           0x06
+N
+N
+N//MPU6050ƒ⁄≤øµÕÕ®¬À≤®…Ë÷√
+N
+N//#define MPU6050_DLPF  MPU6050_DLPF_BW_256 		//256HzµÕÕ®¬À≤®
+N//#define MPU6050_DLPF  MPU6050_DLPF_BW_188 		//188HzµÕÕ®¬À≤®
+N//#define MPU6050_DLPF  MPU6050_DLPF_BW_98	        //98HzµÕÕ®¬À≤®      
+N#define MPU6050_DLPF  MPU6050_DLPF_BW_42 		//42HzµÕÕ®¬À≤®
+N//#define MPU6050_DLPF  MPU6050_DLPF_BW_20 		//20HzµÕÕ®¬À≤®
+N//#define MPU6050_DLPF  MPU6050_DLPF_BW_10  	        //10HzµÕÕ®¬À≤® 	     
+N//#define MPU6050_DLPF  MPU6050_DLPF_BW_5 		//5HzµÕÕ®¬À≤®
+N
+N#define MPU6050_GYRO_FS_250         0x00
+N
+N#define MPU6050_GYRO_FS_500         0x08
+N
+N#define MPU6050_GYRO_FS_1000        0x10
+N
+N#define MPU6050_GYRO_FS_2000        0x18
+N
+N#define MPU6050_ACCEL_FS_2          0x01
+N
+N#define MPU6050_ACCEL_FS_4          0x09
+N
+N#define MPU6050_ACCEL_FS_8          0x11
+N
+N#define MPU6050_ACCEL_FS_16         0x19
 N
 Nstruct _float{
 N	      float x;
@@ -33668,8 +34115,8 @@ N	     int16_t z;};
 N
 Nstruct _trans{
 N     struct _int16 origin;  //‘≠ º÷µ
-N	   struct _int16 averag;  //∆Ωæ˘÷µ
-N	   struct _int16 histor;  //¿˙ ∑÷µ
+N	   struct _float averag;  //∆Ωæ˘÷µ
+N	   struct _float histor;  //¿˙ ∑÷µ
 N	   struct _int16 quiet;   //æ≤Ã¨÷µ
 N	   struct _float radian;  //ª°∂»÷µ 
 N          };
@@ -33690,8 +34137,119 @@ Nvoid UART1_ReportIMU(void);
 Nvoid Gyro_OFFSET(void);
 N
 N#endif // __MPU6050_H__
-L 38 "..\..\User\include.h" 2
-N// #include "MS5611.h"
+L 40 "..\..\User\include.h" 2
+N#include "HMC5883.h"
+L 1 "..\..\User\Modules\Modules_hmc5883\HMC5883.h" 1
+N#ifndef __HMC5883_H_
+N#define __HMC5883_H_
+N#include<stdint.h>
+N#include "stm32f10x.h"
+N
+N/* CTRL_REGA: Control Register A
+N * Read Write
+N * Default value: 0x10
+N * 7:5  0   These bits must be cleared for correct operation.
+N * 4:2 DO2-DO0: Data Output Rate Bits
+N *             DO2 |  DO1 |  DO0 |   Minimum Data Output Rate (Hz)
+N *            ------------------------------------------------------
+N *              0  |  0   |  0   |            0.75
+N *              0  |  0   |  1   |            1.5
+N *              0  |  1   |  0   |            3
+N *              0  |  1   |  1   |            7.5
+N *              1  |  0   |  0   |           15 (default)
+N *              1  |  0   |  1   |           30
+N *              1  |  1   |  0   |           75
+N *              1  |  1   |  1   |           Not Used
+N * 1:0 MS1-MS0: Measurement Configuration Bits
+N *             MS1 | MS0 |   MODE
+N *            ------------------------------
+N *              0  |  0   |  Normal
+N *              0  |  1   |  Positive Bias
+N *              1  |  0   |  Negative Bias
+N *              1  |  1   |  Not Used
+N *
+N * CTRL_REGB: Control RegisterB
+N * Read Write
+N * Default value: 0x20
+N * 7:5 GN2-GN0: Gain Configuration Bits.
+N *             GN2 |  GN1 |  GN0 |   Mag Input   | Gain       | Output Range
+N *                 |      |      |  Range[Ga]    | [LSB/mGa]  |
+N *            ------------------------------------------------------
+N *              0  |  0   |  0   |  ?.88Ga      |   1370     | 0xF800?0x07FF (-2048:2047)
+N *              0  |  0   |  1   |  ?.3Ga (def) |   1090     | 0xF800?0x07FF (-2048:2047)
+N *              0  |  1   |  0   |  ?.9Ga       |   820      | 0xF800?0x07FF (-2048:2047)
+N *              0  |  1   |  1   |  ?.5Ga       |   660      | 0xF800?0x07FF (-2048:2047)
+N *              1  |  0   |  0   |  ?.0Ga       |   440      | 0xF800?0x07FF (-2048:2047)
+N *              1  |  0   |  1   |  ?.7Ga       |   390      | 0xF800?0x07FF (-2048:2047)
+N *              1  |  1   |  0   |  ?.6Ga       |   330      | 0xF800?0x07FF (-2048:2047)
+N *              1  |  1   |  1   |  ?.1Ga       |   230      | 0xF800?0x07FF (-2048:2047)
+N *                               |Not recommended|
+N *
+N * 4:0 CRB4-CRB: 0 This bit must be cleared for correct operation.
+N *
+N * _MODE_REG: Mode Register
+N * Read Write
+N * Default value: 0x02
+N * 7:2  0   These bits must be cleared for correct operation.
+N * 1:0 MD1-MD0: Mode Select Bits
+N *             MS1 | MS0 |   MODE
+N *            ------------------------------
+N *              0  |  0   |  Continuous-Conversion Mode.
+N *              0  |  1   |  Single-Conversion Mode
+N *              1  |  0   |  Negative Bias
+N *              1  |  1   |  Sleep Mode
+N */
+N#define MAG_ADDRESS 0x3c
+N#define MAG_DATA_REGISTER 0x03
+N
+N#define HMC58X3_R_CONFA 0
+N#define HMC58X3_R_CONFB 1
+N#define HMC58X3_R_MODE 2
+N#define HMC58X3_X_SELF_TEST_GAUSS (+1.16f)       // X axis level when bias current is applied.
+N#define HMC58X3_Y_SELF_TEST_GAUSS (+1.16f)       // Y axis level when bias current is applied.
+N#define HMC58X3_Z_SELF_TEST_GAUSS (+1.08f)       // Z axis level when bias current is applied.
+N#define SELF_TEST_LOW_LIMIT  (243.0f / 390.0f)    // Low limit when gain is 5.
+N#define SELF_TEST_HIGH_LIMIT (575.0f / 390.0f)    // High limit when gain is 5.
+N#define HMC_POS_BIAS 1
+N#define HMC_NEG_BIAS 2
+N
+Nextern int16_t  HMC58X3_limit[6];
+Nextern int16_t  *mag_limt;
+N
+Nu8 Init_HMC5883L(void);
+Nvoid HMC5883lRead(int16_t *magData);
+Nvoid Mag_Calibration(int16_t *array);
+N#endif // __MPU6050_H__
+L 41 "..\..\User\include.h" 2
+N#include "MS5611.h"
+L 1 "..\..\User\Modules\Modules_ms5611\MS5611.h" 1
+N#ifndef __MS5611_H
+N#define	__MS5611_H
+N#include "stm32f10x.h"
+N/* MPU6050 Register Address ------------------------------------------------------------*/
+N#define MS561101BA_ADC_RD          0x00
+N#define	MS561101BA_PROM_RD 	       0xA0
+N#define MS561101BA_PROM_CRC        0xAE
+N
+N#define MS561101BA_SlaveAddress    0xEE  //MS5611µƒµÿ÷∑
+N#define MS561101BA_RST             0x1E  //cmd ∏¥Œª
+N
+N#define	MS561101BA_D2_OSR_4096   0x58	// 9.04 mSec conversion time ( 110.62 Hz)
+N#define	MS561101BA_D1_OSR_4096   0x48
+N
+N#define MS5611_OSR256					 		 0x40
+N#define MS5611_OSR512					 		 0x42
+N#define MS5611_OSR1024					   0x44
+N#define MS5611_OSR2048					   0x46
+N#define MS5611_OSR4096					   0x48
+N#define FILTER_num 20
+N
+Nu8  MS5611_init(void);
+Nvoid MS561101BA_getTemperature(void);
+Nfloat Get_High(void);
+Nvoid Sethigh_Mode(void);
+N#endif
+L 42 "..\..\User\include.h" 2
 N#include "NRF24L01.h"
 L 1 "..\..\User\Modules\Modules_nrf24L01\NRF24L01.h" 1
 N#ifndef __NRF24L01_H
@@ -33788,7 +34346,7 @@ N
 N
 N
 N
-L 40 "..\..\User\include.h" 2
+L 43 "..\..\User\include.h" 2
 N
 N#include "MultiRotor_rc.h"
 L 1 "..\..\User\Function\MultiRotor_rc\MultiRotor_rc.h" 1
@@ -33796,8 +34354,6 @@ N#ifndef _MultiRotor_rc_H_
 N#define _MultiRotor_rc_H_
 N#include "stm32f10x.h"
 Ntypedef struct {
-N	      u8  NRF24L01_RXDATA[33];
-N	      u8  NRF24L01_TXDATA[33];
 N	      int16_t rc_data[4];
 N				int16_t ROLL;
 N				int16_t PITCH;
@@ -33840,8 +34396,9 @@ N
 Nvoid RC_Analy(void);
 Nvoid RC_directive(void);
 Nvoid RDAU(void);
+Nvoid RC_Data_Refine(void);
 N#endif
-L 42 "..\..\User\include.h" 2
+L 45 "..\..\User\include.h" 2
 N#include "MultiRotor_app.h"
 L 1 "..\..\User\Function\MultiRotor_app\MultiRotor_app.h" 1
 N#ifndef _MultiRotor_app_H_
@@ -33849,35 +34406,38 @@ N#define _MultiRotor_app_H_
 N/* Includes ------------------------------------------------------------------*/
 N#include "include.h"
 N
-Ntypedef struct {
-N				u8 MPU6050_State;
-N				u8 HMC5883_State;
-N				u8 MS5611_State;
-N        u8 NRF2401_State;
-N         }State;
 N
 Ntypedef struct {
-N        u8 ARMED;      //µÁª˙Ω‚À¯
-N	      u8 Shutdown;   //ø™πÿª˙
-N	      u8 LoseRc;     //“£øÿ–≈∫≈∂™ ß
-N	      u8 LockYaw;    //∫ΩœÚÀ¯∂®       
-N        u8 calibratingA; //º”ÀŸ∂»≤…ºØ
+N	      u8 MpuExist;      // MPU¥Ê‘⁄
+N	      u8 MagExist;      // MAG¥Ê‘⁄
+N	      u8 NrfExist;      // NRF¥Ê‘⁄
+N	      u8 MagIssue;      // MAG”–Œ Ã‚
+N        u8 ARMED;         // µÁª˙Ω‚À¯
+N	      u8 LockYaw;       // ∫ΩœÚÀ¯∂®       
+N        u8 calibratingA;  // º”ÀŸ∂»≤…ºØ
+N	      u8 calibratingM;  // ¥≈¡¶º∆≤…ºØ
+N	      u8 calibratingM_pre; //¥≈¡¶º∆‘§≤…ºØ
+N	      
+N	      u8 ParamSave;     // ≤Œ ˝±£¥Ê±Í÷æ
+N	
+N	      u8 Loop_250Hz;
+N	      u8 Loop_100Hz;
+N	      u8 Loop_10Hz;
 N         }Flag_t;
 N
 Nextern Flag_t flag;
 N
-N
+Nvoid loop(void);
+Nvoid Bootloader_Set(void);
 Nvoid InitBoard(void);
 Nvoid Sensor_Init(void);
-Nvoid State_Display(void);
-Nvoid Battary_Detection(void);
-N
-N
+Nvoid Screen_Update(void);
+Nvoid Time_slice(void);
 N#endif /* __MultiRotor_app_H */
 N
 N
 N
-L 43 "..\..\User\include.h" 2
+L 46 "..\..\User\include.h" 2
 N#include "MultiRotor_ahrs.h"
 L 1 "..\..\User\Function\MultiRotor_ahrs\MultiRotor_ahrs.h" 1
 N#ifndef __MultiRotor_ahrs_H
@@ -33892,21 +34452,12 @@ N#define Gyro_G 	0.03051756
 N#define Gyro_Gr	0.0005426
 N
 N
-Nstruct _angle{
-N        float pitch;
-N				float roll;
-N        float yaw;};
+N
+Nextern int16_t MAG[3];			
 N
 N
-Nextern struct _angle angle;
-N			
-Nfloat FL_ABS(float x);
-Nvoid Prepare_Data(void);
-Nvoid Get_Attitude(void);
-Nvoid IMUupdate(float gx, float gy, float gz, float ax, float ay, float az);
-N
-N
-Nvoid AHRS_Update( void );
+Nvoid AHRS_getValues(void);
+Nvoid AHRS_Geteuler(void);
 N#endif
 N
 N
@@ -33921,7 +34472,7 @@ N
 N
 N
 N
-L 44 "..\..\User\include.h" 2
+L 47 "..\..\User\include.h" 2
 N#include "MultiRotor_radio.h"
 L 1 "..\..\User\Function\MultiRotor_radio\MultiRotor_radio.h" 1
 N#ifndef __MultiRotor_radio_H
@@ -33930,6 +34481,8 @@ N#include "stm32f10x.h"
 N#include "include.h"
 N
 Nvoid mavlink(void);
+Nvoid UsbCmdPro(void);
+N
 N#endif
 N
 N
@@ -33944,7 +34497,7 @@ N
 N
 N
 N
-L 45 "..\..\User\include.h" 2
+L 48 "..\..\User\include.h" 2
 N#include "Algorithm_sqLite.h"
 L 1 "..\..\User\Algorithm\Algorithm_sqLite\Algorithm_sqLite.h" 1
 N#ifndef _Algorithm_sqLite_H_
@@ -33952,17 +34505,33 @@ N#define _Algorithm_sqLite_H_
 N/* Includes ------------------------------------------------------------------*/
 N#include "include.h"
 N
-Nextern uint16_t VirtAddVarTab[15];
+N
+N//¥Ê¥¢Õ‚ª∑∫Õƒ⁄ª∑PIDµ˜øÿ
+N#define EE_PID_CORE_PITCH_P	9
+N#define EE_PID_CORE_PITCH_I	10
+N#define EE_PID_CORE_PITCH_D	11
+N#define EE_PID_CORE_ROLL_P	12
+N#define EE_PID_CORE_ROLL_I	13
+N#define EE_PID_CORE_ROLL_D	14
+N#define EE_PID_CORE_YAW_P	  15
+N#define EE_PID_CORE_YAW_I	  16
+N#define EE_PID_CORE_YAW_D	  17
+N
+N
+N
+Nextern uint16_t VirtAddVarTab[NumbOfVar];
+Xextern uint16_t VirtAddVarTab[((uint8_t)75)];
 N
 Nvoid EE_SAVE_ACC_OFFSET(void);
-N
+Nvoid EE_SAVE_MAG_OFFSET(void);
+Nvoid EE_SAVE_Attitude_PID(void);
 Nvoid paramLoad(void);
-N
+Nvoid Data_Parser(u16 *rxBuffer);
 N#endif /* __Algorithm_sqLite_H */
 N
-N/******************* (C) COPYRIGHT 2009 STMicroelectronics *****END OF FILE****/
 N
-L 46 "..\..\User\include.h" 2
+N
+L 49 "..\..\User\include.h" 2
 N#include "MultiRotor_control.h"
 L 1 "..\..\User\Function\MultiRotor_control\MultiRotor_control.h" 1
 N#ifndef _MultiRotor_control_H_
@@ -34008,9 +34577,9 @@ Nvoid Calculate_Target(void);
 Nvoid CONTROL(struct _target Goal);
 Nvoid Attitude_RatePID(void);
 Nvoid Motor_Conter(void);
-N
+Nvoid Reset_Integral(void);
 N#endif
-L 47 "..\..\User\include.h" 2
+L 50 "..\..\User\include.h" 2
 N
 N#include "Algorithm_math.h"
 L 1 "..\..\User\Algorithm\Algorithm_math\Algorithm_math.h" 1
@@ -34029,12 +34598,12 @@ N
 N
 Nfloat Q_rsqrt(float number);
 Nfloat VariableParameter(float error);
-Nvoid array_assign(s16 *array,s16 value);
+Nvoid array_assign(u16 *array,s16 value,u16 length);
 Nvoid array_astrict(s16 *array,s16 lower,s16 upper);
-Nvoid data_limit(float data,float toplimit,float lowerlimit);
-N
+Nfloat data_limit(float data,float toplimit,float lowerlimit);
+Ndouble Degree(double rad);
 N#endif /* __Algorithm_math_H */
-L 49 "..\..\User\include.h" 2
+L 52 "..\..\User\include.h" 2
 N#include "Algorithm_filter.h"
 L 1 "..\..\User\Algorithm\Algorithm_filter\Algorithm_filter.h" 1
 N#ifndef __Algorithm_filter_H
@@ -34043,9 +34612,9 @@ N
 N#include "stm32f10x.h"
 N
 Ndouble IIR_I_Filter(double InData, double *x, double *y, double *b, short nb, double *a, short na);
-N
+Nfp32 LPF_1st(fp32 oldData, fp32 newData, fp32 lpf_factor);
 N#endif /* __Algorithm_filter_H */
-L 50 "..\..\User\include.h" 2
+L 53 "..\..\User\include.h" 2
 N#include "Algorithm_quaternion.h"
 L 1 "..\..\User\Algorithm\Algorithm_quaternion\Algorithm_quaternion.h" 1
 N#ifndef __Algorithm_quaternion_H
@@ -34053,8 +34622,7 @@ N#define	__Algorithm_quaternion_H
 N
 N#include "stm32f10x.h"
 N
-Ntypedef __IO struct {
-Xtypedef volatile struct {
+Ntypedef  struct {
 N  float Pitch;
 N  float Roll;
 N  float Yaw;
@@ -34085,7 +34653,7 @@ NQuaternion Quaternion_Multiply( Quaternion NowQ, Quaternion OldQ );
 Nvoid Quaternion_Normalize( Quaternion *pNumQ );
 Nvoid Quaternion_RungeKutta( Quaternion *pNumQ, float GyrX, float GyrY, float GyrZ, float helfTimes );
 N#endif /* __Algorithm_quaternion_H */
-L 51 "..\..\User\include.h" 2
+L 54 "..\..\User\include.h" 2
 N
 N#endif /* __INCLUDE_H */
 L 10 "..\..\User\Modules\Modules_ms5611\MS5611.c" 2
@@ -34145,11 +34713,11 @@ N*******************************************************************************
 Nvoid MS561101BA_RESET(void)
 N{
 N  I2C_Start();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 65 15 identifier "MS561101BA_SlaveAddress" is undefined
 N	I2C_SendByte(MS561101BA_SlaveAddress);
+X	I2C_SendByte(0xEE);
 N	I2C_WaitAck();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 67 15 identifier "MS561101BA_RST" is undefined
 N	I2C_SendByte(MS561101BA_RST);
+X	I2C_SendByte(0x1E);
 N	I2C_WaitAck();
 N	I2C_Stop();
 N}
@@ -34168,17 +34736,18 @@ N	 delay_ms(20);
 N	 for(i=1;i<=6;i++)
 N	 {
 N		I2C_Start();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 86 16 identifier "MS561101BA_SlaveAddress" is undefined
 N		I2C_SendByte(MS561101BA_SlaveAddress);
+X		I2C_SendByte(0xEE);
 N		I2C_WaitAck();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 88 17 identifier "MS561101BA_PROM_RD" is undefined
 N		I2C_SendByte((MS561101BA_PROM_RD+i*2));
+X		I2C_SendByte((0xA0+i*2));
 N		I2C_WaitAck();
 N	  I2C_Stop();
 N		delay_ms(1);
 N
 N		I2C_Start();
 N		I2C_SendByte(MS561101BA_SlaveAddress+1);
+X		I2C_SendByte(0xEE +1);
 N		I2C_WaitAck();
 N		d1=I2C_RadeByte();
 N		I2C_Ack();
@@ -34204,8 +34773,8 @@ N*******************************************************************************
 Nvoid MS561101BA_startConversion(uint8_t command) 
 N{	
 N	I2C_Start();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 120 15 identifier "MS561101BA_SlaveAddress" is undefined
 N	I2C_SendByte(MS561101BA_SlaveAddress);
+X	I2C_SendByte(0xEE);
 N	I2C_WaitAck();
 N	I2C_SendByte(command);
 N  I2C_WaitAck();
@@ -34222,8 +34791,8 @@ N	unsigned long conversion = 0;
 N	uint8_t conv1,conv2,conv3; 
 N	
 N	I2C_Start();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 137 15 identifier "MS561101BA_SlaveAddress" is undefined
 N	I2C_SendByte(MS561101BA_SlaveAddress);
+X	I2C_SendByte(0xEE);
 N	I2C_WaitAck();
 N	I2C_SendByte(0);
 N	I2C_WaitAck();
@@ -34232,6 +34801,7 @@ N
 N
 N	I2C_Start();
 N	I2C_SendByte(MS561101BA_SlaveAddress+1);
+X	I2C_SendByte(0xEE +1);
 N	I2C_WaitAck();
 N	conv1=I2C_RadeByte();
 N	I2C_Ack();
@@ -34322,8 +34892,8 @@ N		 case SCTemperature:
 X		 case 0x01: 
 N		 {		
 N			 if(flag)    MS561101BA_getPressure();			 
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 234 32 identifier "MS561101BA_D2_OSR_4096" is undefined
 N			 MS561101BA_startConversion(MS561101BA_D2_OSR_4096);  
+X			 MS561101BA_startConversion(0x58);  
 N			 Now_doing = CTemperatureing;//«–ªªµΩœ¬“ª∏ˆ◊¥Ã¨
 X			 Now_doing = 0x02;
 N		 }
@@ -34332,8 +34902,8 @@ N		 case CTemperatureing:
 X		 case 0x02: 
 N		 {		
 N			 MS561101BA_getTemperature();
-E "..\..\User\Modules\Modules_ms5611\MS5611.c" 241 32 identifier "MS561101BA_D1_OSR_4096" is undefined
 N			 MS561101BA_startConversion(MS561101BA_D1_OSR_4096); 
+X			 MS561101BA_startConversion(0x48); 
 N			 flag = 1;
 N			 Now_doing = SCTemperature;
 X			 Now_doing = 0x01;
@@ -34374,8 +34944,8 @@ N{
 N	static u8 p=0;
 N	int32_t sum=0;
 N	
-N  Acc_speed_Filterbuffer[p] = (sensor.acc.averag.z * COS(angle.pitch/RtA) * COS(angle.roll/RtA) - sensor.acc.averag.x * SIN(angle.pitch/RtA) + sensor.acc.averag.y * SIN(angle.roll/RtA) - sensor.acc.quiet.z)*Acc_G; 
-X  Acc_speed_Filterbuffer[p] = (sensor.acc.averag.z * COS(angle.pitch/57.324841) * COS(angle.roll/57.324841) - sensor.acc.averag.x * SIN(angle.pitch/57.324841) + sensor.acc.averag.y * SIN(angle.roll/57.324841) - sensor.acc.quiet.z)*0.0011963; 
+N  Acc_speed_Filterbuffer[p] = (sensor.acc.averag.z * COS(AngE.Pitch/RtA) * COS(AngE.Roll/RtA) - sensor.acc.averag.x * SIN(AngE.Pitch/RtA) + sensor.acc.averag.y * SIN(AngE.Roll/RtA) - sensor.acc.quiet.z)*Acc_G; 
+X  Acc_speed_Filterbuffer[p] = (sensor.acc.averag.z * COS(AngE.Pitch/57.324841) * COS(AngE.Roll/57.324841) - sensor.acc.averag.x * SIN(AngE.Pitch/57.324841) + sensor.acc.averag.y * SIN(AngE.Roll/57.324841) - sensor.acc.quiet.z)*0.0011963; 
 N	p++;
 N	if(p== SAMPLE_NUM) p = 0;
 X	if(p== 10) p = 0;

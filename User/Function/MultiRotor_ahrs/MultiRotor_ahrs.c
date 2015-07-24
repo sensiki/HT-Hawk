@@ -12,7 +12,7 @@
 #include "MultiRotor_ahrs.h"
 #include "MPU6050.h"
 
-#define KpDef 0.7f
+#define KpDef 0.8f
 #define KiDef 0.0005f
 #define SampleRateHalf 0.001f  
 
@@ -32,8 +32,9 @@ double OutPut_IIR[3][IIR_ORDER+1] = {0};
 Quaternion NumQ = {1, 0, 0, 0};
 EulerAngle AngE = {0};
 
-struct _angle angle;
+
 int16_t MAG[3];
+
 
 
 void AHRS_getValues(void)
@@ -50,9 +51,9 @@ void AHRS_getValues(void)
 	sensor.acc.averag.z = IIR_I_Filter(sensor.acc.origin.z, InPut_IIR[2], OutPut_IIR[2], b_IIR, IIR_ORDER+1, a_IIR, IIR_ORDER+1);
 	
 	// 陀螺仪一阶低通滤波
- 	sensor.gyro.averag.x = LPF_1st(x,sensor.gyro.radian.x,0.386f);	x = sensor.gyro.averag.x;
- 	sensor.gyro.averag.y = LPF_1st(y,sensor.gyro.radian.y,0.386f);	y = sensor.gyro.averag.y;
- 	sensor.gyro.averag.z = LPF_1st(z,sensor.gyro.radian.z,0.386f);	z = sensor.gyro.averag.z;
+ 	sensor.gyro.averag.x = LPF_1st(x,sensor.gyro.radian.x * Gyro_G,0.386f);	x = sensor.gyro.averag.x;
+ 	sensor.gyro.averag.y = LPF_1st(y,sensor.gyro.radian.y * Gyro_G,0.386f);	y = sensor.gyro.averag.y;
+ 	sensor.gyro.averag.z = LPF_1st(z,sensor.gyro.radian.z * Gyro_G,0.386f);	z = sensor.gyro.averag.z;
 }
 
 /*====================================================================================================*/
@@ -91,9 +92,9 @@ void AHRS_GetQ( Quaternion *pNumQ )
   eyInt = eyInt + ErrY * KiDef;
   ezInt = ezInt + ErrZ * KiDef;
 
-  GyrX = sensor.gyro.averag.x * Gyro_Gr + KpDef * VariableParameter(ErrX) * ErrX  +  exInt;
-  GyrY = sensor.gyro.averag.y * Gyro_Gr + KpDef * VariableParameter(ErrY) * ErrY  +  eyInt;
-	GyrZ = sensor.gyro.averag.z * Gyro_Gr + KpDef * VariableParameter(ErrZ) * ErrZ  +  ezInt;
+  GyrX = Rad(sensor.gyro.averag.x) + KpDef * VariableParameter(ErrX) * ErrX  +  exInt;
+  GyrY = Rad(sensor.gyro.averag.y) + KpDef * VariableParameter(ErrY) * ErrY  +  eyInt;
+	GyrZ = Rad(sensor.gyro.averag.z) + KpDef * VariableParameter(ErrZ) * ErrZ  +  ezInt;
 	
 	
 	// 一阶龙格库塔法, 更新四元数

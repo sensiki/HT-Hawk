@@ -28863,9 +28863,9 @@ N
 N/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
 L 4 "..\..\User\Driver\TIM\time.h" 2
 N
-N#define EnTIM3()  TIM_Cmd(TIM3,ENABLE)
+N#define EnTIMER  TIM_Cmd(TIM5,ENABLE)
 Nvoid Nvic_Init(void);
-Nvoid TIM3_Config(void);
+Nvoid TIM5_Config(void);
 N#endif 
 L 10 "..\..\User\Driver\TIM\time.c" 2
 N#include "stm32f10x.h"
@@ -28875,15 +28875,15 @@ N/**************************实现函数********************************************
 N*函数原型:		
 N*功　　能:2ms中断一次,计数器为2000		
 N*******************************************************************************/
-Nvoid TIM3_Config(void)
+Nvoid TIM5_Config(void)
 N{
 N	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 N	//基础设置，时基和比较输出设置，由于这里只需定时，所以不用OC比较输出
-N	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
-X	RCC_APB1PeriphClockCmd(((uint32_t)0x00000002),ENABLE);
+N	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,ENABLE);
+X	RCC_APB1PeriphClockCmd(((uint32_t)0x00000008),ENABLE);
 N	
-N	TIM_DeInit(TIM3);
-X	TIM_DeInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)));
+N	TIM_DeInit(TIM5);
+X	TIM_DeInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0C00)));
 N
 N	TIM_TimeBaseStructure.TIM_Period=2000;//装载值
 N	//prescaler is 1200,that is 72000000/72/500=2000Hz;
@@ -28895,17 +28895,17 @@ N	//count up
 N	TIM_TimeBaseStructure.TIM_CounterMode=TIM_CounterMode_Up;
 X	TIM_TimeBaseStructure.TIM_CounterMode=((uint16_t)0x0000);
 N	
-N	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseStructure);
-X	TIM_TimeBaseInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),&TIM_TimeBaseStructure);
-N	//clear the TIM2 overflow interrupt flag
-N	TIM_ClearFlag(TIM3,TIM_FLAG_Update);
-X	TIM_ClearFlag(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0001));
-N	//TIM2 overflow interrupt enable
-N	TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);
-X	TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),((uint16_t)0x0001),ENABLE);
-N	//enable TIM2
-N	TIM_Cmd(TIM3,DISABLE);
-X	TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0400)),DISABLE);
+N	TIM_TimeBaseInit(TIM5,&TIM_TimeBaseStructure);
+X	TIM_TimeBaseInit(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0C00)),&TIM_TimeBaseStructure);
+N	//clear the TIM5 overflow interrupt flag
+N	TIM_ClearFlag(TIM5,TIM_FLAG_Update);
+X	TIM_ClearFlag(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0C00)),((uint16_t)0x0001));
+N	//TIM5 overflow interrupt enable
+N	TIM_ITConfig(TIM5,TIM_IT_Update,ENABLE);
+X	TIM_ITConfig(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0C00)),((uint16_t)0x0001),ENABLE);
+N	//enable TIM5
+N	TIM_Cmd(TIM5,DISABLE);
+X	TIM_Cmd(((TIM_TypeDef *) (((uint32_t)0x40000000) + 0x0C00)),DISABLE);
 N}
 Nvoid Nvic_Init(void)
 N{
@@ -28915,17 +28915,23 @@ N	/* NVIC_PriorityGroup */
 N	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 X	NVIC_PriorityGroupConfig(((uint32_t)0x500));
 N	
-N	NVIC_InitStructure.NVIC_IRQChannel=TIM3_IRQn;
+N	NVIC_InitStructure.NVIC_IRQChannel=TIM5_IRQn;
 N	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
 N	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 N	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 N	NVIC_Init(&NVIC_InitStructure);
 N	
-N	
 N	/* Enable the USARTy Interrupt */
 N	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;	 
-N	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+N	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 N	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+N	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+N	NVIC_Init(&NVIC_InitStructure);
+N	
+N	/* Enable the USARTy Interrupt */
+N	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;	 
+N	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+N	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 N	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 N	NVIC_Init(&NVIC_InitStructure);
 N	
